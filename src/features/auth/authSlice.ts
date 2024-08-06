@@ -1,6 +1,6 @@
-import { User } from "@/lib/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { login, logout, register } from "./authThunks";
+import { User } from "@/lib/types";
 
 // Define a type for the slice state
 interface AuthState {
@@ -19,10 +19,6 @@ export interface RegisterPayload {
   name: string;
   email: string;
   password: string;
-}
-
-interface AuthErrorPayload {
-  error: AuthError;
 }
 
 const initialState: AuthState = {
@@ -50,7 +46,7 @@ export const authSlice = createSlice({
     .addCase(login.rejected, (state, action: PayloadAction<AuthError | undefined>) => {
       state.loading = false;
       state.error = action.payload ? action.payload.message : 'Unknown authentication error';
-})
+    })
     .addCase(register.pending, (state) => {
       state.loading = true;
     })
@@ -63,7 +59,7 @@ export const authSlice = createSlice({
     .addCase(register.rejected, (state, action: PayloadAction<AuthError | undefined>) => {
       state.loading = false;
       state.error = action.payload ? action.payload.message : 'Unknown authentication error';
-})
+    })
     .addCase(logout.pending, (state) => {
       state.loading = true;
     })
@@ -76,7 +72,7 @@ export const authSlice = createSlice({
     .addCase(logout.rejected, (state, action: PayloadAction<AuthError | undefined>) => {
       state.loading = false;
       state.error = action.payload ? action.payload.message : 'Unknown authentication error';
-})
+    })
   },
 });
 

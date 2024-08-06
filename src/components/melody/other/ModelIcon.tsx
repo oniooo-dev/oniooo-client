@@ -1,0 +1,16 @@
+import React from 'react'
+
+interface ModelIconProps {
+  modelName?: string
+}
+
+const ModelIcon: React.FC<ModelIconProps> = ({ modelName }) => {
+  return (
+    <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-white cursor-pointer 
+                    duration-500 hover:scale-[1.05]">
+      <p>{modelName ? modelName : 'NaN'}</p>
+    </div>
+  )
+}
+
+export default ModelIcon
