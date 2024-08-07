@@ -11,15 +11,15 @@ export const fetchSavedAIModels = createAsyncThunk<SavedAIModel[], void, { rejec
         } catch (error: any) {
             if (error.response && error.response.data) {
                 // Assuming the backend sends { message: string } in the response body
-                return rejectWithValue({ message: error.response.data.message, name: 'MelodyFetchError' });
+                return rejectWithValue({ message: error.response.data.message, name: 'MelodyError' });
             } else {
-                return rejectWithValue({ message: error.message, name: 'MelodyFetchError' });
+                return rejectWithValue({ message: error.message, name: 'MelodyError' });
             }
         }
     }
 );
 
-export const fetchConversationHistory = createAsyncThunk<Conversation[], void, { rejectValue: MelodyFetchError }>(
+export const fetchConversationHistory = createAsyncThunk<Conversation[], void, { rejectValue: MelodyError }>(
     'melody/fetchConversationHistory',
     async (_, { rejectWithValue }) => {
         try {
@@ -29,104 +29,104 @@ export const fetchConversationHistory = createAsyncThunk<Conversation[], void, {
         } catch (error: any) {
             if (error.response && error.response.data) {
                 // Assuming the backend sends { message: string } in the response body
-                return rejectWithValue({ message: error.response.data.message, name: 'MelodyFetchError' });
+                return rejectWithValue({ message: error.response.data.message, name: 'MelodyError' });
             } else {
-                return rejectWithValue({ message: error.message, name: 'MelodyFetchError' });
+                return rejectWithValue({ message: error.message, name: 'MelodyError' });
             }
         }
     }
 )
 
-export const fetchConversationMessages = createAsyncThunk<ConversationMessage[], { conversationId: string }, { rejectValue: MelodyFetchError }>(
-    'melody/fetchConversationMessages',
+export const fetchMessagesByConversationId = createAsyncThunk<ConversationMessage[], { conversationId: string }, { rejectValue: MelodyError }>(
+    'melody/fetchMessagesByConversationId',
     async (params: { conversationId: string }, { rejectWithValue }) => {
         try {
             // No request data
-            const response = await axios.get(`/api/v1/melody/conversation/${params.conversationId}/messages`);
+            const response = await axios.get(`/api/v1/melody/conversations/${params.conversationId}/messages`);
             return response.data;     // should return an array of messages
         } catch (error: any) {
             if (error.response && error.response.data) {
                 // Assuming the backend sends { message: string } in the response body
-                return rejectWithValue({ message: error.response.data.message, name: 'MelodyFetchError' });
+                return rejectWithValue({ message: error.response.data.message, name: 'MelodyError' });
             } else {
-                return rejectWithValue({ message: error.message, name: 'MelodyFetchError' });
+                return rejectWithValue({ message: error.message, name: 'MelodyError' });
             }
         }
     }
 )
 
-export const createConversation = createAsyncThunk<void, { firstPrompt: string }, { rejectValue: MelodyFetchError }>(
+export const createConversation = createAsyncThunk<void, { firstPrompt: string }, { rejectValue: MelodyError }>(
     'melody/createConversation',
     async (params: { firstPrompt: string }, { rejectWithValue }) => {
         try {
             const requestData: { firstPrompt: string } = {
                 firstPrompt: params.firstPrompt
             }
-            const response = await axios.post(`/api/v1/melody/conversation`, requestData);
+            const response = await axios.post(`/api/v1/melody/conversations`, requestData);
             return response.data;     // should return an array of messages
         } catch (error: any) {
             if (error.response && error.response.data) {
                 // Assuming the backend sends { message: string } in the response body
-                return rejectWithValue({ message: error.response.data.message, name: 'MelodyFetchError' });
+                return rejectWithValue({ message: error.response.data.message, name: 'MelodyError' });
             } else {
-                return rejectWithValue({ message: error.message, name: 'MelodyFetchError' });
+                return rejectWithValue({ message: error.message, name: 'MelodyError' });
             }
         }
     }
 )
 
-export const createConversationMessage = createAsyncThunk<void, { conversationId: string, prompt: string }, { rejectValue: MelodyPostError }>(
+export const createConversationMessage = createAsyncThunk<void, { conversationId: string, prompt: string }, { rejectValue: MelodyError }>(
     'melody/createConversationMessage',
     async (params: { conversationId: string, prompt: string }, { rejectWithValue }) => {
         try {
             const requestData: { prompt: string } = {
                 prompt: params.prompt
             }
-            const response = await axios.post(`/api/v1/melody/conversation`, requestData);
+            const response = await axios.post(`/api/v1/melody/conversations`, requestData);
             return response.data;     // should return an array of messages
         } catch (error: any) {
             if (error.response && error.response.data) {
                 // Assuming the backend sends { message: string } in the response body
-                return rejectWithValue({ message: error.response.data.message, name: 'MelodyPostError' });
+                return rejectWithValue({ message: error.response.data.message, name: 'MelodyError' });
             } else {
-                return rejectWithValue({ message: error.message, name: 'MelodyPostError' });
+                return rejectWithValue({ message: error.message, name: 'MelodyError' });
             }
         }
     }
 )
 
-export const updateConversationTitle = createAsyncThunk<void, { conversationId: string, newTitle: string }, { rejectValue: MelodyPutError }>(
+export const updateConversationTitle = createAsyncThunk<void, { conversationId: string, newTitle: string }, { rejectValue: MelodyError }>(
     'melody/updateConversationTitle',
     async (params: { conversationId: string, newTitle: string }, { rejectWithValue }) => {
         try {
             const requestData: { newTitle: string } = {
                 newTitle: params.newTitle
             }
-            const response = await axios.post(`/api/v1/melody/conversation/${params.conversationId}/title`, requestData);
+            const response = await axios.patch(`/api/v1/melody/conversations/${params.conversationId}/title`, requestData);
             return response.data;     // should return an array of messages
         } catch (error: any) {
             if (error.response && error.response.data) {
                 // Assuming the backend sends { message: string } in the response body
-                return rejectWithValue({ message: error.response.data.message, name: 'MelodyPutError' });
+                return rejectWithValue({ message: error.response.data.message, name: 'MelodyError' });
             } else {
-                return rejectWithValue({ message: error.message, name: 'MelodyPutError' });
+                return rejectWithValue({ message: error.message, name: 'MelodyError' });
             }
         }
     }
 )
 
-export const deleteConversationTitle = createAsyncThunk<void, { conversationId: string }, { rejectValue: MelodyPutError }>(
+export const deleteConversation = createAsyncThunk<void, { conversationId: string }, { rejectValue: MelodyError }>(
     'melody/deleteConversation',
     async (params: { conversationId: string, }, { rejectWithValue }) => {
         try {
-            const response = await axios.delete(`/api/v1/melody/conversation/${params.conversationId}`);
+            const response = await axios.delete(`/api/v1/melody/conversations/${params.conversationId}`);
             return response.data;     // should return an array of messages
         } catch (error: any) {
             if (error.response && error.response.data) {
                 // Assuming the backend sends { message: string } in the response body
-                return rejectWithValue({ message: error.response.data.message, name: 'MelodyPutError' });
+                return rejectWithValue({ message: error.response.data.message, name: 'MelodyError' });
             } else {
-                return rejectWithValue({ message: error.message, name: 'MelodyPutError' });
+                return rejectWithValue({ message: error.message, name: 'MelodyError' });
             }
         }
     }

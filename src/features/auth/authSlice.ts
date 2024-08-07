@@ -7,7 +7,7 @@ interface AuthState {
 	isAuthenticated: boolean;
 	user: User | null;
 	loading: boolean;
-	error: String | null;
+	error: string | null;
 }
 
 export interface LoginPayload {

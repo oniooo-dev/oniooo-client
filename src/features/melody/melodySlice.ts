@@ -1,14 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Conversation, ConversationMessage, SavedAIModel } from '@/lib/types';
-import { fetchSavedAIModels, fetchConversationHistory, fetchConversationMessages } from './melodyThunks';
+import { fetchSavedAIModels, fetchConversationHistory, fetchMessagesByConversationId, createConversation, createConversationMessage, updateConversationTitle, deleteConversation } from './melodyThunks';
 
 interface MelodyState {
     loading: boolean;
-    error: Error | null;
+    error: string | null;
     savedModels: SavedAIModel[];
     selectedModelId: string;
-    conversations: Conversation[];
+    conversationHistory: Conversation[];
     selectedConversationId: string;
+    currentConversationMessages: ConversationMessage[];
+    currentPrompt: string;
 }
 
 const initialState: MelodyState = {
@@ -16,19 +18,27 @@ const initialState: MelodyState = {
     error: null,
     savedModels: [],
     selectedModelId: '',
-    conversations: [],
+    conversationHistory: [],
     selectedConversationId: '',
+    currentConversationMessages: [],
+    currentPrompt: '',
 }
 
-const melodySlice = createSlice({
+export const melodySlice = createSlice({
     name: 'melody',
     initialState,
     reducers: {
         selectModelById(state, action: PayloadAction<string>) {
             state.selectedModelId = action.payload;
+            state.currentPrompt = ''; // Clear the current prompt when selecting a new model
         },
         selectConversationById(state, action: PayloadAction<string>) {
             state.selectedConversationId = action.payload;
+            state.currentPrompt = ''; // Clear the current prompt when selecting a new conversation
+            fetchMessagesByConversationId({ conversationId: action.payload });
+        },
+        clearCurrentPrompt(state) {
+            state.currentPrompt = '';
         }
     },
     extraReducers: (builder) => {
@@ -39,12 +49,12 @@ const melodySlice = createSlice({
         .addCase(fetchSavedAIModels.fulfilled, (state, action: PayloadAction<SavedAIModel[]>) => {
             state.loading = false;
             state.error = null;
-            state.savedModels = action.payload
+            state.savedModels = action.payload;
         })
-        .addCase(fetchSavedAIModels.rejected, (state, action: PayloadAction<MelodyFetchError | undefined>) => {
+        .addCase(fetchSavedAIModels.rejected, (state, action: PayloadAction<MelodyError | undefined>) => {
             state.loading = false;
             state.error = action.payload ? action.payload.message : 'Unknown server error';
-            state.
+            state.savedModels = [];
         })
         .addCase(fetchConversationHistory.pending, (state) => {
             state.loading = true;
@@ -52,32 +62,72 @@ const melodySlice = createSlice({
         .addCase(fetchConversationHistory.fulfilled, (state, action: PayloadAction<Conversation[]>) => {
             state.loading = false;
             state.error = null;
+            state.conversationHistory = action.payload;
         })
-        .addCase(fetchConversationHistory.rejected, (state, action: PayloadAction<MelodyFetchError | undefined>) => {
+        .addCase(fetchConversationHistory.rejected, (state, action: PayloadAction<MelodyError | undefined>) => {
             state.loading = false;
             state.error = action.payload ? action.payload.message : 'Unknown server error';
+            state.conversationHistory = [];
         })
-        .addCase(fetchConversationMessages.pending, (state) => {
+        .addCase(fetchMessagesByConversationId.pending, (state) => {
             state.loading = true;
         })
-        .addCase(fetchConversationMessages.fulfilled, (state, action: PayloadAction<ConversationMessage[]>) => {
+        .addCase(fetchMessagesByConversationId.fulfilled, (state, action: PayloadAction<ConversationMessage[]>) => {
+            state.loading = false;
+            state.error = null;
+            state.currentConversationMessages = action.payload;
+        })
+        .addCase(fetchMessagesByConversationId.rejected, (state, action: PayloadAction<MelodyError | undefined>) => {
+            state.loading = false;
+            state.error = action.payload ? action.payload.message : 'Unknown server error';
+            state.currentConversationMessages = [];
+        })
+        .addCase(createConversation.pending, (state) => {
+            state.loading = true;
+        })
+        .addCase(createConversation.fulfilled, (state) => {
             state.loading = false;
             state.error = null;
         })
-        .addCase(fetchConversationMessages.rejected, (state, action: PayloadAction<MelodyFetchError | undefined>) => {
+        .addCase(createConversation.rejected, (state, action: PayloadAction<MelodyError | undefined>) => {
             state.loading = false;
             state.error = action.payload ? action.payload.message : 'Unknown server error';
         })
-        .addCase(fetchConversationMessages.pending, (state) => {
+        .addCase(createConversationMessage.pending, (state) => {
             state.loading = true;
         })
-        .addCase(fetchConversationMessages.fulfilled, (state, action: PayloadAction<ConversationMessage[]>) => {
+        .addCase(createConversationMessage.fulfilled, (state) => {
             state.loading = false;
             state.error = null;
         })
-        .addCase(fetchConversationMessages.rejected, (state, action: PayloadAction<MelodyFetchError | undefined>) => {
+        .addCase(createConversationMessage.rejected, (state, action: PayloadAction<MelodyError | undefined>) => {
+            state.loading = false;
+            state.error = action.payload ? action.payload.message : 'Unknown server error';
+        })
+        .addCase(updateConversationTitle.pending, (state) => {
+            state.loading = true;
+        })
+        .addCase(updateConversationTitle.fulfilled, (state) => {
+            state.loading = false;
+            state.error = null;
+        })
+        .addCase(updateConversationTitle.rejected, (state, action: PayloadAction<MelodyError | undefined>) => {
+            state.loading = false;
+            state.error = action.payload ? action.payload.message : 'Unknown server error';
+        })
+        .addCase(deleteConversation.pending, (state) => {
+            state.loading = true;
+        })
+        .addCase(deleteConversation.fulfilled, (state) => {
+            state.loading = false;
+            state.error = null;
+        })
+        .addCase(deleteConversation.rejected, (state, action: PayloadAction<MelodyError | undefined>) => {
             state.loading = false;
             state.error = action.payload ? action.payload.message : 'Unknown server error';
         })
     }
 })
+
+export const { selectModelById, selectConversationById, clearCurrentPrompt } = melodySlice.actions;
+export default melodySlice.reducer;

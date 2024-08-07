@@ -1,6 +1,11 @@
 import React from "react";
 
-const PromptBox = () => {
+interface PromptBoxProps {
+	sender: string;
+	content: string;
+}
+
+const PromptBox: React.FC<PromptBoxProps> = () => {
 	return <div className="p-4">PromptBox</div>;
 };
 

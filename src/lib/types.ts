@@ -5,7 +5,7 @@ export interface User {
 
 export interface SavedAIModel {
     id: string;
-    name: string;
+    modelName: string;
 }
 
 export interface Conversation {
