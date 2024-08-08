@@ -1,16 +1,18 @@
-import React from 'react'
+import React from "react";
 
 interface ModelIconProps {
-  modelName?: string
+	modelIcon?: string;
 }
 
-const ModelIcon: React.FC<ModelIconProps> = ({ modelName }) => {
-  return (
-    <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-white cursor-pointer 
-                    duration-500 hover:scale-[1.05]">
-      <p>{modelName ? modelName : 'NaN'}</p>
-    </div>
-  )
-}
+const ModelIcon: React.FC<ModelIconProps> = ({ modelIcon }) => {
+	return (
+		<div
+			className="flex items-center justify-center w-12 h-12 rounded-lg bg-white cursor-pointer 
+                    duration-500 hover:scale-[1.05]"
+		>
+			<p>{modelIcon ? modelIcon : "NaN"}</p>
+		</div>
+	);
+};
 
-export default ModelIcon
+export default ModelIcon;

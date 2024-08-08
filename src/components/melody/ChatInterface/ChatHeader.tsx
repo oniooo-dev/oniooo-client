@@ -1,11 +1,16 @@
-import React from 'react'
+"use client";
+
+import React from "react";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 const ChatHeader = () => {
-  return (
-    <div className="w-full">
-        <p className="text-3xl font-semibold">GEMINI</p>
-    </div>
-  )
-}
+	const modelName = useSelector((state: RootState) => state.melody.selectedModelId);
+	return (
+		<div className="w-full">
+			<p className="text-3xl font-semibold">{modelName}</p>
+		</div>
+	);
+};
 
-export default ChatHeader
+export default ChatHeader;

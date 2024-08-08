@@ -1,25 +1,22 @@
 export interface User {
-    username: string,
-    email: string,
+	id: string;
+	username: string;
+	email: string;
 }
 
 export interface SavedAIModel {
-    id: string;
-    modelName: string;
+	id: string;
+	modelName: string;
+	iconUrl: string;
 }
 
 export interface Conversation {
-    id: string;
-    title: string;
-}
-
-enum ConversationMessageAuthor {
-    user,
-    system
+	id: string;
+	title: string;
 }
 
 export interface ConversationMessage {
-    id: string;
-    author: ConversationMessageAuthor;
-    content: string;
+	id: string;
+	sender: string;
+	content: string;
 }
