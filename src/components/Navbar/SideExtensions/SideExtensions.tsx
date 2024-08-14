@@ -14,8 +14,8 @@ const SideExtensions = () => {
 	};
 
 	return (
-		<div className="flex flex-col items-center w-[200px] gap-2 p-2">
-			<ExtensionSwitch onSelect={handleSelectExtension} />
+		<div className="flex flex-col w-[200px] gap-2">
+			<ExtensionSwitch onSelect={handleSelectExtension} selectedExtension={selectedExtension} />
 			{selectedExtension === AvailableExtensions.ModelSelection ? (
 				<ModelSelectionPanel />
 			) : (

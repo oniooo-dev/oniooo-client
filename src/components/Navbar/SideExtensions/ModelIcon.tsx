@@ -7,10 +7,10 @@ interface ModelIconProps {
 const ModelIcon: React.FC<ModelIconProps> = ({ modelIcon }) => {
 	return (
 		<div
-			className="flex items-center justify-center w-12 h-12 rounded-lg bg-white cursor-pointer 
+			className="flex items-center justify-center w-full h-12 rounded-lg bg-white cursor-pointer 
                     duration-500 hover:scale-[1.05]"
 		>
-			<p>{modelIcon ? modelIcon : "NaN"}</p>
+			<p className="text-black">{modelIcon ? modelIcon : "NaN"}</p>
 		</div>
 	);
 };

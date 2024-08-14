@@ -1,35 +1,19 @@
 import React from "react";
 import Link from "next/link";
-import { SiLivechat } from "react-icons/si";
-import { RiCompassDiscoverFill } from "react-icons/ri";
-import { FaPaintbrush } from "react-icons/fa6";
-import { MdAccountCircle } from "react-icons/md";
-
-interface NavbarButtonProps {
-	icon: React.FC;
-	onClick: () => void;
-}
-
-const NavbarButton: React.FC<NavbarButtonProps> = ({ icon, onClick }) => {
-	return <div onClick={onClick}></div>;
-};
+import SideExtensions from "./SideExtensions/SideExtensions";
+import ModelProfileBanner from "./ModelProfileBanner/ModelProfileBanner";
 
 const Navbar = () => {
 	return (
-		<div className="flex flex-col h-screen items-center justify-between p-4 bg-gray-950">
-			<div className="flex flex-col gap-2">
-				<Link href={`/melody`}>
-					<SiLivechat size={32} />
-				</Link>
-				<Link href={`/store`}>
-					<RiCompassDiscoverFill size={32} />
-				</Link>
+		<div className="flex flex-col h-screen justify-between gap-2 p-2 bg-gray-900">
+			<div>
+				<p className="text-xl font-semibold">Oniooo</p>
 			</div>
-			<div className="flex flex-col gap-2">
-				<FaPaintbrush size={32} />
-				<Link href={`/store`}>
-					<MdAccountCircle size={32} />
-				</Link>
+			<div>
+				<ModelProfileBanner />
+			</div>
+			<div className="flex h-full">
+				<SideExtensions />
 			</div>
 		</div>
 	);

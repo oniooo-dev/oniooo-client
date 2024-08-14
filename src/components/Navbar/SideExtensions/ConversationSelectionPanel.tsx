@@ -3,7 +3,7 @@ import { useAppDispatch } from "@/store/hooks";
 import { RootState } from "@/store/store";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import ConversationBanner from "../other/ConversationBanner";
+import ConversationBanner from "./ConversationBanner";
 
 const ConversationSelectionPanel = () => {
 	const dispatch = useAppDispatch();

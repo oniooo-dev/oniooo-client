@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import ModelIcon from "../other/ModelIcon";
+import ModelIcon from "./ModelIcon";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useAppDispatch } from "@/store/hooks";
@@ -13,7 +13,7 @@ const ModelSelectionPanel = () => {
 		dispatch(fetchSavedAIModels());
 	}, [dispatch]);
 	return (
-		<div className="grid grid-cols-3 gap-2">
+		<div className="flex flex-col gap-2">
 			{savedModels.map((model, index) => (
 				<div key={index}>
 					<ModelIcon modelIcon={model.iconUrl} />
