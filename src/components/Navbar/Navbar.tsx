@@ -1,23 +1,51 @@
-import React from "react";
-import Link from "next/link";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import NavbarLink from "./NavbarLink";
+import { NAVBAR_LINKS } from "@/lib/constants";
 
 const Navbar = () => {
+	// Initialize state without assuming access to window
+	const [selectedPage, setSelectedPage] = useState<string>("");
+
+	useEffect(() => {
+		// Set the initial state once the component is mounted on the client
+		setSelectedPage(window.location.pathname);
+
+		const handleRouteChange = () => {
+			setSelectedPage(window.location.pathname);
+		};
+
+		// Add event listener for popstate event on window
+		window.addEventListener("popstate", handleRouteChange);
+
+		// Clean up the event listener on component unmount
+		return () => {
+			window.removeEventListener("popstate", handleRouteChange);
+		};
+	}, []);
+
+	const handlePageSelect = (href: string) => {
+		setSelectedPage(href);
+		window.history.pushState({}, "", href);
+	};
+
 	return (
-		<div className="flex flex-col h-screen justify-between gap-[5px] px-[14px] py-[20px]">
+		<div className="flex flex-col h-screen justify-between gap-[5px] px-[8px] py-[14px]">
 			<div className="flex flex-col w-full items-center gap-[5px]">
-				<Link href="/melody">
-					<div className="w-12 h-12 rounded-lg bg-white duration-500 hover:scale-[1.05]"></div>
-				</Link>
-				<Link href="/store">
-					<div className="w-12 h-12 rounded-lg bg-white duration-500 hover:scale-[1.05]"></div>
-				</Link>
-			</div>
-			<div className="flex flex-col w-full items-center gap-2">
-				<div>
-					<img 
-						src={"https://images.squarespace-cdn.com/content/v1/5e10bdc20efb8f0d169f85f9/09943d85-b8c7-4d64-af31-1a27d1b76698/arrow.png"} 
-						className="w-10 h-10 rounded-full bg-white duration-500 hover:scale-[1.05]"
+				{NAVBAR_LINKS.map((link, index) => (
+					<NavbarLink
+						key={index}
+						href={link.href}
+						iconUrl={link.iconUrl}
+						onSelect={() => handlePageSelect(link.href)}
+						selectedPage={selectedPage}
 					/>
+				))}
+			</div>
+			<div className="flex w-full items-center justify-center gap-2 mb-1 cursor-pointer">
+				<div>
+					<img src="/icons/navbar/shin-chan-pfp.png" className="w-9 h-9 rounded-full bg-white" />
 				</div>
 			</div>
 		</div>

@@ -1,26 +1,24 @@
-import React from 'react'
+import React from "react";
+import UserConversationMessage from "./UserConversationMessage";
+import OtherConversationMessage from "./OtherConversationMessage";
 
 interface ConversationMessageProps {
-    iconUrl: string;
-    sender: string;
-    senderName: string;
-    content: string;
+	iconUrl: string;
+	senderName: string;
+	senderType: string;
+	content: string;
 }
 
-const ConversationMessage: React.FC<ConversationMessageProps> = ({ sender, senderName, content }) => {
-  return (
-    <div className="flex flex-row gap-2">
-        <div className="mt-2 w-10 h-10 rounded-full bg-white"></div>
-        <div className="flex flex-col gap-2">
-            <div>
-                <p className="font-medium">{senderName}</p>
-            </div>
-            <div className="w-fit px-4 py-2 rounded-[10px] bg-white bg-opacity-20">
-                <p>{content}</p>
-            </div>
-        </div>
-    </div>
-  )
-}
+const ConversationMessage: React.FC<ConversationMessageProps> = ({ iconUrl, senderType, senderName, content }) => {
+	return (
+		<div className="flex w-full rounded-lg bg-white bg-opacity-5 p-4">
+			{senderType === "user" ? (
+				<UserConversationMessage iconUrl={iconUrl} senderName={senderName} content={content} />
+			) : (
+				<OtherConversationMessage iconUrl={iconUrl} senderName={senderName} content={content} />
+			)}
+		</div>
+	);
+};
 
 export default ConversationMessage;

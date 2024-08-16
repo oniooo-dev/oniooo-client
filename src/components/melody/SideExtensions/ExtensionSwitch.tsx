@@ -1,5 +1,4 @@
 import React from "react";
-import ExtensionIcon from "./ExtensionIcon";
 import { AvailableExtensions } from "@/lib/enums";
 
 interface ExtensionSwitchProps {
@@ -9,22 +8,28 @@ interface ExtensionSwitchProps {
 
 const ExtensionSwitch: React.FC<ExtensionSwitchProps> = ({ onSelect, selectedExtension }) => {
 	return (
-		<div className="flex flex-row gap-2">
+		<div className="flex flex-row items-center h-8 gap-2">
 			<div onClick={() => onSelect(AvailableExtensions.ModelSelection)}>
 				<div className="rounded-lg cursor-pointer">
 					<p
 						className={
-							selectedExtension === AvailableExtensions.ModelSelection ? `text-white` : `text-gray-700`
+							selectedExtension === AvailableExtensions.ModelSelection
+								? `text-white`
+								: `text-white text-opacity-50`
 						}
 					>{`Apps`}</p>
 				</div>
 			</div>
-			<div>|</div>
+			<div>
+				<p className="text-opacity-50">|</p>
+			</div>
 			<div onClick={() => onSelect(AvailableExtensions.HistorySelection)}>
 				<div className="rounded-lg cursor-pointer">
 					<p
 						className={
-							selectedExtension === AvailableExtensions.HistorySelection ? `text-white` : `text-gray-700`
+							selectedExtension === AvailableExtensions.HistorySelection
+								? `text-white`
+								: `text-white text-opacity-50`
 						}
 					>{`History`}</p>
 				</div>

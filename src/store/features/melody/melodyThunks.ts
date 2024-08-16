@@ -2,12 +2,16 @@ import { Conversation, ConversationMessage, SavedAIModel } from "@/lib/types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+const api = axios.create({
+	baseURL: "http://localhost:8080/api/v1/melody",
+});
+
 // should return an array of AI models
 export const fetchSavedAIModels = createAsyncThunk<SavedAIModel[], void, { rejectValue: Error }>(
 	"melody/fetchSavedModels",
 	async (_, { rejectWithValue }) => {
 		try {
-			const response = await axios.get("http://localhost:8080/api/v1/melody/models/saved");
+			const response = await api.get("/models/saved");
 			console.log(response.data.message);
 			return response.data.savedModels;
 		} catch (error: any) {
@@ -15,7 +19,7 @@ export const fetchSavedAIModels = createAsyncThunk<SavedAIModel[], void, { rejec
 				// Assuming the backend sends { message: string } in the response body
 				return rejectWithValue({ message: error.response.data.message, name: "MelodyError" });
 			} else {
-				return rejectWithValue({ message: error.message, name: "MelodyError" });
+				return rejectWithValue({ message: "Internal Server Error", name: "MelodyError" });
 			}
 		}
 	},
@@ -27,7 +31,7 @@ export const fetchConversationHistory = createAsyncThunk<Conversation[], void, {
 	async (_, { rejectWithValue }) => {
 		try {
 			// No request data
-			const response = await axios.get("http://localhost:8080/api/v1/melody/conversations");
+			const response = await api.get("/conversations");
 			console.log(response.data.message);
 			return response.data.conversations;
 		} catch (error: any) {
@@ -35,7 +39,7 @@ export const fetchConversationHistory = createAsyncThunk<Conversation[], void, {
 				// Assuming the backend sends { message: string } in the response body
 				return rejectWithValue({ message: error.response.data.message, name: "MelodyError" });
 			} else {
-				return rejectWithValue({ message: error.message, name: "MelodyError" });
+				return rejectWithValue({ message: "Internal Server Error", name: "MelodyError" });
 			}
 		}
 	},
@@ -49,14 +53,14 @@ export const createConversation = createAsyncThunk<void, { firstPrompt: string }
 			const requestData: { firstPrompt: string } = {
 				firstPrompt: params.firstPrompt,
 			};
-			const response = await axios.post(`/api/v1/melody/conversations`, requestData);
+			const response = await api.post(`/conversations`, requestData);
 			return response.data;
 		} catch (error: any) {
 			if (error.response && error.response.data) {
 				// Assuming the backend sends { message: string } in the response body
 				return rejectWithValue({ message: error.response.data.message, name: "MelodyError" });
 			} else {
-				return rejectWithValue({ message: error.message, name: "MelodyError" });
+				return rejectWithValue({ message: "Internal Server Error", name: "MelodyError" });
 			}
 		}
 	},
@@ -73,14 +77,14 @@ export const createConversationMessage = createAsyncThunk<
 			const requestData: { prompt: string } = {
 				prompt: params.prompt,
 			};
-			const response = await axios.post(`/api/v1/melody/conversations`, requestData);
+			const response = await api.post(`/conversations`, requestData);
 			return response.data; // should return an array of messages
 		} catch (error: any) {
 			if (error.response && error.response.data) {
 				// Assuming the backend sends { message: string } in the response body
 				return rejectWithValue({ message: error.response.data.message, name: "MelodyError" });
 			} else {
-				return rejectWithValue({ message: error.message, name: "MelodyError" });
+				return rejectWithValue({ message: "Internal Server Error", name: "MelodyError" });
 			}
 		}
 	},
@@ -93,14 +97,14 @@ export const fetchMessagesByConversationId = createAsyncThunk<
 >("melody/fetchMessagesByConversationId", async (params: { conversationId: string }, { rejectWithValue }) => {
 	try {
 		// No request data
-		const response = await axios.get(`/api/v1/melody/conversations/${params.conversationId}/messages`);
-		return response.data; // should return an array of messages
+		const response = await api.get(`/conversations/${params.conversationId}/messages`);
+		return response.data.conversationMessages; // should return an array of messages
 	} catch (error: any) {
 		if (error.response && error.response.data) {
 			// Assuming the backend sends { message: string } in the response body
 			return rejectWithValue({ message: error.response.data.message, name: "MelodyError" });
 		} else {
-			return rejectWithValue({ message: error.message, name: "MelodyError" });
+			return rejectWithValue({ message: "Internal Server Error", name: "MelodyError" });
 		}
 	}
 });
@@ -116,17 +120,14 @@ export const updateConversationTitle = createAsyncThunk<
 			const requestData: { newTitle: string } = {
 				newTitle: params.newTitle,
 			};
-			const response = await axios.patch(
-				`/api/v1/melody/conversations/${params.conversationId}/title`,
-				requestData,
-			);
+			const response = await api.patch(`/conversations/${params.conversationId}/title`, requestData);
 			return response.data; // should return an array of messages
 		} catch (error: any) {
 			if (error.response && error.response.data) {
 				// Assuming the backend sends { message: string } in the response body
 				return rejectWithValue({ message: error.response.data.message, name: "MelodyError" });
 			} else {
-				return rejectWithValue({ message: error.message, name: "MelodyError" });
+				return rejectWithValue({ message: "Internal Server Error", name: "MelodyError" });
 			}
 		}
 	},
@@ -136,14 +137,14 @@ export const deleteConversation = createAsyncThunk<void, { conversationId: strin
 	"melody/deleteConversation",
 	async (params: { conversationId: string }, { rejectWithValue }) => {
 		try {
-			const response = await axios.delete(`/api/v1/melody/conversations/${params.conversationId}`);
+			const response = await api.delete(`/conversations/${params.conversationId}`);
 			return response.data; // should return an array of messages
 		} catch (error: any) {
 			if (error.response && error.response.data) {
 				// Assuming the backend sends { message: string } in the response body
 				return rejectWithValue({ message: error.response.data.message, name: "MelodyError" });
 			} else {
-				return rejectWithValue({ message: error.message, name: "MelodyError" });
+				return rejectWithValue({ message: "Internal Server Error", name: "MelodyError" });
 			}
 		}
 	},

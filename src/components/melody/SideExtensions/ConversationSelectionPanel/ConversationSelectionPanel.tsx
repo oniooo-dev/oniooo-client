@@ -17,7 +17,7 @@ const ConversationSelectionPanel = () => {
 		<div className="flex flex-col w-full gap-2">
 			{conversations.map((conversation, index) => (
 				<div key={index}>
-					<ConversationBanner title={conversation.title} />
+					<ConversationBanner conversationId={conversation.id} title={conversation.title} />
 				</div>
 			))}
 		</div>

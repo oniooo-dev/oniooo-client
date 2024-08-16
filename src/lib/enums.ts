@@ -1,4 +1,4 @@
 export enum AvailableExtensions {
-    ModelSelection,
-    HistorySelection
+	ModelSelection,
+	HistorySelection,
 }

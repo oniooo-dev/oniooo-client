@@ -17,6 +17,8 @@ export interface Conversation {
 
 export interface ConversationMessage {
 	id: string;
-	sender: string;
+	iconUrl: string;
+	senderType: string;
+	senderName: string;
 	content: string;
 }

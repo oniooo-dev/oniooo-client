@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import ModelSelectionPanel from "./ModelSelectionPanel";
+import ModelSelectionPanel from "./ModelSelectionPanel/ModelSelectionPanel";
 import ExtensionSwitch from "./ExtensionSwitch";
 import { AvailableExtensions } from "@/lib/enums";
-import ConversationSelectionPanel from "./ConversationSelectionPanel";
+import ConversationSelectionPanel from "./ConversationSelectionPanel/ConversationSelectionPanel";
 import ModelProfileBanner from "./ModelProfileBanner/ModelProfileBanner";
 
 const SideExtensions = () => {
@@ -15,10 +15,10 @@ const SideExtensions = () => {
 	};
 
 	return (
-		<div className="flex flex-col w-[300px]">
+		<div className="flex flex-col w-[300px] px-2">
 			<ModelProfileBanner />
 			<div className="flex flex-col gap-2">
-				<div className="px-2">
+				<div className="ml-3">
 					<ExtensionSwitch onSelect={handleSelectExtension} selectedExtension={selectedExtension} />
 				</div>
 				{selectedExtension === AvailableExtensions.ModelSelection ? (

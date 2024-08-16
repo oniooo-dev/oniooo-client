@@ -10,6 +10,10 @@ const ModelSelectionPanel = () => {
 	const dispatch = useAppDispatch();
 	const savedModels = useSelector((state: RootState) => state.melody.savedModels);
 
+	const handleSelectModel = (modelId: string) => {
+		dispatch(selectModelById(modelId));
+	};
+
 	useEffect(() => {
 		dispatch(fetchSavedAIModels());
 	}, [dispatch]);
@@ -17,8 +21,13 @@ const ModelSelectionPanel = () => {
 	return (
 		<div className="flex flex-col gap-1">
 			{savedModels.map((model, index) => (
-				<div key={index} onClick={() => dispatch(selectModelById(model.id))}>
-					<ModelBanner modelId={model.id} iconUrl={model.iconUrl} modelName={model.modelName} />
+				<div key={index}>
+					<ModelBanner
+						modelId={model.id}
+						iconUrl={model.iconUrl}
+						modelName={model.modelName}
+						onClick={handleSelectModel}
+					/>
 				</div>
 			))}
 		</div>
