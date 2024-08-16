@@ -18,7 +18,7 @@ export default function RootLayout({
 			<html lang="en">
 				<body className="flex flex-row w-[100vw] h-[100vh] bg-black text-white">
 					<Navbar />
-					<div className="w-[1px] bg-gray-300 bg-opacity-10"></div> {/* This is a line. */}
+					<div className="w-[1px] bg-gray-300 bg-opacity-20"></div> {/* This is a line. */}
 					{children}
 				</body>
 			</html>

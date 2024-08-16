@@ -9,7 +9,7 @@ interface UserConversationMessageProps {
 const UserConversationMessage: React.FC<UserConversationMessageProps> = ({ iconUrl, senderName, content }) => {
 	return (
 		<div className="flex flex-row ml-auto gap-3">
-			<div className="flex flex-col gap-2">
+			<div className="flex flex-col gap-1">
 				<div className="ml-auto">
 					<p className="font-medium">{senderName}</p>
 				</div>

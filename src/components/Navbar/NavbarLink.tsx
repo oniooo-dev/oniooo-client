@@ -13,7 +13,7 @@ const NavbarLink: React.FC<NavbarLinkProps> = ({ href, iconUrl, selectedPage, on
 		<Link href={href}>
 			<div
 				className={`flex w-12 h-12 items-center justify-center
-							rounded-lg bg-white ${selectedPage === href ? `bg-opacity-10` : `bg-opacity-0`} duration-500 hover:bg-opacity-10`}
+							rounded-lg bg-white ${selectedPage === href ? `bg-opacity-15` : `bg-opacity-0`} duration-300 hover:bg-opacity-10`}
 				onClick={onSelect}
 			>
 				<img src={iconUrl} className="w-8 h-8" />

@@ -10,6 +10,12 @@ export interface SavedAIModel {
 	iconUrl: string;
 }
 
+export interface AIModel {
+	id: string;
+	modelName: string;
+	iconUrl: string;
+}
+
 export interface Conversation {
 	id: string;
 	title: string;

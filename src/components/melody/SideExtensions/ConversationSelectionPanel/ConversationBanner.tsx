@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import ConversationTools from "./ConversationTools";
 import { RootState } from "@/store/store";
@@ -58,18 +58,20 @@ const ConversationBanner: React.FC<ConversationBannerProps> = ({ conversationId,
 					</div>
 				)}
 			</div>
-			{isOptionsOpen && (
-				<motion.div
-					className="absolute right-[-105px] flex flex-row"
-					initial={{ opacity: 0, x: -20 }}
-					animate={{ opacity: 1, x: 0 }}
-					exit={{ opacity: 0, x: -20 }}
-					transition={{ duration: 0.3 }}
-				>
-					<div className="px-2"></div>
-					<ConversationTools />
-				</motion.div>
-			)}
+			<AnimatePresence>
+                {isOptionsOpen && (
+                    <motion.div
+                        className="absolute right-[-105px] flex flex-row"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        <div className="px-2"></div>
+                        <ConversationTools />
+                    </motion.div>
+                )}
+            </AnimatePresence>
 		</div>
 	);
 };

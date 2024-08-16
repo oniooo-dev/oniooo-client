@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Conversation, ConversationMessage, SavedAIModel } from "@/lib/types";
+import { AIModel, Conversation, ConversationMessage, SavedAIModel } from "@/lib/types";
 import {
 	fetchSavedAIModels,
 	fetchConversationHistory,
@@ -15,6 +15,7 @@ interface MelodyState {
 	error: string | null;
 	savedModels: SavedAIModel[];
 	selectedModelId: string;
+	currentSelectedModel: AIModel | null;
 	conversationHistory: Conversation[];
 	selectedConversationId: string;
 	currentConversationMessages: ConversationMessage[];
@@ -25,6 +26,7 @@ const initialState: MelodyState = {
 	error: null,
 	savedModels: [],
 	selectedModelId: "",
+	currentSelectedModel: null,
 	conversationHistory: [],
 	selectedConversationId: "",
 	currentConversationMessages: [],
@@ -36,6 +38,7 @@ export const melodySlice = createSlice({
 	reducers: {
 		selectModelById(state, action: PayloadAction<string>) {
 			state.selectedModelId = action.payload;
+			state.currentSelectedModel = state.savedModels.find((model) => model.id === action.payload) || null;
 		},
 		selectConversationById(state, action: PayloadAction<string>) {
 			state.selectedConversationId = action.payload;

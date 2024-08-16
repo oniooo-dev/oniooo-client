@@ -21,7 +21,7 @@ const ExtensionSwitch: React.FC<ExtensionSwitchProps> = ({ onSelect, selectedExt
 				</div>
 			</div>
 			<div>
-				<p className="text-opacity-50">|</p>
+				<p className="text-white text-opacity-40">|</p>
 			</div>
 			<div onClick={() => onSelect(AvailableExtensions.HistorySelection)}>
 				<div className="rounded-lg cursor-pointer">
