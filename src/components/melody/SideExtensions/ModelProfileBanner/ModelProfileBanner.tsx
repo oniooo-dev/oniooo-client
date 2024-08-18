@@ -6,13 +6,13 @@ const ModelProfileBanner = () => {
 	const currentSelectedModel = useSelector((state: RootState) => state.melody.currentSelectedModel);
 	return (
 		<div className="flex flex-row items-center justify-between px-[16px] py-[24px]">
-			<div className="flex flex-row items-center gap-4">
-				<div className="w-12 h-12 bg-white rounded-full">
+			<div className="flex flex-row items-center gap-2">
+				<div className="w-10 h-10 bg-white rounded-full">
 					<img src="/icons/melody/melody-pfp.png" className="w-full h-full rounded-full" />
 				</div>
 				<div className="flex flex-col h-full">
-					<p className="text-white">{currentSelectedModel?.modelName}</p>
-					<p className="text-xs text-white text-opacity-80">By Oniooo</p>
+					<p className="text-white text-nowrap">{currentSelectedModel?.modelName}</p>
+					<p className="text-xs text-white text-opacity-80 text-nowrap">By Oniooo</p>
 				</div>
 			</div>
 			<div className="p-2 cursor-pointer rounded-full bg-white bg-opacity-0 hover:bg-opacity-20">

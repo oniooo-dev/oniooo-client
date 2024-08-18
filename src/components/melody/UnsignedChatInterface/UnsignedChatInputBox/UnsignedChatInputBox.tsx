@@ -4,7 +4,7 @@ import FileUploadList from "./FileUploadList";
 import SendButton from "./SendButton";
 import VoiceButton from "./VoiceButton";
 
-const ChatInputBox = () => {
+const UnsignedChatInputBox = () => {
 	return (
 		<div className="flex flex-row w-full gap-2">
 			<div className="flex flex-col w-full px-4 rounded-[10px] bg-white bg-opacity-15">
@@ -37,4 +37,4 @@ const ChatInputBox = () => {
 	);
 };
 
-export default ChatInputBox;
+export default UnsignedChatInputBox;

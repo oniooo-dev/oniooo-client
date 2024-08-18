@@ -1,20 +1,20 @@
 import React from "react";
-import ChatHeader from "./ChatHeader";
-import ChatInputBox from "./ChatInputBox/ChatInputBox";
+import UnsignedChatHeader from "./UnsignedChatHeader";
+import UnsignedChatInputBox from "./UnsignedChatInputBox/UnsignedChatInputBox";
 import MessageList from "../other/MessageList";
 
-const ChatInterface = () => {
+const UnsignedChatInterface = () => {
 	return (
 		<div className="flex flex-col w-full h-full items-center">
 			<div className="flex flex-col w-[60%] h-full">
-				<ChatHeader />
+				<UnsignedChatHeader />
 				<MessageList />
 				<div className="w-[100%] mb-9">
-					<ChatInputBox />
+					<UnsignedChatInputBox />
 				</div>
 			</div>
 		</div>
 	);
 };
 
-export default ChatInterface;
+export default UnsignedChatInterface;

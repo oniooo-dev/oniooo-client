@@ -21,7 +21,7 @@ const FileUploadItem = () => {
 		>
 			<div className="w-8 h-8 rounded-lg bg-red-400"></div>
 			<div className="flex flex-col justify-center">
-				<p className="text-white text-xs text-nowrap">File Name</p>
+				<p className="text-white text-sm text-nowrap">File Name</p>
 				<p className="text-white text-opacity-80 text-xs text-nowrap">File Size</p>
 			</div>
 			{isHovered && (
