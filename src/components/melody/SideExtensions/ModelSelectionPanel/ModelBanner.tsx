@@ -59,7 +59,7 @@ const ModelBanner: React.FC<ModelBannerProps> = ({ modelId, iconUrl, modelName, 
 				{isOptionsOpen && (
 					<motion.div
 						ref={modelToolsRef}
-						className="absolute right-[-105px] flex flex-row"
+						className="absolute right-[-60px] flex flex-row"
 						initial={{ opacity: 0, x: -20 }}
 						animate={{ opacity: 1, x: 0 }}
 						exit={{ opacity: 0, x: -20 }}
