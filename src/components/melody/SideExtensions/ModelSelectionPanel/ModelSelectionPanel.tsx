@@ -1,4 +1,3 @@
-import { selectModelById } from "@/store/features/melody/melodySlice";
 import { fetchSavedAIModels } from "@/store/features/melody/melodyThunks";
 import { useAppDispatch } from "@/store/hooks";
 import { RootState } from "@/store/store";
@@ -10,24 +9,15 @@ const ModelSelectionPanel = () => {
 	const dispatch = useAppDispatch();
 	const savedModels = useSelector((state: RootState) => state.melody.savedModels);
 
-	const handleSelectModel = (modelId: string) => {
-		dispatch(selectModelById(modelId));
-	};
-
 	useEffect(() => {
 		dispatch(fetchSavedAIModels());
 	}, [dispatch]);
 
 	return (
-		<div className="flex flex-col gap-1">
+		<div className="flex flex-col gap-2">
 			{savedModels.map((model, index) => (
 				<div key={index}>
-					<ModelBanner
-						modelId={model.id}
-						iconUrl={model.iconUrl}
-						modelName={model.modelName}
-						onClick={handleSelectModel}
-					/>
+					<ModelBanner modelId={model.id} iconUrl={model.iconUrl} modelName={model.modelName} />
 				</div>
 			))}
 		</div>

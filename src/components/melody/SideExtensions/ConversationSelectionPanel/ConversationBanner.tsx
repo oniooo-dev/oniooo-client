@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ConversationTools from "./ConversationTools";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
@@ -17,36 +17,50 @@ const ConversationBanner: React.FC<ConversationBannerProps> = ({ conversationId,
 	const selectedConversationId = useSelector((state: RootState) => state.melody.selectedConversationId);
 	const [isHovered, setIsHovered] = useState(false);
 	const [isOptionsOpen, setIsOptionsOpen] = useState(false);
+	const conversationBannerRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		dispatch(fetchMessagesByConversationId({ conversationId: conversationId }));
 	}, [dispatch]);
-
-	const handleOpenOptions = () => {
-		setIsOptionsOpen(!isOptionsOpen);
-	};
-
-	const handleMouseLeave = () => {
-		setIsHovered(false);
-		setIsOptionsOpen(false);
-	};
 
 	const handleMouseClick = () => {
 		console.log("Selected conversation id: ", conversationId);
 		dispatch(selectConversationById(conversationId));
 	};
 
+	const handleOpenOptions = (event: React.MouseEvent<HTMLDivElement>) => {
+		event.stopPropagation();
+		setIsOptionsOpen((prev) => !prev);
+	};
+
+	const handleMouseLeave = () => {
+		setIsHovered(false);
+	};
+
+	const handleClickOutside = (event: MouseEvent) => {
+		if (conversationBannerRef.current && !conversationBannerRef.current.contains(event.target as Node)) {
+			setIsOptionsOpen(false);
+		}
+	};
+
+	useEffect(() => {
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, [conversationBannerRef]);
+
 	return (
-		<div
-			className="relative flex flex-row"
-			onMouseEnter={() => setIsHovered(true)}
-			onMouseLeave={handleMouseLeave}
-			onClick={handleMouseClick}
-		>
+		<div ref={conversationBannerRef} className="relative flex flex-row">
 			<div
+				// When the conversation is selected, the background color of the banner is opacity 20
+				// When the options menu is opened, the background color of the banner is opacity 10
 				className={`flex flex-row items-center justify-between w-full h-10 px-3 bg-opacity-20 rounded-[10px] cursor-pointer 
-							${selectedConversationId === conversationId ? "bg-white hover:bg-opacity-20" : "hover:bg-white hover:bg-opacity-10"} 
+							${isOptionsOpen ? "bg-white bg-opacity-5" : `${selectedConversationId === conversationId ? "bg-white hover:bg-opacity-20" : "hover:bg-white hover:bg-opacity-10"}`} 
 							duration-300`}
+				onMouseEnter={() => setIsHovered(true)}
+				onMouseLeave={handleMouseLeave}
+				onClick={handleMouseClick}
 			>
 				<p>{title}</p>
 				{isHovered && (
@@ -59,19 +73,19 @@ const ConversationBanner: React.FC<ConversationBannerProps> = ({ conversationId,
 				)}
 			</div>
 			<AnimatePresence>
-                {isOptionsOpen && (
-                    <motion.div
-                        className="absolute right-[-105px] flex flex-row"
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
-                        transition={{ duration: 0.3 }}
-                    >
-                        <div className="px-2"></div>
-                        <ConversationTools />
-                    </motion.div>
-                )}
-            </AnimatePresence>
+				{isOptionsOpen && (
+					<motion.div
+						className="absolute right-[-105px] flex flex-row"
+						initial={{ opacity: 0, x: -20 }}
+						animate={{ opacity: 1, x: 0 }}
+						exit={{ opacity: 0, x: -20 }}
+						transition={{ duration: 0.3 }}
+					>
+						<div className="px-2"></div>
+						<ConversationTools />
+					</motion.div>
+				)}
+			</AnimatePresence>
 		</div>
 	);
 };

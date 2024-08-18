@@ -10,37 +10,51 @@ interface ModelBannerProps {
 	modelId: string;
 	iconUrl?: string;
 	modelName: string;
-	onClick: (modelId: string) => void;
 }
 
-const ModelBanner: React.FC<ModelBannerProps> = ({ modelId, iconUrl, modelName, onClick }) => {
+const ModelBanner: React.FC<ModelBannerProps> = ({ modelId, iconUrl, modelName }) => {
 	const dispatch = useAppDispatch();
 	const selectedModelId = useSelector((state: RootState) => state.melody.selectedModelId);
 	const [isHovered, setIsHovered] = useState(false);
 	const [isOptionsOpen, setIsOptionsOpen] = useState(false);
 	const modelToolsRef = useRef<HTMLDivElement>(null);
 
-	const handleOpenOptions = () => {
-		setIsOptionsOpen(!isOptionsOpen);
+	const handleMouseClick = () => {
+		console.log("Selected conversation id: ", modelId);
+		dispatch(selectModelById(modelId));
+	};
+
+	const handleOpenOptions = (event: React.MouseEvent<HTMLDivElement>) => {
+		event.stopPropagation();
+		setIsOptionsOpen((prev) => !prev);
 	};
 
 	const handleMouseLeave = () => {
 		setIsHovered(false);
-		setIsOptionsOpen(false);
 	};
 
-	const handleMouseClick = () => {
-		console.log("Selected model id: ", modelId);
-		dispatch(selectModelById(modelId));
+	const handleClickOutside = (event: MouseEvent) => {
+		if (modelToolsRef.current && !modelToolsRef.current.contains(event.target as Node)) {
+			setIsOptionsOpen(false);
+		}
 	};
+
+	useEffect(() => {
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, [modelToolsRef]);
 
 	return (
-		<div className="relative flex flex-row" onMouseEnter={() => setIsHovered(true)} onMouseLeave={handleMouseLeave}>
+		<div ref={modelToolsRef} className="relative flex flex-row">
 			<div
 				className={`flex flex-row items-center justify-between w-full h-10 px-3 bg-opacity-20 rounded-[10px] cursor-pointer 
-							${selectedModelId === modelId ? "bg-white hover:bg-opacity-20" : "hover:bg-white hover:bg-opacity-10"} 
-							duration-300`}
+					${isOptionsOpen ? "bg-white bg-opacity-5" : `${selectedModelId === modelId ? "bg-white hover:bg-opacity-20" : "hover:bg-white hover:bg-opacity-10"}`} 
+					duration-300`}
 				onClick={handleMouseClick}
+				onMouseEnter={() => setIsHovered(true)}
+				onMouseLeave={handleMouseLeave}
 			>
 				<div className="flex flex-row gap-2 items-center">
 					<img src={iconUrl} className="w-8 h-8 rounded-full" />
@@ -58,8 +72,7 @@ const ModelBanner: React.FC<ModelBannerProps> = ({ modelId, iconUrl, modelName, 
 			<AnimatePresence>
 				{isOptionsOpen && (
 					<motion.div
-						ref={modelToolsRef}
-						className="absolute right-[-60px] flex flex-row"
+						className="absolute right-[-56px] flex flex-row"
 						initial={{ opacity: 0, x: -20 }}
 						animate={{ opacity: 1, x: 0 }}
 						exit={{ opacity: 0, x: -20 }}

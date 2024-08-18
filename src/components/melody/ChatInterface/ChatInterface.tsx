@@ -1,6 +1,6 @@
 import React from "react";
 import ChatHeader from "./ChatHeader";
-import ChatInputBox from "./ChatInputBox";
+import ChatInputBox from "./ChatInputBox/ChatInputBox";
 import MessageList from "../other/MessageList";
 
 const ChatInterface = () => {
@@ -9,7 +9,7 @@ const ChatInterface = () => {
 			<div className="flex flex-col w-[60%] h-full">
 				<ChatHeader />
 				<MessageList />
-				<div className="mb-[36px]">
+				<div className="mb-9">
 					<ChatInputBox />
 				</div>
 			</div>
