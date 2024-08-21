@@ -4,31 +4,30 @@ import ConversationTools from "./ConversationTools";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "@/store/hooks";
-import { fetchMessagesByConversationId } from "@/store/features/melody/melodyThunks";
+import { fetchMessagesByConversationId, fetchModelBasicDetails } from "@/store/features/melody/melodyThunks";
 import { selectConversationById } from "@/store/features/melody/melodySlice";
 
 interface ConversationBannerProps {
 	conversationId: string;
+	modelId: string;
 	title: string;
 }
 
-const ConversationBanner: React.FC<ConversationBannerProps> = ({ conversationId, title }) => {
+const ConversationBanner: React.FC<ConversationBannerProps> = ({ conversationId, modelId, title }) => {
 	const dispatch = useAppDispatch();
 	const selectedConversationId = useSelector((state: RootState) => state.melody.selectedConversationId);
 	const [isHovered, setIsHovered] = useState(false);
 	const [isOptionsOpen, setIsOptionsOpen] = useState(false);
 	const conversationBannerRef = useRef<HTMLDivElement>(null);
 
-	useEffect(() => {
-		dispatch(fetchMessagesByConversationId({ conversationId: conversationId }));
-	}, [dispatch]);
-
 	const handleMouseClick = () => {
 		console.log("Selected conversation id: ", conversationId);
 		dispatch(selectConversationById(conversationId));
+		dispatch(fetchModelBasicDetails({ modelId: modelId }));
+		dispatch(fetchMessagesByConversationId({ conversationId: conversationId }));
 	};
 
-	const handleOpenOptions = (event: React.MouseEvent<HTMLDivElement>) => {
+	const handleOptionsClick = (event: React.MouseEvent<HTMLDivElement>) => {
 		event.stopPropagation();
 		setIsOptionsOpen((prev) => !prev);
 	};
@@ -51,22 +50,24 @@ const ConversationBanner: React.FC<ConversationBannerProps> = ({ conversationId,
 	}, [conversationBannerRef]);
 
 	return (
-		<div ref={conversationBannerRef} className="relative flex flex-row">
+		<div ref={conversationBannerRef} className="relative flex flex-row w-full">
 			<div
 				// When the conversation is selected, the background color of the banner is opacity 20
 				// When the options menu is opened, the background color of the banner is opacity 10
-				className={`flex flex-row items-center justify-between w-full h-10 px-3 bg-opacity-20 rounded-[10px] cursor-pointer 
+				className={`flex flex-row items-center justify-between w-full h-10 px-3 bg-opacity-20 rounded-[10px] cursor-pointer
 							${isOptionsOpen ? "bg-white bg-opacity-5" : `${selectedConversationId === conversationId ? "bg-white hover:bg-opacity-20" : "hover:bg-white hover:bg-opacity-10"}`} 
 							duration-300`}
 				onMouseEnter={() => setIsHovered(true)}
 				onMouseLeave={handleMouseLeave}
 				onClick={handleMouseClick}
 			>
-				<p>{title}</p>
+				<div className="banner-container">
+					<p>{title}</p>
+				</div>
 				{isHovered && (
 					<div
 						className="p-2 rounded-full bg-white bg-opacity-0 hover:bg-opacity-10 opacity-50 hover:opacity-100 duration-500"
-						onClick={handleOpenOptions}
+						onClick={handleOptionsClick}
 					>
 						<img src="/icons/melody/bars-sort.png" alt="options icon" className="w-3 h-3" />
 					</div>

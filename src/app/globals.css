@@ -27,3 +27,12 @@ body {
 	margin: 8px 0; /* Optional: Add some margin for spacing */
 	opacity: 0.2; /* Optional: Adjust the opacity */
 }
+
+.banner-container {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	width: 180px; /* Adjust as needed */
+	mask-image: linear-gradient(to right, rgba(0, 0, 0, 1) 85%, rgba(0, 0, 0, 0));
+	-webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 1) 85%, rgba(0, 0, 0, 0)); /* For Safari */
+}

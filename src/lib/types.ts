@@ -4,20 +4,27 @@ export interface User {
 	email: string;
 }
 
-export interface SavedAIModel {
-	id: string;
-	modelName: string;
-	iconUrl: string;
+export interface UserOwnedModels {
+	ai_model: {
+		model_id: string;
+		name: string;
+		icon_url: string;
+		short_description: string;
+	};
 }
 
 export interface AIModel {
-	id: string;
-	modelName: string;
-	iconUrl: string;
+	ai_model: {
+		model_id: string;
+		name: string;
+		icon_url: string;
+		short_description: string;
+	};
 }
 
 export interface Conversation {
-	id: string;
+	conversation_id: string;
+	model_id: string;
 	title: string;
 }
 

@@ -11,7 +11,7 @@ const ConversationTools = () => {
 			</div>
 			<div
 				className="flex items-center justify-center w-10 h-10 cursor-pointer 
-							rounded-lg bg-white bg-opacity-10 hover:bg-opacity-20"
+							rounded-lg bg-red-400 bg-opacity-20 hover:bg-opacity-40"
 			>
 				<img src="/icons/melody/trash.png" className="w-[18px] h-[18px]" />
 			</div>

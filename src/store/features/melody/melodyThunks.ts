@@ -1,19 +1,66 @@
-import { Conversation, ConversationMessage, SavedAIModel } from "@/lib/types";
+import { AIModel, Conversation, ConversationMessage, UserOwnedModels } from "@/lib/types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+const baseUrl = "http://localhost:8080/api/v1";
+
 const api = axios.create({
-	baseURL: "http://localhost:8080/api/v1/melody",
+	baseURL: `${baseUrl}/melody`,
 });
 
+export const fetchModelBasicDetails = createAsyncThunk<AIModel, { modelId: string | undefined }, { rejectValue: Error }>(
+	"melody/fetchModelBasicDetails",
+	async (params: { modelId: string | undefined }, { rejectWithValue }) => {
+		try {
+			if (!params.modelId) {
+				return rejectWithValue(new Error("Model ID is required"));
+			}
+			console.log("Fetching model basic details...");
+			console.log("Model ID: ", params.modelId);
+			const response = await axios.get(`${baseUrl}/ais/${params.modelId}/basics`);
+			console.log("Fetched model basic details: ", response.data.ai_model);
+			return response.data;
+		} catch (error: any) {
+			if (error.response && error.response.data) {
+				// Assuming the backend sends { message: string } in the response body
+				return rejectWithValue({ message: error.response.data.message, name: "MelodyError" });
+			} else {
+				return rejectWithValue({ message: "Internal Server Error", name: "MelodyError" });
+			}
+		}
+	},
+);
+
+// should return an array of messages
+export const createConversation = createAsyncThunk<void, { modelId: string; firstPrompt: string }, { rejectValue: MelodyError }>(
+	"melody/createConversation",
+	async (params: { modelId: string; firstPrompt: string }, { rejectWithValue }) => {
+		try {
+			const requestData: { modelId: string; firstPrompt: string } = {
+				modelId: params.modelId,
+				firstPrompt: params.firstPrompt,
+			};
+			const response = await api.post(`/melody/conversations`, requestData);
+			return response.data;
+		} catch (error: any) {
+			if (error.response && error.response.data) {
+				// Assuming the backend sends { message: string } in the response body
+				return rejectWithValue({ message: error.response.data.message, name: "MelodyError" });
+			} else {
+				return rejectWithValue({ message: "Internal Server Error", name: "MelodyError" });
+			}
+		}
+	},
+);
+
 // should return an array of AI models
-export const fetchSavedAIModels = createAsyncThunk<SavedAIModel[], void, { rejectValue: Error }>(
-	"melody/fetchSavedModels",
+export const fetchUserModelOwnerships = createAsyncThunk<UserOwnedModels[], void, { rejectValue: Error }>(
+	"melody/fetchUserModelOwnerships",
 	async (_, { rejectWithValue }) => {
 		try {
 			const response = await api.get("/models/saved");
 			console.log(response.data.message);
-			return response.data.savedModels;
+			return response.data.userOwnedModels;
 		} catch (error: any) {
 			if (error.response && error.response.data) {
 				// Assuming the backend sends { message: string } in the response body
@@ -26,8 +73,8 @@ export const fetchSavedAIModels = createAsyncThunk<SavedAIModel[], void, { rejec
 );
 
 // should return an array of conversations
-export const fetchConversationHistory = createAsyncThunk<Conversation[], void, { rejectValue: MelodyError }>(
-	"melody/fetchConversationHistory",
+export const fetchUserConversations = createAsyncThunk<Conversation[], void, { rejectValue: MelodyError }>(
+	"melody/fetchUserConversations",
 	async (_, { rejectWithValue }) => {
 		try {
 			// No request data
@@ -45,32 +92,11 @@ export const fetchConversationHistory = createAsyncThunk<Conversation[], void, {
 	},
 );
 
-// should return an array of messages
-export const createConversation = createAsyncThunk<void, { firstPrompt: string }, { rejectValue: MelodyError }>(
-	"melody/createConversation",
-	async (params: { firstPrompt: string }, { rejectWithValue }) => {
-		try {
-			const requestData: { firstPrompt: string } = {
-				firstPrompt: params.firstPrompt,
-			};
-			const response = await api.post(`/conversations`, requestData);
-			return response.data;
-		} catch (error: any) {
-			if (error.response && error.response.data) {
-				// Assuming the backend sends { message: string } in the response body
-				return rejectWithValue({ message: error.response.data.message, name: "MelodyError" });
-			} else {
-				return rejectWithValue({ message: "Internal Server Error", name: "MelodyError" });
-			}
-		}
-	},
-);
+// ...
+// ...
+// ...
 
-export const createConversationMessage = createAsyncThunk<
-	void,
-	{ conversationId: string; prompt: string },
-	{ rejectValue: MelodyError }
->(
+export const createConversationMessage = createAsyncThunk<void, { conversationId: string; prompt: string }, { rejectValue: MelodyError }>(
 	"melody/createConversationMessage",
 	async (params: { conversationId: string; prompt: string }, { rejectWithValue }) => {
 		try {
@@ -90,30 +116,27 @@ export const createConversationMessage = createAsyncThunk<
 	},
 );
 
-export const fetchMessagesByConversationId = createAsyncThunk<
-	ConversationMessage[],
-	{ conversationId: string },
-	{ rejectValue: MelodyError }
->("melody/fetchMessagesByConversationId", async (params: { conversationId: string }, { rejectWithValue }) => {
-	try {
-		// No request data
-		const response = await api.get(`/conversations/${params.conversationId}/messages`);
-		return response.data.conversationMessages; // should return an array of messages
-	} catch (error: any) {
-		if (error.response && error.response.data) {
-			// Assuming the backend sends { message: string } in the response body
-			return rejectWithValue({ message: error.response.data.message, name: "MelodyError" });
-		} else {
-			return rejectWithValue({ message: "Internal Server Error", name: "MelodyError" });
-		}
-	}
-});
+export const fetchMessagesByConversationId = createAsyncThunk<ConversationMessage[], { conversationId: string }, { rejectValue: MelodyError }>(
+	"melody/fetchMessagesByConversationId",
+	async (params: { conversationId: string }, { rejectWithValue }) => {
+		try {
+			console.log("Fetching messages by conversation id...");
 
-export const updateConversationTitle = createAsyncThunk<
-	void,
-	{ conversationId: string; newTitle: string },
-	{ rejectValue: MelodyError }
->(
+			// No request data
+			const response = await api.get(`/conversations/${params.conversationId}/messages`);
+			return response.data.conversationMessages; // should return an array of messages
+		} catch (error: any) {
+			if (error.response && error.response.data) {
+				// Assuming the backend sends { message: string } in the response body
+				return rejectWithValue({ message: error.response.data.message, name: "MelodyError" });
+			} else {
+				return rejectWithValue({ message: "Internal Server Error", name: "MelodyError" });
+			}
+		}
+	},
+);
+
+export const updateConversationTitle = createAsyncThunk<void, { conversationId: string; newTitle: string }, { rejectValue: MelodyError }>(
 	"melody/updateConversationTitle",
 	async (params: { conversationId: string; newTitle: string }, { rejectWithValue }) => {
 		try {

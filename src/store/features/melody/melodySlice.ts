@@ -1,19 +1,21 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AIModel, Conversation, ConversationMessage, SavedAIModel } from "@/lib/types";
+import { AIModel, Conversation, ConversationMessage, UserOwnedModels } from "@/lib/types";
 import {
-	fetchSavedAIModels,
-	fetchConversationHistory,
+	fetchUserModelOwnerships,
+	fetchUserConversations,
 	fetchMessagesByConversationId,
 	createConversation,
 	createConversationMessage,
 	updateConversationTitle,
 	deleteConversation,
+	fetchModelBasicDetails,
 } from "./melodyThunks";
 
 interface MelodyState {
+	chatState: "idle" | "new" | "existing";
 	loading: boolean;
 	error: string | null;
-	savedModels: SavedAIModel[];
+	savedModels: UserOwnedModels[];
 	selectedModelId: string;
 	currentSelectedModel: AIModel | null;
 	conversationHistory: Conversation[];
@@ -22,6 +24,7 @@ interface MelodyState {
 }
 
 const initialState: MelodyState = {
+	chatState: "idle",
 	loading: false,
 	error: null,
 	savedModels: [],
@@ -37,58 +40,48 @@ export const melodySlice = createSlice({
 	initialState,
 	reducers: {
 		selectModelById(state, action: PayloadAction<string>) {
-			state.selectedModelId = action.payload;
-			state.currentSelectedModel = state.savedModels.find((model) => model.id === action.payload) || null;
+			state.loading = true;
+			state.chatState = "new";
+
+			const newModelId = action.payload;
+
+			state.selectedModelId = newModelId;
+			state.currentSelectedModel = state.savedModels.find((model) => model.ai_model.model_id === newModelId) || null;
+
+			// Reset the selected conversation id
+			state.selectedConversationId = "";
+			state.currentConversationMessages = [];
+			state.loading = false;
 		},
 		selectConversationById(state, action: PayloadAction<string>) {
-			state.selectedConversationId = action.payload;
-			fetchMessagesByConversationId({ conversationId: action.payload });
+			state.loading = true;
+			state.chatState = "existing";
+
+			const newConversationId = action.payload;
+
+			// Select conversation's model id
+			const newSelectedModelId = state.conversationHistory.find((conversation) => conversation.conversation_id === newConversationId)?.model_id || "";
+			console.log("Selected model id: ", newSelectedModelId);
+			state.selectedModelId = newSelectedModelId;
+			state.selectedConversationId = newConversationId;
+			// state.currentSelectedModel = null;
+			state.loading = false;
 		},
 	},
 	extraReducers: (builder) => {
 		builder
-			.addCase(fetchSavedAIModels.pending, (state) => {
+			.addCase(fetchModelBasicDetails.pending, (state) => {
 				state.loading = true;
 			})
-			.addCase(fetchSavedAIModels.fulfilled, (state, action: PayloadAction<SavedAIModel[]>) => {
+			.addCase(fetchModelBasicDetails.fulfilled, (state, action: PayloadAction<AIModel>) => {
 				state.loading = false;
+				state.currentSelectedModel = action.payload;
 				state.error = null;
-				state.savedModels = action.payload;
 			})
-			.addCase(fetchSavedAIModels.rejected, (state, action: PayloadAction<MelodyError | undefined>) => {
+			.addCase(fetchModelBasicDetails.rejected, (state, action: PayloadAction<MelodyError | undefined>) => {
 				state.loading = false;
 				state.error = action.payload ? action.payload.message : "Unknown server error";
-				state.savedModels = [];
 			})
-			.addCase(fetchConversationHistory.pending, (state) => {
-				state.loading = true;
-			})
-			.addCase(fetchConversationHistory.fulfilled, (state, action: PayloadAction<Conversation[]>) => {
-				state.loading = false;
-				state.error = null;
-				state.conversationHistory = action.payload;
-			})
-			.addCase(fetchConversationHistory.rejected, (state, action: PayloadAction<MelodyError | undefined>) => {
-				state.loading = false;
-				state.error = action.payload ? action.payload.message : "Unknown server error";
-				state.conversationHistory = [];
-			})
-			.addCase(fetchMessagesByConversationId.pending, (state) => {
-				state.loading = true;
-			})
-			.addCase(fetchMessagesByConversationId.fulfilled, (state, action: PayloadAction<ConversationMessage[]>) => {
-				state.loading = false;
-				state.error = null;
-				state.currentConversationMessages = action.payload;
-			})
-			.addCase(
-				fetchMessagesByConversationId.rejected,
-				(state, action: PayloadAction<MelodyError | undefined>) => {
-					state.loading = false;
-					state.error = action.payload ? action.payload.message : "Unknown server error";
-					state.currentConversationMessages = [];
-				},
-			)
 			.addCase(createConversation.pending, (state) => {
 				state.loading = true;
 			})
@@ -110,6 +103,45 @@ export const melodySlice = createSlice({
 			.addCase(createConversationMessage.rejected, (state, action: PayloadAction<MelodyError | undefined>) => {
 				state.loading = false;
 				state.error = action.payload ? action.payload.message : "Unknown server error";
+			})
+			.addCase(fetchUserModelOwnerships.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(fetchUserModelOwnerships.fulfilled, (state, action: PayloadAction<UserOwnedModels[]>) => {
+				state.loading = false;
+				state.error = null;
+				state.savedModels = action.payload;
+			})
+			.addCase(fetchUserModelOwnerships.rejected, (state, action: PayloadAction<MelodyError | undefined>) => {
+				state.loading = false;
+				state.error = action.payload ? action.payload.message : "Unknown server error";
+				state.savedModels = [];
+			})
+			.addCase(fetchUserConversations.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(fetchUserConversations.fulfilled, (state, action: PayloadAction<Conversation[]>) => {
+				state.loading = false;
+				state.error = null;
+				state.conversationHistory = action.payload;
+			})
+			.addCase(fetchUserConversations.rejected, (state, action: PayloadAction<MelodyError | undefined>) => {
+				state.loading = false;
+				state.error = action.payload ? action.payload.message : "Unknown server error";
+				state.conversationHistory = [];
+			})
+			.addCase(fetchMessagesByConversationId.pending, (state) => {
+				state.loading = true;
+			})
+			.addCase(fetchMessagesByConversationId.fulfilled, (state, action: PayloadAction<ConversationMessage[]>) => {
+				state.loading = false;
+				state.error = null;
+				state.currentConversationMessages = action.payload;
+			})
+			.addCase(fetchMessagesByConversationId.rejected, (state, action: PayloadAction<MelodyError | undefined>) => {
+				state.loading = false;
+				state.error = action.payload ? action.payload.message : "Unknown server error";
+				state.currentConversationMessages = [];
 			})
 			.addCase(updateConversationTitle.pending, (state) => {
 				state.loading = true;

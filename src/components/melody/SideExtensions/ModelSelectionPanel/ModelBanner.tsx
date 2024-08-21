@@ -56,7 +56,7 @@ const ModelBanner: React.FC<ModelBannerProps> = ({ modelId, iconUrl, modelName }
 				onMouseEnter={() => setIsHovered(true)}
 				onMouseLeave={handleMouseLeave}
 			>
-				<div className="flex flex-row gap-2 items-center">
+				<div className="banner-container flex flex-row gap-3 items-center">
 					<img src={iconUrl} className="w-8 h-8 rounded-full" />
 					<p>{modelName}</p>
 				</div>

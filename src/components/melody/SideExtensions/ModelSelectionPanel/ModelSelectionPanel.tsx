@@ -1,4 +1,4 @@
-import { fetchSavedAIModels } from "@/store/features/melody/melodyThunks";
+import { fetchUserModelOwnerships } from "@/store/features/melody/melodyThunks";
 import { useAppDispatch } from "@/store/hooks";
 import { RootState } from "@/store/store";
 import { useEffect } from "react";
@@ -7,17 +7,21 @@ import ModelBanner from "./ModelBanner";
 
 const ModelSelectionPanel = () => {
 	const dispatch = useAppDispatch();
-	const savedModels = useSelector((state: RootState) => state.melody.savedModels);
+	const userOwnedModels = useSelector((state: RootState) => state.melody.savedModels);
 
 	useEffect(() => {
-		dispatch(fetchSavedAIModels());
+		dispatch(fetchUserModelOwnerships());
 	}, [dispatch]);
 
 	return (
 		<div className="flex flex-col gap-2">
-			{savedModels.map((model, index) => (
+			{userOwnedModels.map((model, index) => (
 				<div key={index}>
-					<ModelBanner modelId={model.id} iconUrl={model.iconUrl} modelName={model.modelName} />
+					<ModelBanner
+						modelId={model.ai_model.model_id}
+						iconUrl={model.ai_model.icon_url}
+						modelName={model.ai_model.name}
+					/>
 				</div>
 			))}
 		</div>
