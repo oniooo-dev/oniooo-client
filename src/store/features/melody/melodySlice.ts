@@ -28,8 +28,8 @@ const initialState: MelodyState = {
 	loading: false,
 	error: null,
 	savedModels: [],
-	selectedModelId: "",
-	currentSelectedModel: null,
+	selectedModelId: "8cc878e1-2e2c-4c20-abed-b8951f94fddf",
+	currentSelectedModel: { ai_model: {model_id: '8cc878e1-2e2c-4c20-abed-b8951f94fddf', icon_url: 'https://static1.xdaimages.com/wordpress/wp-content/uploads/2024/02/google-gemini-ai-icon.png', name: 'Gemini', short_description: 'Always Online'} },
 	conversationHistory: [],
 	selectedConversationId: "",
 	currentConversationMessages: [],
@@ -60,9 +60,9 @@ export const melodySlice = createSlice({
 			const newConversationId = action.payload;
 
 			// Select conversation's model id
-			const newSelectedModelId = state.conversationHistory.find((conversation) => conversation.conversation_id === newConversationId)?.model_id || "";
-			console.log("Selected model id: ", newSelectedModelId);
-			state.selectedModelId = newSelectedModelId;
+			// const newSelectedModelId = state.conversationHistory.find((conversation) => conversation.conversation_id === newConversationId)?.model_id || "";
+			// console.log("Selected model id: ", newSelectedModelId);
+			state.selectedModelId = "";
 			state.selectedConversationId = newConversationId;
 			// state.currentSelectedModel = null;
 			state.loading = false;

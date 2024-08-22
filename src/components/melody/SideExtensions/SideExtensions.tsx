@@ -17,7 +17,7 @@ const SideExtensions = () => {
 	return (
 		<div className="flex flex-col w-[300px] px-2">
 			<ModelProfileBanner />
-			<div className="flex flex-col gap-2">
+			<div className="flex flex-col gap-1">
 				<div className="ml-3">
 					<ExtensionSwitch onSelect={handleSelectExtension} selectedExtension={selectedExtension} />
 				</div>

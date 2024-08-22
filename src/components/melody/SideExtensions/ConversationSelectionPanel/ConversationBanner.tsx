@@ -4,7 +4,6 @@ import ConversationTools from "./ConversationTools";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "@/store/hooks";
-import { fetchMessagesByConversationId, fetchModelBasicDetails } from "@/store/features/melody/melodyThunks";
 import { selectConversationById } from "@/store/features/melody/melodySlice";
 
 interface ConversationBannerProps {
@@ -23,8 +22,6 @@ const ConversationBanner: React.FC<ConversationBannerProps> = ({ conversationId,
 	const handleMouseClick = () => {
 		console.log("Selected conversation id: ", conversationId);
 		dispatch(selectConversationById(conversationId));
-		dispatch(fetchModelBasicDetails({ modelId: modelId }));
-		dispatch(fetchMessagesByConversationId({ conversationId: conversationId }));
 	};
 
 	const handleOptionsClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -50,23 +47,25 @@ const ConversationBanner: React.FC<ConversationBannerProps> = ({ conversationId,
 	}, [conversationBannerRef]);
 
 	return (
-		<div ref={conversationBannerRef} className="relative flex flex-row w-full">
+		<div ref={conversationBannerRef} className="relative flex flex-row w-[260px]">
 			<div
 				// When the conversation is selected, the background color of the banner is opacity 20
 				// When the options menu is opened, the background color of the banner is opacity 10
-				className={`flex flex-row items-center justify-between w-full h-10 px-3 bg-opacity-20 rounded-[10px] cursor-pointer
-							${isOptionsOpen ? "bg-white bg-opacity-5" : `${selectedConversationId === conversationId ? "bg-white hover:bg-opacity-20" : "hover:bg-white hover:bg-opacity-10"}`} 
+				className={`relative flex flex-row items-center justify-between w-full h-10 px-3 bg-opacity-20 rounded-[10px] cursor-pointer
+							${isOptionsOpen ? "bg-white bg-opacity-[0.1]" : `${selectedConversationId === conversationId ? "bg-white hover:bg-opacity-[0.15]" : "hover:bg-white hover:bg-opacity-[0.15]"}`} 
 							duration-300`}
 				onMouseEnter={() => setIsHovered(true)}
 				onMouseLeave={handleMouseLeave}
 				onClick={handleMouseClick}
 			>
 				<div className="banner-container">
-					<p>{title}</p>
+					<div className="title-container">
+						<p className="scrolling-title">{title}</p>
+					</div>
 				</div>
 				{isHovered && (
 					<div
-						className="p-2 rounded-full bg-white bg-opacity-0 hover:bg-opacity-10 opacity-50 hover:opacity-100 duration-500"
+						className={`absolute right-2 p-2 rounded-full bg-white bg-opacity-0 hover:bg-opacity-20 opacity-60 hover:opacity-100 duration-500`}
 						onClick={handleOptionsClick}
 					>
 						<img src="/icons/melody/bars-sort.png" alt="options icon" className="w-3 h-3" />

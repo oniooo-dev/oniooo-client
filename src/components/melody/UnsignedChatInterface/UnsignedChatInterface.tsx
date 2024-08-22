@@ -7,7 +7,6 @@ const UnsignedChatInterface = () => {
 	return (
 		<div className="flex flex-col w-full h-full items-center">
 			<div className="flex flex-col w-[60%] h-full">
-				<UnsignedChatHeader />
 				<MessageList />
 				<div className="w-[100%] mb-9">
 					<UnsignedChatInputBox />

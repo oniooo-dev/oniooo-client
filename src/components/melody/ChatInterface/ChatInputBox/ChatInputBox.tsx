@@ -6,6 +6,7 @@ import VoiceButton from "./VoiceButton";
 
 const ChatInputBox = () => {
 	const [inputValue, setInputValue] = useState("");
+	
 
 	const [currentPrompt, setCurrentPrompt] = useState("");
 
@@ -68,7 +69,6 @@ const ChatInputBox = () => {
 			</div>
 			<div className="flex flex-row mt-auto gap-2">
 				<SendButton onClick={handleSend} />
-				<VoiceButton />
 			</div>
 		</div>
 	);

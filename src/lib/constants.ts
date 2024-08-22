@@ -1,6 +1,6 @@
 export const NAVBAR_LINKS = [
 	{
-		href: "/",
+		href: "/melody",
 		iconUrl: "/icons/melody/melody-chat.png",
 	},
 	{
