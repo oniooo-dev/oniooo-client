@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
-import ConversationMessage from "./ConversationMessage";
-import ChatHeader from "../ChatInterface/ChatHeader";
+import ConversationMessage from "../other/ConversationMessage";
+import ChatHeader from "./ChatHeader";
 import { useAppDispatch } from "@/store/hooks";
 import { fetchMessagesByConversationId } from "@/store/features/melody/melodyThunks";
 
@@ -12,9 +12,10 @@ const MessageList = () => {
 	const conversationId = useSelector((state: RootState) => state.melody.selectedConversationId);
 	const currentSelectedModel = useSelector((state: RootState) => state.melody.currentSelectedModel);
 
+	// Fetch messages by conversation ID automatically
 	useEffect(() => {
 		dispatch(fetchMessagesByConversationId({ conversationId: conversationId }));
-	}, [dispatch, conversationId])
+	}, [dispatch, conversationId]);
 
 	return (
 		<div className="flex flex-col w-full h-full gap-1 overflow-y-scroll hide-scrollbar">

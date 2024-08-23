@@ -1,13 +1,36 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import FileUploadIcon from "./FileUploadIcon";
 import FileUploadList from "./FileUploadList";
 import SendButton from "./SendButton";
 
-const ChatInputBox = () => {
-	const [inputValue, setInputValue] = useState("");
+interface ChatInputBoxProps {
+	files: File[];
+	onDragOver: (event: React.DragEvent<HTMLDivElement>) => void;
+	onDrop: (event: React.DragEvent<HTMLDivElement>) => void;
+	onFileDrop: (file: File) => void;
+	onRemove: (file: File) => void;
+}
+
+const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onDragOver, onDrop, onFileDrop, onRemove }) => {
+	const [currentPrompt, setCurrentPrompt] = useState("");
+	const [isDraggingOver, setIsDraggingOver] = useState(false);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-	const [currentPrompt, setCurrentPrompt] = useState("");
+	const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+		event.preventDefault(); // Prevent default behavior (Prevent file from being opened)
+		onDragOver(event);
+	};
+
+	const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+		event.preventDefault();
+		if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
+			onDrop(event);
+		}
+	};
+
+	const handleFileDrop = (file: File) => {
+		onFileDrop(file);
+	};
 
 	const handlePromptChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setCurrentPrompt(event.target.value);
@@ -26,72 +49,50 @@ const ChatInputBox = () => {
 	};
 
 	const adjustHeight = () => {
-        const textarea = textareaRef.current;
-        if (!textarea) return;
+		const textarea = textareaRef.current;
+		if (!textarea) return;
 
-        // Reset the height to ensure we can calculate the natural content height
-        textarea.style.height = 'auto';
+		const singleLineHeight = 24; // Height for one line of text
+		const defaultHeight = 60; // Minimum height when more text is added
+		const maxHeight = 500; // Maximum height when more text is added
 
-        // Determine if the content is a single line by checking the absence of line breaks
-        const isSingleLine = !textarea.value.includes('\n');
+		// Reset the height to default to accurately read scrollHeight
+		textarea.style.height = "auto";
+		const currentScrollHeight = textarea.scrollHeight;
 
-        if (isSingleLine) {
-            // Apply a fixed height for single line of text
-            textarea.style.height = '24px'; // Example: single line height
-        } else {
-            // Adjust height based on the content
-            textarea.style.height = `${Math.max(textarea.scrollHeight, 50)}px`; // Minimum height for multi-line content
-        }
-    };
-
-    // Adjust height on component mount and input changes
-    useEffect(() => {
-        adjustHeight();
-    }, []);
-
-	// const handleDragOver = (e) => {
-	//     e.preventDefault(); // Prevent default behavior (Prevent file from being opened)
-	//     e.stopPropagation();
-	//     e.dataTransfer.dropEffect = 'copy'; // Show drag-and-drop effect
-	// };
-
-	// const handleDrop = (e) => {
-	//     e.preventDefault();
-	//     e.stopPropagation();
-
-	//     const files = e.dataTransfer.files;
-	//     if (files.length) {
-	//         const fileNames = Array.from(files).map(file => file.name).join(', ');
-	//         setInputValue(fileNames);
-	//     }
-	// };
+		if (currentScrollHeight <= singleLineHeight) {
+			textarea.style.height = `${singleLineHeight}px`; // Set height for single line
+		} else {
+			textarea.style.height = `${Math.min(currentScrollHeight, maxHeight)}px`; // Adjust height based on content
+		}
+	};
 
 	return (
-		<div
-			className="flex flex-row w-full gap-2"
-			// onDragOver={handleDragOver}
-			// onDrop={handleDrop}
-		>
+		<div className="flex flex-row w-full gap-2" onDragOver={handleDragOver} onDrop={handleDrop}>
 			<div className="flex flex-col w-full px-4 rounded-[10px] bg-white bg-opacity-10">
-				{/* <div className="pt-2">
-					<FileUploadList />
-				</div>
-				<div className="line"></div> */}
+				{files && files.length > 0 && (
+					<div className="flex flex-col">
+						<div className="pt-2">
+							<FileUploadList files={files} onRemove={onRemove} />
+						</div>
+						{/* <div className="line"></div> */}
+					</div>
+				)}
 				<div className="flex flex-row w-full gap-2 py-1">
-					<div className="flex flex-row w-full gap-2">
-						<div className="mt-auto mb-[12px]">
-							<FileUploadIcon />
+					<div className={`flex flex-row w-full ${currentPrompt.split("\n").length > 1 ? "" : "h-10"} gap-2`}>
+						<div className="mt-auto mb-[10px]">
+							<FileUploadIcon onFileDrop={handleFileDrop} />
 						</div>
 						<textarea
-							className="w-full px-1 py-2 rounded-lg bg-transparent ring-0 focus:outline-none resize-none"
 							ref={textareaRef}
+							className="w-full px-1 py-2 rounded-lg bg-transparent ring-0 focus:outline-none resize-none"
 							placeholder="Message"
 							value={currentPrompt}
 							onChange={handlePromptChange}
 							onKeyDown={handleKeyDown}
 							maxLength={4096}
 						/>
-						<div className="mt-auto mb-[12px]">
+						<div className="mt-auto mb-[10px]" style={{ flexShrink: 0 }}>
 							<img src="/icons/melody/magic-card.png" className="w-5 h-5 cursor-pointer object-contain" alt="Enhance your prompt" />
 						</div>
 					</div>
