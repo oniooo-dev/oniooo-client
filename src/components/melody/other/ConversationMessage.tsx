@@ -11,7 +11,7 @@ interface ConversationMessageProps {
 
 const ConversationMessage: React.FC<ConversationMessageProps> = ({ iconUrl, senderType, senderName, content }) => {
 	return (
-		<div className="flex w-full p-4 rounded-lg bg-white bg-opacity-5 hover:bg-opacity-15 duration-500 cursor-pointer">
+		<div className="flex w-full p-3 rounded-lg">
 			{senderType === "user" ? (
 				<UserConversationMessage iconUrl={iconUrl} senderName={senderName} content={content} />
 			) : (

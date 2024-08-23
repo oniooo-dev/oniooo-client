@@ -8,16 +8,18 @@ interface UserConversationMessageProps {
 
 const UserConversationMessage: React.FC<UserConversationMessageProps> = ({ iconUrl, senderName, content }) => {
 	return (
-		<div className="flex flex-row gap-3 ml-auto w-[95%]">
-			<div className="flex flex-col gap-[6px]">
+		<div className="flex flex-row ml-auto gap-3">
+			<div className="flex flex-col gap-1">
 				<div className="ml-auto">
 					<p className="font-medium">{senderName}</p>
 				</div>
-				<div className="w-fit px-4 py-2 rounded-[10px] bg-white bg-opacity-15">
+				<div className="w-fit px-4 py-2 rounded-[10px] bg-white bg-opacity-20">
 					<p>{content}</p>
 				</div>
 			</div>
-			<img src={iconUrl} alt="icon" className="w-9 h-9 object-contain rounded-full" />
+			<div className="mt-1 w-9 h-9 rounded-full bg-white">
+				<img src={iconUrl} alt="icon" className="w-full h-full rounded-full" />
+			</div>
 		</div>
 	);
 };

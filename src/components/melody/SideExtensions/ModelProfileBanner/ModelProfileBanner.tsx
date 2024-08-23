@@ -12,7 +12,7 @@ const ModelProfileBanner = () => {
 
 	useEffect(() => {
 		dispatch(fetchModelBasicDetails({ modelId: selectedModelId }));
-	})
+	}, []);
 
 	if (!currentSelectedModel) {
 		// Draw sketelon loader
@@ -48,8 +48,8 @@ const ModelProfileBanner = () => {
 					<p className="text-xs text-white text-opacity-80 text-nowrap">{currentSelectedModel.short_description}</p>
 				</div>
 			</div>
-			<div className="p-2 cursor-pointer rounded-lg bg-white bg-opacity-20 hover:bg-opacity-[0.15]"
-				onClick={() => handleNewChatClick()}
+			<div className="p-2 cursor-pointer rounded-lg bg-white bg-opacity-10 hover:bg-opacity-[0.15]"
+				onClick={handleNewChatClick}
 			>
 				<img src="/icons/melody/new-chat.png" className="w-4 h-4" />
 			</div>

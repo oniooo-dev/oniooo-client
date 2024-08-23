@@ -17,7 +17,7 @@ const ModelTools = () => {
 		<div>
 			<div
 				className="flex items-center justify-center w-10 h-10 cursor-pointer 
-							rounded-lg bg-red-400 bg-opacity-20 hover:bg-opacity-40"
+							rounded-lg bg-pink-300 bg-opacity-20 hover:bg-opacity-40"
 				onClick={handleDeleteModalOpen}
 			>
 				<img src="/icons/melody/trash.png" className="w-[18px] h-[18px]" />

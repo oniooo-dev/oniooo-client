@@ -5,8 +5,43 @@
 /* globals.css */
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap");
 
+/* Apply basic reset to the body or specific container */
 body {
 	font-family: "Open Sans", sans-serif;
+	margin: 0;
+    padding: 0;
+    background: #f9f9f9; /* Light grey background for contrast */
+}
+
+/* Styling the scrollbar itself */
+::-webkit-scrollbar {
+	width: 6px; /* Slimmer than the default */
+	height: 6px; /* For horizontal scrollbars */
+}
+
+/* Styling the track (part the thumb slides within) */
+::-webkit-scrollbar-track {
+	background: rgba(255, 255, 255, 0.1); /* Subtle track */
+	border-radius: 10px; /* Rounded corners for the track */
+}
+
+/* Styling the thumb (the part you drag) */
+::-webkit-scrollbar-thumb {
+	background: rgba(255, 255, 255, 0.2); /* Slightly darker for contrast */
+	border-radius: 10px; /* Rounded corners on the thumb */
+}
+
+/* Styling the thumb when hovering over it */
+::-webkit-scrollbar-thumb:hover {
+	background: rgba(255, 255, 255, 0.15); /* Darker shade on hover */
+	cursor: pointer; /* Add a pointer on hover */
+}
+
+img {
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;     /* Internet Explorer */
+    user-select: none;         /* Standard syntax */
 }
 
 /* Custom class to hide scrollbar */
@@ -18,6 +53,23 @@ body {
 	&::-webkit-scrollbar {
 		display: none;
 	}
+}
+
+.navbar {
+	justify-content: space-between;
+}
+
+/* Media query for screens smaller than 768px */
+@media (max-width: 768px) {
+    .navbar {
+        position: absolute; /* Change position to absolute */
+        top: 0; /* Align to the top of the viewport */
+        left: 0; /* Align to the left of the viewport */
+        width: 100%; /* Continue spanning the full width */
+		height: 100%; /* Expand to full height */
+		background-color: #000; /* Change background color */
+		z-index: 9999;
+    }
 }
 
 .line {
