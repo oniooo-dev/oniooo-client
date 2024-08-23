@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import FileUploadIcon from "./FileUploadIcon";
 import FileUploadList from "./FileUploadList";
 import SendButton from "./SendButton";
-import VoiceButton from "./VoiceButton";
 
 const ChatInputBox = () => {
 	const [inputValue, setInputValue] = useState("");
-	
+	const textareaRef = useRef<HTMLTextAreaElement>(null);
 
 	const [currentPrompt, setCurrentPrompt] = useState("");
 
 	const handlePromptChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setCurrentPrompt(event.target.value);
+		adjustHeight();
 	};
 
 	const handleSend = () => {
@@ -24,6 +24,30 @@ const ChatInputBox = () => {
 			handleSend();
 		}
 	};
+
+	const adjustHeight = () => {
+        const textarea = textareaRef.current;
+        if (!textarea) return;
+
+        // Reset the height to ensure we can calculate the natural content height
+        textarea.style.height = 'auto';
+
+        // Determine if the content is a single line by checking the absence of line breaks
+        const isSingleLine = !textarea.value.includes('\n');
+
+        if (isSingleLine) {
+            // Apply a fixed height for single line of text
+            textarea.style.height = '24px'; // Example: single line height
+        } else {
+            // Adjust height based on the content
+            textarea.style.height = `${Math.max(textarea.scrollHeight, 50)}px`; // Minimum height for multi-line content
+        }
+    };
+
+    // Adjust height on component mount and input changes
+    useEffect(() => {
+        adjustHeight();
+    }, []);
 
 	// const handleDragOver = (e) => {
 	//     e.preventDefault(); // Prevent default behavior (Prevent file from being opened)
@@ -48,22 +72,28 @@ const ChatInputBox = () => {
 			// onDragOver={handleDragOver}
 			// onDrop={handleDrop}
 		>
-			<div className="flex flex-col w-full px-4 rounded-[10px] bg-white bg-opacity-15">
+			<div className="flex flex-col w-full px-4 rounded-[10px] bg-white bg-opacity-10">
 				{/* <div className="pt-2">
 					<FileUploadList />
 				</div>
 				<div className="line"></div> */}
-				<div className="flex flex-row w-full gap-2">
-					<div className="flex flex-row w-full items-center justify-center gap-2">
-						<FileUploadIcon />
+				<div className="flex flex-row w-full gap-2 py-1">
+					<div className="flex flex-row w-full gap-2">
+						<div className="mt-auto mb-[12px]">
+							<FileUploadIcon />
+						</div>
 						<textarea
+							className="w-full px-1 py-2 rounded-lg bg-transparent ring-0 focus:outline-none resize-none"
+							ref={textareaRef}
 							placeholder="Message"
 							value={currentPrompt}
 							onChange={handlePromptChange}
 							onKeyDown={handleKeyDown}
-							className="w-full min-h-12 max-h-12 px-4 py-2 rounded-lg bg-transparent ring-0 focus:outline-none resize-none"
+							maxLength={4096}
 						/>
-						<img src="/icons/melody/magic-card.png" className="w-5 h-5 cursor-pointer object-contain" alt="Enhance your prompt" />
+						<div className="mt-auto mb-[12px]">
+							<img src="/icons/melody/magic-card.png" className="w-5 h-5 cursor-pointer object-contain" alt="Enhance your prompt" />
+						</div>
 					</div>
 				</div>
 			</div>

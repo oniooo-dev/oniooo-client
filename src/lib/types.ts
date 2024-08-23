@@ -35,3 +35,11 @@ export interface ConversationMessage {
 	senderName: string;
 	content: string;
 }
+
+// For unsigned chat interface
+export interface DaoYouMessage {
+    iconUrl: string;
+    senderType: string;
+    senderName: string;
+    content: string;
+}

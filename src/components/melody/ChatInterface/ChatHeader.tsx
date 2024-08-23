@@ -12,8 +12,7 @@ const ChatHeader = () => {
 				<div className="w-16 h-16 rounded-full bg-white bg-opacity-50 animate-pulse"></div>
 				</div>
 				<div className="flex flex-col items-center w-full gap-2">
-				<div className="w-3/4 h-6 bg-white bg-opacity-40 rounded animate-pulse"></div>
-				<div className="w-1/2 h-4 bg-white bg-opacity-60 rounded animate-pulse"></div>
+					<div className="w-1/6 h-4 bg-white bg-opacity-40 rounded animate-pulse"></div>
 				</div>
 			</div>
 		)
@@ -22,13 +21,12 @@ const ChatHeader = () => {
 	return (
 		<div className="flex flex-col w-full items-center justify-center mt-24 gap-2 mb-2">
 			<div>
-				<div className="w-16 h-16 rounded-full">
+				<div className="w-16 h-16 object-contain rounded-full">
 					<img src={aiModel?.icon_url} className="w-16 h-16 rounded-full" />
 				</div>
 			</div>
 			<div className="flex flex-col items-center w-full gap-1">
-				<p className="font-medium text-3xl">{aiModel?.name}</p>
-				<p className="font-normal text-md">{aiModel?.short_description}</p>
+				<p className="font-medium text-xl">{aiModel?.name}</p>
 			</div>
 		</div>
 	);

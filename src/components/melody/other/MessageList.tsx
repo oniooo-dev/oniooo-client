@@ -17,7 +17,7 @@ const MessageList = () => {
 	}, [dispatch, conversationId])
 
 	return (
-		<div className="flex flex-col w-full h-full gap-2 overflow-y-scroll hide-scrollbar">
+		<div className="flex flex-col w-full h-full gap-1 overflow-y-scroll hide-scrollbar">
 			{currentSelectedModel && <ChatHeader />}
 			{messages.map((message, index) => (
 				<div key={index} className="w-full">
