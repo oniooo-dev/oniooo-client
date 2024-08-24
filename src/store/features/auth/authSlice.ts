@@ -27,10 +27,26 @@ const initialState: AuthState = {
 	error: null as string | null,
 };
 
+if (typeof window !== "undefined") {
+	// Check if there is a user stored in local storage
+	const storedUser = localStorage.getItem("user");
+	const storedToken = localStorage.getItem("token");
+
+	if (storedUser && storedToken) {
+		initialState.isAuthenticated = true;
+		initialState.user = JSON.parse(storedUser);
+	}
+}
+
 export const authSlice = createSlice({
 	name: "auth",
 	initialState,
-	reducers: {},
+	reducers: {
+		setUser: (state, action: PayloadAction<User>) => {
+			state.isAuthenticated = true;
+			state.user = action.payload;
+		},
+	},
 	extraReducers: (builder) => {
 		builder
 			.addCase(login.pending, (state) => {
@@ -41,6 +57,10 @@ export const authSlice = createSlice({
 				state.user = action.payload;
 				state.loading = false;
 				state.error = null;
+
+				// Store user in local storage
+				localStorage.setItem("isAuthenticated", "true");
+				localStorage.setItem("user", JSON.stringify(action.payload));
 			})
 			.addCase(login.rejected, (state, action: PayloadAction<AuthError | undefined>) => {
 				state.loading = false;
@@ -54,6 +74,10 @@ export const authSlice = createSlice({
 				state.user = action.payload;
 				state.loading = false;
 				state.error = null;
+
+				// Store user in local storage
+				localStorage.setItem("isAuthenticated", "true");
+				localStorage.setItem("user", JSON.stringify(action.payload));
 			})
 			.addCase(register.rejected, (state, action: PayloadAction<AuthError | undefined>) => {
 				state.loading = false;
@@ -74,5 +98,7 @@ export const authSlice = createSlice({
 			});
 	},
 });
+
+export const { setUser } = authSlice.actions;
 
 export default authSlice.reducer;

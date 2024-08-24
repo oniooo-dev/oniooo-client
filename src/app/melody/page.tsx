@@ -20,8 +20,7 @@ export default function MelodyPage() {
 		<div className="flex flex-row w-full h-full">
 			{isAuthenticated ? (
 				<>
-					{/* <div className="w-[1px] bg-gray-300 bg-opacity-20 z-10"></div> This is a line. */}
-					{isSideExtensionsOpen ? null : <div className={`w-[1px] bg-gray-300 bg-opacity-20 z-10`}></div>}
+					<div className="w-[1px] bg-gray-300 bg-opacity-20 z-10"></div>
 					{isSideExtensionsOpen && <SideExtensions />}
 					<div className={`w-[1px] bg-gray-300 bg-opacity-20 z-10`}></div>
 					<div

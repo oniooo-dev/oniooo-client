@@ -19,6 +19,7 @@ export default function RootLayout({
 			<html lang="en">
 				<body className="flex flex-row w-[100vw] h-[100vh] overflow-hidden bg-black text-white">
 					<Navbar />
+					<div className={`w-[1px] bg-gray-300 bg-opacity-20 z-10`}></div>
 					{/* <div className="md:hidden">
 						<OtherNavbar />
 					</div> */}

@@ -2,6 +2,8 @@ export interface User {
 	id: string;
 	username: string;
 	email: string;
+	role: string;
+	icon_url: string;
 }
 
 export interface UserOwnedModels {
@@ -38,8 +40,8 @@ export interface ConversationMessage {
 
 // For unsigned chat interface
 export interface DaoYouMessage {
-    iconUrl: string;
-    senderType: string;
-    senderName: string;
-    content: string;
+	iconUrl: string;
+	senderType: string;
+	senderName: string;
+	content: string;
 }
