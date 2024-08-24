@@ -8,9 +8,6 @@
 /* Apply basic reset to the body or specific container */
 body {
 	font-family: "Open Sans", sans-serif;
-	margin: 0;
-    padding: 0;
-    background: #f9f9f9; /* Light grey background for contrast */
 }
 
 /* Styling the scrollbar itself */
@@ -21,7 +18,8 @@ body {
 
 /* Styling the track (part the thumb slides within) */
 ::-webkit-scrollbar-track {
-	background: rgba(255, 255, 255, 0.1); /* Subtle track */
+	/* background: transparent; */
+	background: rgba(255, 255, 255, 0.1);
 	border-radius: 10px; /* Rounded corners for the track */
 }
 

@@ -17,7 +17,7 @@ export default function MelodyPage() {
 	};
 
 	return (
-		<div className="flex flex-row w-full h-full">
+		<div className="relative flex flex-row w-full h-full">
 			{isAuthenticated ? (
 				<>
 					<div className="w-[1px] bg-gray-300 bg-opacity-20 z-10"></div>
@@ -26,7 +26,7 @@ export default function MelodyPage() {
 					<div
 						onMouseEnter={() => setIsCollapseButtonShown(true)}
 						onMouseLeave={() => setIsCollapseButtonShown(false)}
-						className="flex items-center p-1 bg-white bg-opacity-0 hover:bg-opacity-[0.05] z-10 cursor-pointer duration-500"
+						className="absolute h-full flex w-5 px-1 items-center cursor-pointer duration-500 z-10 bg-white bg-opacity-0 hover:bg-opacity-10"
 						onClick={handleSideExtension}
 					>
 						<img
@@ -34,9 +34,12 @@ export default function MelodyPage() {
 							className={`w-3 h-3 cursor-pointer filter invert 
 										${isSideExtensionsOpen ? "rotate-180" : ""} duration-500
 										${isCollapseButtonShown ? "" : "opacity-0"}`}
+							style={{ flexShrink: 0 }}
 						/>
 					</div>
-					<ChatInterface />
+					<div className="flex w-full h-full items-center justify-center">
+						<ChatInterface />
+					</div>
 				</>
 			) : (
 				<>

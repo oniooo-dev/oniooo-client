@@ -63,7 +63,7 @@ const Navbar = () => {
 
 	return (
 		<div className="flex flex-col justify-between gap-[5px] px-[8px] pt-[14px] pb-[8px]">
-			<div className="flex flex-col w-full items-center gap-[5px]">
+			<div className="flex flex-col w-full items-center gap-[3px]">
 				{NAVBAR_LINKS.map((link, index) => (
 					<NavbarLink
 						key={index}

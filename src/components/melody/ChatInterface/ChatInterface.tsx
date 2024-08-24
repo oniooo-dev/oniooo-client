@@ -55,12 +55,12 @@ const ChatInterface = () => {
 	};
 
 	return (
-		<div className="flex flex-col w-full h-full items-center">
-			<div className="flex flex-col w-[90%] lg:w-[65%] h-full">
-				<MessageList />
-				<div className="w-[100%] mb-9">
-					<ChatInputBox files={files} onDragOver={handleDragOver} onDrop={handleDrop} onFileDrop={handleFileDrop} onRemove={removeFile} />
-				</div>
+		<div className="relative flex flex-col w-full h-full items-center">
+			<div className="w-[90%] lg:w-[60%] h-full">
+				<MessageList files={files} />
+			</div>
+			<div className="absolute bottom-0 flex w-[90%] lg:w-[60%] mb-8">
+				<ChatInputBox files={files} onDragOver={handleDragOver} onDrop={handleDrop} onFileDrop={handleFileDrop} onRemove={removeFile} />
 			</div>
 		</div>
 	);

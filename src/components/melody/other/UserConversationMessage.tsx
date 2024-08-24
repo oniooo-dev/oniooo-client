@@ -1,12 +1,11 @@
 import React from "react";
 
 interface UserConversationMessageProps {
-	iconUrl: string;
 	senderName: string;
 	content: string;
 }
 
-const UserConversationMessage: React.FC<UserConversationMessageProps> = ({ iconUrl, senderName, content }) => {
+const UserConversationMessage: React.FC<UserConversationMessageProps> = ({ senderName, content }) => {
 	return (
 		<div className="flex flex-row gap-3 ml-auto w-[95%]">
 			<div className="flex flex-col gap-[6px]">
@@ -17,7 +16,6 @@ const UserConversationMessage: React.FC<UserConversationMessageProps> = ({ iconU
 					<p>{content}</p>
 				</div>
 			</div>
-			<img src={iconUrl} alt="icon" className="w-9 h-9 object-contain rounded-full" />
 		</div>
 	);
 };

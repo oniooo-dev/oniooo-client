@@ -13,9 +13,13 @@ const ConversationMessage: React.FC<ConversationMessageProps> = ({ iconUrl, send
 	return (
 		<div className="flex w-full p-4">
 			{senderType === "user" ? (
-				<UserConversationMessage iconUrl={iconUrl} senderName={senderName} content={content} />
+				<div>
+					<UserConversationMessage senderName={senderName} content={content} />
+				</div>
 			) : (
-				<OtherConversationMessage iconUrl={iconUrl} senderName={senderName} content={content} />
+				<div>
+					<OtherConversationMessage senderName={senderName} content={content} />
+				</div>
 			)}
 		</div>
 	);

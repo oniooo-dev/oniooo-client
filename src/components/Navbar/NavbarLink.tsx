@@ -9,14 +9,17 @@ interface NavbarLinkProps {
 }
 
 const NavbarLink: React.FC<NavbarLinkProps> = ({ href, iconUrl, selectedPage, onSelect }) => {
+
+	const iconScale = href === "/melody" ? "w-[26px] h-[26px]" : "w-7 h-7";
+
 	return (
 		<Link href={href}>
 			<div
-				className={`flex w-12 h-12 items-center justify-center
-							rounded-lg bg-white ${selectedPage === href ? `bg-opacity-15` : `bg-opacity-0`} duration-300 hover:bg-opacity-10`}
+				className={`flex w-11 h-11 items-center justify-center
+							rounded-lg bg-white ${selectedPage === href ? `bg-opacity-20` : `bg-opacity-0`} duration-300 hover:bg-opacity-20`}
 				onClick={onSelect}
 			>
-				<img src={iconUrl} className="w-8 h-8" />
+				<img src={iconUrl} className={iconScale} />
 			</div>
 		</Link>
 	);

@@ -1,15 +1,13 @@
 import React from "react";
 
 interface OtherConversationMessageProps {
-	iconUrl: string;
 	senderName: string;
 	content: string;
 }
 
-const OtherConversationMessage: React.FC<OtherConversationMessageProps> = ({ iconUrl, senderName, content }) => {
+const OtherConversationMessage: React.FC<OtherConversationMessageProps> = ({ senderName, content }) => {
 	return (
 		<div className="flex flex-row gap-3 w-[95%]">
-			<img src={iconUrl} alt="icon" className="w-9 h-9 object-contain rounded-full" />
 			<div className="flex flex-col gap-[6px]">
 				<div>
 					<p className="font-medium">{senderName}</p>

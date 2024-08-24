@@ -12,7 +12,7 @@ import {
 } from "./melodyThunks";
 
 interface MelodyState {
-	chatState: "idle" | "new" | "existing";
+	chatState: "IDLE" | "NEW_CHAT" | "EXISTING_CHAT";
 	loading: boolean;
 	error: string | null;
 	savedModels: UserOwnedModels[];
@@ -24,7 +24,7 @@ interface MelodyState {
 }
 
 const initialState: MelodyState = {
-	chatState: "idle",
+	chatState: "IDLE",
 	loading: false,
 	error: null,
 	savedModels: [],
@@ -41,7 +41,7 @@ export const melodySlice = createSlice({
 	reducers: {
 		selectModelById(state, action: PayloadAction<string>) {
 			state.loading = true;
-			state.chatState = "new";
+			state.chatState = "NEW_CHAT";
 
 			const newModelId = action.payload;
 
@@ -55,7 +55,7 @@ export const melodySlice = createSlice({
 		},
 		selectConversationById(state, action: PayloadAction<string>) {
 			state.loading = true;
-			state.chatState = "existing";
+			state.chatState = "EXISTING_CHAT";
 
 			const newConversationId = action.payload;
 

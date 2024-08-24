@@ -38,9 +38,9 @@ const ModelProfileBanner = () => {
 	}
 
 	return (
-		<div className="flex flex-row items-center justify-between w-full px-[20px] py-[24px]">
+		<div className="flex flex-row items-center justify-between w-full px-[12px] py-[24px]">
 			<div className="flex flex-row items-center gap-3">
-				<div className="w-10 h-10 rounded-full">
+				<div className="w-[50px] h-[50px] rounded-full bg-white">
 					<img src={currentSelectedModel.icon_url} className="w-full h-full rounded-full" />
 				</div>
 				<div className="flex flex-col h-full">

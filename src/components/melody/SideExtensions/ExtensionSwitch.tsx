@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { AvailableExtensions } from "@/lib/enums";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 interface ExtensionSwitchProps {
 	onSelect: (selectedId: AvailableExtensions) => void;
@@ -7,6 +9,17 @@ interface ExtensionSwitchProps {
 }
 
 const ExtensionSwitch: React.FC<ExtensionSwitchProps> = ({ onSelect, selectedExtension }) => {
+	const conversationId = useSelector((state: RootState) => state.melody.selectedConversationId);
+	const selectedModelId = useSelector((state: RootState) => state.melody.selectedModelId);
+
+	useEffect(() => {
+		if (selectedExtension === AvailableExtensions.ModelSelection && !selectedModelId) {
+			onSelect(AvailableExtensions.HistorySelection);
+		} else if (selectedExtension === AvailableExtensions.HistorySelection && !conversationId) {
+			onSelect(AvailableExtensions.ModelSelection);
+		}
+	}, [])
+	
 	return (
 		<div className="flex flex-row items-center h-8 gap-2">
 			<div onClick={() => onSelect(AvailableExtensions.ModelSelection)}>
