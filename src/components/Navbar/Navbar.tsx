@@ -10,12 +10,7 @@ import { useSelector } from "react-redux";
 
 const Navbar = () => {
 	const router = useRouter();
-
 	const pathname = usePathname();
-
-	if (pathname === "/") {
-		return null;
-	}
 
 	const [selectedPage, setSelectedPage] = useState<string>("");
 	const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -44,13 +39,13 @@ const Navbar = () => {
 		}
 	};
 
+	const handleRouteChange = () => {
+		setSelectedPage(window.location.pathname);
+	};
+
 	useEffect(() => {
 		// Set the initial state once the component is mounted on the client
 		setSelectedPage(window.location.pathname);
-
-		const handleRouteChange = () => {
-			setSelectedPage(window.location.pathname);
-		};
 
 		// Add event listener for popstate event on window
 		window.addEventListener("popstate", handleRouteChange);
@@ -67,6 +62,10 @@ const Navbar = () => {
 			setIsAuthModalOpen(false);
 		}
 	}, [isAuthenticated]);
+
+	if (pathname === "/") {
+		return null;
+	}
 
 	return (
 		<div className="flex flex-col justify-between gap-[5px] px-[8px] pt-[14px] pb-[8px]">
