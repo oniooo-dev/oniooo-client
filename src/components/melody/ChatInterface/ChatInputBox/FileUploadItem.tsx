@@ -6,23 +6,14 @@ interface FileUploadItemProps {
 }
 
 const FileUploadItem: React.FC<FileUploadItemProps> = memo(({ file, onRemove }) => {
-	const [isHovered, setIsHovered] = useState(false);
 	const [fileUrl, setFileUrl] = useState<string | null>("");
 
 	useEffect(() => {
-		// Create the URL only once and store it
-		if (!fileUrl) {
-			const newUrl = URL.createObjectURL(file);
-			setFileUrl(newUrl);
-		}
+		const newUrl = URL.createObjectURL(file);
+		setFileUrl(newUrl);
 
-		// Clean up the URL when the component unmounts or the file changes
-		return () => {
-			if (fileUrl) {
-				URL.revokeObjectURL(fileUrl);
-			}
-		};
-	}, [file]); // Only re-run this effect if the file changes
+		return () => URL.revokeObjectURL(newUrl);
+	}, [file]);
 
 	const handleRemove = useCallback(() => {
 		onRemove(file);
@@ -55,14 +46,6 @@ const FileUploadItem: React.FC<FileUploadItemProps> = memo(({ file, onRemove }) 
 						</div>
 					</>
 				)}
-				{/* {isHovered && (
-					<div
-						className="absolute top-[-12px] right-[-12px] flex items-center justify-center h-6 w-6 
-									rounded-full bg-red-500 bg-opacity-100 hover:bg-opacity-60 duration-500 cursor-pointer hover:rotate-90"
-					>
-						<img src="/icons/melody/x.png" className="w-4 h-4 filter invert" alt="Remove" onClick={handleRemove} />
-					</div>
-				)} */}
 			</div>
 		</div>
 	);

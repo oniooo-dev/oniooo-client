@@ -35,13 +35,6 @@ body {
 	cursor: pointer; /* Add a pointer on hover */
 }
 
-img {
-    -webkit-user-select: none; /* Safari */
-    -moz-user-select: none;    /* Firefox */
-    -ms-user-select: none;     /* Internet Explorer */
-    user-select: none;         /* Standard syntax */
-}
-
 /* Custom class to hide scrollbar */
 .hide-scrollbar {
 	-ms-overflow-style: none; /* Internet Explorer and Edge */
@@ -69,15 +62,15 @@ img {
 
 /* Media query for screens smaller than 768px */
 @media (max-width: 768px) {
-    .navbar {
-        position: absolute; /* Change position to absolute */
-        top: 0; /* Align to the top of the viewport */
-        left: 0; /* Align to the left of the viewport */
-        width: 100%; /* Continue spanning the full width */
+	.navbar {
+		position: absolute; /* Change position to absolute */
+		top: 0; /* Align to the top of the viewport */
+		left: 0; /* Align to the left of the viewport */
+		width: 100%; /* Continue spanning the full width */
 		height: 100%; /* Expand to full height */
 		background-color: #000; /* Change background color */
 		z-index: 9999;
-    }
+	}
 }
 
 .line {
@@ -102,7 +95,7 @@ img {
 	overflow: hidden;
 	white-space: nowrap;
 }
-  
+
 .scrolling-title {
 	display: inline-block;
 	white-space: nowrap;
@@ -110,14 +103,15 @@ img {
 }
 
 @keyframes pulse {
-	0%, 100% {
-	  opacity: 1;
+	0%,
+	100% {
+		opacity: 1;
 	}
 	50% {
-	  opacity: .5;
+		opacity: 0.5;
 	}
 }
-  
+
 .animate-pulse {
 	animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
