@@ -57,6 +57,16 @@ img {
 	justify-content: space-between;
 }
 
+.flex-vertical {
+	display: flex;
+	flex-direction: column;
+}
+
+.flex-horizontal {
+	display: flex;
+	flex-direction: row;
+}
+
 /* Media query for screens smaller than 768px */
 @media (max-width: 768px) {
     .navbar {

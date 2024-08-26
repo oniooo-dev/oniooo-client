@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/store/hooks";
 import { logout } from "@/store/features/auth/authThunks";
 
-const page = () => {
+const MePage = () => {
 	const router = useRouter();
 	const dispatch = useAppDispatch();
 	const user = useSelector((state: RootState) => state.auth.user);
@@ -51,4 +51,4 @@ const page = () => {
 	);
 };
 
-export default page;
+export default MePage;

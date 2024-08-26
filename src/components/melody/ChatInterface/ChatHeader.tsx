@@ -8,7 +8,7 @@ const ChatHeader = () => {
 	// Assuming there should always be an AI model selected
 	if (!aiModel) {
 		return (
-			<div className="flex flex-col w-full items-center justify-center mt-24 gap-4 mb-4">
+			<div className="flex-vertical w-full items-center justify-center mt-24 gap-4 mb-4">
 				<div>
 					<div className="w-16 h-16 rounded-full bg-white bg-opacity-50 animate-pulse"></div>
 				</div>

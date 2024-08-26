@@ -19,7 +19,7 @@ const MessageList: React.FC<MessageListProps> = ({ files }) => {
 
 	// Fetch messages by conversation ID automatically
 	useEffect(() => {
-		dispatch(fetchMessagesByConversationId({ conversationId: conversationId }));
+		dispatch(fetchMessagesByConversationId({ conversationId }));
 	}, [dispatch, conversationId]);
 
 	return (

@@ -38,20 +38,22 @@ const ModelProfileBanner = () => {
 	}
 
 	return (
-		<div className="flex flex-row items-center justify-between w-full px-[12px] py-[24px]">
-			<div className="flex flex-row items-center gap-3">
-				<div className="w-[50px] h-[50px] rounded-full bg-white">
-					<img src={currentSelectedModel.icon_url} className="w-full h-full rounded-full" />
+		<div className="flex flex-row items-center justify-between w-full px-[4px] py-[12px]">
+			<div className="flex flex-row items-center justify-between w-full px-[8px] py-[12px] bg-white bg-opacity-20 rounded-lg">
+				<div className="flex flex-row items-center gap-3">
+					<div className="w-[50px] h-[50px] rounded-full bg-white">
+						<img src={currentSelectedModel.icon_url} className="w-full h-full rounded-full" />
+					</div>
+					<div className="flex flex-col h-full">
+						<p className="text-white text-nowrap">{currentSelectedModel.name}</p>
+						<p className="text-xs text-white text-opacity-80 text-nowrap">{currentSelectedModel.short_description}</p>
+					</div>
 				</div>
-				<div className="flex flex-col h-full">
-					<p className="text-white text-nowrap">{currentSelectedModel.name}</p>
-					<p className="text-xs text-white text-opacity-80 text-nowrap">{currentSelectedModel.short_description}</p>
+				<div className="p-2 cursor-pointer rounded-lg bg-white bg-opacity-10 hover:bg-opacity-[0.15]"
+					onClick={handleNewChatClick}
+				>
+					<img src="/icons/melody/new-chat.png" className="w-4 h-4" />
 				</div>
-			</div>
-			<div className="p-2 cursor-pointer rounded-lg bg-white bg-opacity-10 hover:bg-opacity-[0.15]"
-				onClick={handleNewChatClick}
-			>
-				<img src="/icons/melody/new-chat.png" className="w-4 h-4" />
 			</div>
 		</div>
 	);

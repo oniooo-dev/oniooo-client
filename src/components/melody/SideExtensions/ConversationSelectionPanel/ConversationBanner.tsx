@@ -78,7 +78,7 @@ const ConversationBanner: React.FC<ConversationBannerProps> = ({ conversationId,
 			<AnimatePresence>
 				{isOptionsOpen && (
 					<motion.div
-						className="absolute right-[-105px] flex flex-row"
+						className="absolute top-1 right-[-105px] flex flex-row"
 						initial={{ opacity: 0, x: -20 }}
 						animate={{ opacity: 1, x: 0 }}
 						exit={{ opacity: 0, x: -20 }}

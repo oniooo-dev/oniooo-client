@@ -7,7 +7,7 @@ export const fetchModelBasicDetails = createAsyncThunk<AIModel, { modelId: strin
 	async (params: { modelId: string | undefined }, { rejectWithValue }) => {
 		try {
 			if (!params.modelId) {
-				return rejectWithValue(new Error("Model ID is required"));
+				return rejectWithValue({ message: "Model ID is required", name: "MelodyError" });
 			}
 			console.log("Fetching model basic details...");
 			console.log("Model ID: ", params.modelId);
