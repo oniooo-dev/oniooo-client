@@ -12,6 +12,7 @@ const FileUploadItem: React.FC<FileUploadItemProps> = memo(({ file, onRemove }) 
 		const newUrl = URL.createObjectURL(file);
 		setFileUrl(newUrl);
 
+		// Cleanup function to revoke the created URL
 		return () => URL.revokeObjectURL(newUrl);
 	}, [file]);
 
@@ -50,5 +51,7 @@ const FileUploadItem: React.FC<FileUploadItemProps> = memo(({ file, onRemove }) 
 		</div>
 	);
 });
+
+FileUploadItem.displayName = "FileUploadItem";
 
 export default FileUploadItem;
