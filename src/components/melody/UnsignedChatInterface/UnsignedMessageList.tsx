@@ -6,7 +6,7 @@ import ChatHeader from "../ChatInterface/ChatHeader";
 import { DaoYouMessage } from "@/lib/types";
 
 interface UnsignedMessageListProps {
-    messages: DaoYouMessage[];
+	messages: DaoYouMessage[];
 }
 
 const UnsignedMessageList: React.FC<UnsignedMessageListProps> = ({ messages }) => {
@@ -18,7 +18,7 @@ const UnsignedMessageList: React.FC<UnsignedMessageListProps> = ({ messages }) =
 			<ChatHeader />
 			{messages.map((message, index) => (
 				<div key={index} className="w-full">
-					<ConversationMessage iconUrl={message.iconUrl} senderType={message.senderType} senderName={message.senderName} content={message.content} />
+					<ConversationMessage content={message.content} />
 				</div>
 			))}
 		</div>
