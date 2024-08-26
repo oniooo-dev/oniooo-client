@@ -17,7 +17,12 @@ export default function MelodyPage() {
 	};
 
 	return (
-		<div className="relative flex flex-row w-screen h-screen bg-black text-white">
+		<div className="relative flex flex-row w-screen h-screen bg-black bg-opacity-80 text-white">
+			<img
+				src={"https://wallpapers.com/images/hd/1920-x-1080-hd-ydvvfje0bdoimttn.jpg"}
+				className="absolute top-0 left-0 w-full h-full object-cover pointer-events-none"
+				style={{ zIndex: -10 }}
+			/>
 			{isAuthenticated ? (
 				<>
 					<div className="w-[1px] bg-gray-300 bg-opacity-20"></div>
@@ -26,7 +31,7 @@ export default function MelodyPage() {
 						<div
 							onMouseEnter={() => setIsCollapseButtonShown(true)}
 							onMouseLeave={() => setIsCollapseButtonShown(false)}
-							className="absolute h-full flex w-5 px-1 z-10 items-center cursor-pointer duration-500 bg-white bg-opacity-0 hover:bg-opacity-10"
+							className="absolute h-full flex w-5 px-1 z-10 items-center cursor-pointer duration-300 bg-white bg-opacity-0 hover:bg-opacity-10"
 							onClick={handleSideExtension}
 						>
 							<img

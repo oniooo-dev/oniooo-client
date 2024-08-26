@@ -68,7 +68,7 @@ const Navbar = () => {
 	}
 
 	return (
-		<div className="flex flex-row gap-2 px-16 w-full">
+		<div className="flex flex-row gap-2 px-2 w-full">
 			<div
 				onClick={handleProfileIconClick}
 				className="flex items-center justify-center w-11 h-11 rounded-lg bg-white bg-opacity-0 hover:bg-opacity-20 duration-500"

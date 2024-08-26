@@ -105,7 +105,7 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onDragOver, onDrop, 
 		<div className="flex flex-col w-full justify-center items-center" onDragOver={handleDragOver} onDrop={handleDrop}>
 			<div className="w-full mb-2">{files && files.length > 0 && <FileUploadList files={files} onRemove={onRemove} />}</div>
 			<div className="flex flex-row w-full gap-2">
-				<div className="flex flex-col w-full pl-5 pr-3 rounded-[10px] bg-[#222222]">
+				<div className="flex flex-col w-full pl-5 pr-3 rounded-[10px] bg-white bg-opacity-10">
 					<div className="flex flex-row w-full gap-2 py-1">
 						<div className={`flex flex-row w-full ${currentPrompt.split("\n").length > 1 ? "" : "h-10"} gap-2`}>
 							<div className="mt-auto mb-[10px]">
