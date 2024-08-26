@@ -17,12 +17,12 @@ export default function MelodyPage() {
 	};
 
 	return (
-		<div className="relative flex flex-row w-full h-full">
+		<div className="relative flex flex-row w-screen h-screen bg-black text-white">
 			{isAuthenticated ? (
 				<>
 					<div className="w-[1px] bg-gray-300 bg-opacity-20"></div>
 					{isSideExtensionsOpen && <SideExtensions />}
-					<div className={`relative w-[1px] bg-gray-300 bg-opacity-20`}>
+					<div className={`relative`}>
 						<div
 							onMouseEnter={() => setIsCollapseButtonShown(true)}
 							onMouseLeave={() => setIsCollapseButtonShown(false)}

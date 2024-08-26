@@ -68,24 +68,20 @@ const Navbar = () => {
 	}
 
 	return (
-		<div className="flex flex-col justify-between gap-[5px] px-[8px] pt-[14px] pb-[8px]">
-			<div className="flex flex-col w-full items-center gap-[3px]">
-				{NAVBAR_LINKS.map((link, index) => (
-					<NavbarLink key={index} href={link.href} iconUrl={link.iconUrl} onSelect={() => handlePageSelect(link.href)} selectedPage={selectedPage} />
-				))}
+		<div className="flex flex-row gap-2 px-16 w-full">
+			<div
+				onClick={handleProfileIconClick}
+				className="flex items-center justify-center w-11 h-11 rounded-lg bg-white bg-opacity-0 hover:bg-opacity-20 duration-500"
+			>
+				{isAuthenticated ? (
+					<img src="/icons/navbar/shin-chan-pfp.png" className="w-8 h-8 rounded-full" />
+				) : (
+					<img src="/icons/navbar/unsigned-user-profile.png" className="w-7 h-7 rounded-full" />
+				)}
 			</div>
-			<div className="flex w-full items-center justify-center gap-2 mb-1 cursor-pointer">
-				<div
-					onClick={handleProfileIconClick}
-					className="flex items-center justify-center w-11 h-11 rounded-lg bg-white bg-opacity-0 hover:bg-opacity-20 duration-500"
-				>
-					{isAuthenticated ? (
-						<img src="/icons/navbar/shin-chan-pfp.png" className="w-8 h-8 rounded-full" />
-					) : (
-						<img src="/icons/navbar/unsigned-user-profile.png" className="w-7 h-7 rounded-full" />
-					)}
-				</div>
-			</div>
+			{NAVBAR_LINKS.map((link, index) => (
+				<NavbarLink key={index} href={link.href} iconUrl={link.iconUrl} onSelect={() => handlePageSelect(link.href)} selectedPage={selectedPage} />
+			))}
 			{isAuthModalOpen && (
 				<div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-80 z-20 cursor-pointer duration-500">
 					<AuthModal onClose={handleAuthModalClose} />

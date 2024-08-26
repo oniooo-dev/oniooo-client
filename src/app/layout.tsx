@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "@/components/Navbar/Navbar";
 import StoreProvider from "@/store/StoreProvider";
 
 export const metadata: Metadata = {
@@ -14,15 +13,10 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-			<html lang="en">
-				<body>
-					<StoreProvider>
-						<div className="flex flex-row bg-black text-white w-screen h-screen">
-							<Navbar />
-							{children}
-						</div>
-					</StoreProvider>
-				</body>
-			</html>
+		<html lang="en">
+			<body>
+				<StoreProvider>{children}</StoreProvider>
+			</body>
+		</html>
 	);
 }
