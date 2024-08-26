@@ -29,6 +29,10 @@ const ConversationBanner: React.FC<ConversationBannerProps> = ({ conversationId,
 		setIsOptionsOpen((prev) => !prev);
 	};
 
+	const handleMouseEnter = () => {
+		setIsHovered(true);
+	};
+
 	const handleMouseLeave = () => {
 		setIsHovered(false);
 	};
@@ -51,10 +55,9 @@ const ConversationBanner: React.FC<ConversationBannerProps> = ({ conversationId,
 			<div
 				// When the conversation is selected, the background color of the banner is opacity 20
 				// When the options menu is opened, the background color of the banner is opacity 10
-				className={`relative flex flex-row items-center justify-between w-full h-10 px-3 bg-opacity-20 rounded-[10px] cursor-pointer
-							${isOptionsOpen ? "bg-white bg-opacity-[0.1]" : `${selectedConversationId === conversationId ? "bg-white hover:bg-opacity-[0.15]" : "hover:bg-white hover:bg-opacity-[0.15]"}`} 
-							duration-300`}
-				onMouseEnter={() => setIsHovered(true)}
+				className={`relative flex flex-row items-center justify-between w-full h-12 px-3 py-4 bg-opacity-20 rounded-[10px] cursor-pointer duration-300
+							${isOptionsOpen ? "bg-white bg-opacity-[0.1]" : `${selectedConversationId === conversationId ? "bg-white hover:bg-opacity-[0.15]" : "hover:bg-white hover:bg-opacity-[0.15]"}`}`}
+				onMouseEnter={handleMouseEnter}
 				onMouseLeave={handleMouseLeave}
 				onClick={handleMouseClick}
 			>

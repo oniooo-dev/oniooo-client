@@ -20,22 +20,22 @@ export default function MelodyPage() {
 		<div className="relative flex flex-row w-full h-full">
 			{isAuthenticated ? (
 				<>
-					<div className="w-[1px] bg-gray-300 bg-opacity-20 z-10"></div>
+					<div className="w-[1px] bg-gray-300 bg-opacity-20"></div>
 					{isSideExtensionsOpen && <SideExtensions />}
-					<div className={`w-[1px] bg-gray-300 bg-opacity-20 z-10`}></div>
-					<div
-						onMouseEnter={() => setIsCollapseButtonShown(true)}
-						onMouseLeave={() => setIsCollapseButtonShown(false)}
-						className="absolute h-full flex w-5 px-1 items-center cursor-pointer duration-500 z-10 bg-white bg-opacity-0 hover:bg-opacity-10"
-						onClick={handleSideExtension}
-					>
-						<img
-							src="/icons/melody/arrow.png"
-							className={`w-3 h-3 cursor-pointer filter invert 
+					<div className={`relative w-[1px] bg-gray-300 bg-opacity-20`}>
+						<div
+							onMouseEnter={() => setIsCollapseButtonShown(true)}
+							onMouseLeave={() => setIsCollapseButtonShown(false)}
+							className="absolute h-full flex w-5 px-1 z-10 items-center cursor-pointer duration-500 bg-white bg-opacity-0 hover:bg-opacity-10"
+							onClick={handleSideExtension}
+						>
+							<img
+								src="/icons/melody/arrow.png"
+								className={`w-3 h-3 cursor-pointer filter invert 
 										${isSideExtensionsOpen ? "rotate-180" : ""} duration-500
 										${isCollapseButtonShown ? "" : "opacity-0"}`}
-							style={{ flexShrink: 0 }}
-						/>
+							/>
+						</div>
 					</div>
 					<div className="flex w-full h-full items-center justify-center">
 						<ChatInterface />

@@ -14,10 +14,10 @@ const ModelTools = () => {
 	};
 
 	return (
-		<div>
+		<div className="z-20">
 			<div
-				className="flex items-center justify-center w-10 h-10 cursor-pointer 
-							rounded-lg bg-pink-300 bg-opacity-20 hover:bg-opacity-40"
+				className="flex items-center justify-center w-10 h-10 cursor-pointer
+						   rounded-lg bg-pink-300 bg-opacity-20 hover:bg-opacity-40"
 				onClick={handleDeleteModalOpen}
 			>
 				<img src="/icons/melody/trash.png" className="w-[18px] h-[18px]" />

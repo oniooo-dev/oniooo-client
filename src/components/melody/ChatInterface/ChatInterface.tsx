@@ -4,20 +4,26 @@ import MessageList from "./MessageList";
 
 const ChatInterface = () => {
 	const [files, setFiles] = useState<File[]>([]);
+	const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
 
-	// const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-	// 	// Ensure files are present in the event target before updating state
-	// 	if (event.target.files) {
-	// 		setFiles(Array.from(event.target.files));
-	// 	}
-	// };
+	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const newFiles = event.target.files ? Array.from(event.target.files) : [];
+		const nonDuplicateFiles = newFiles.filter((file) => !uploadedFiles.includes(file.name)); // Filter out already uploaded files
+		setFiles([...files, ...nonDuplicateFiles]);
+	};
+
+	const removeFile = (file: File) => {
+		setFiles(files.filter((f) => f !== file));
+	};
 
 	const handleFileUpload = () => {
 		const formData = new FormData();
 
-		// Append each file to the FormData object
+		// Append non-uploaded files to the FormData object
 		files.forEach((file) => {
-			formData.append("files", file);
+			if (!uploadedFiles.includes(file.name)) {
+				formData.append("files", file);
+			}
 		});
 
 		// POST request using fetch
@@ -26,7 +32,11 @@ const ChatInterface = () => {
 			body: formData,
 		})
 			.then((response) => response.json())
-			.then((data) => console.log("Success:", data))
+			.then((data) => {
+				console.log("Success:", data);
+				const newUploadedFiles = files.map((file) => file.name);
+				setUploadedFiles([...uploadedFiles, ...newUploadedFiles]); // Update the uploaded files list
+			})
 			.catch((error) => console.error("Error:", error));
 	};
 
@@ -47,11 +57,6 @@ const ChatInterface = () => {
 	const handleFileDrop = (file: File) => {
 		const updatedFiles = [...files, file]; // Combine the new file with the existing files
 		setFiles(updatedFiles); // Update the state with the combined files
-	};
-
-	const removeFile = (file: File) => {
-		const updatedFiles = files.filter((f) => f !== file);
-		setFiles(updatedFiles);
 	};
 
 	return (

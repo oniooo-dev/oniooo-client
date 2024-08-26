@@ -1,12 +1,6 @@
 import { AIModel, Conversation, ConversationMessage, UserOwnedModels } from "@/lib/types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
-const baseUrl = "http://localhost:8080/api/v1";
-
-const api = axios.create({
-	baseURL: `${baseUrl}/melody`,
-});
+import api from "@/store/api";
 
 export const fetchModelBasicDetails = createAsyncThunk<AIModel, { modelId: string | undefined }, { rejectValue: Error }>(
 	"melody/fetchModelBasicDetails",
@@ -17,7 +11,7 @@ export const fetchModelBasicDetails = createAsyncThunk<AIModel, { modelId: strin
 			}
 			console.log("Fetching model basic details...");
 			console.log("Model ID: ", params.modelId);
-			const response = await axios.get(`${baseUrl}/ais/${params.modelId}/basics`);
+			const response = await api.get(`/ais/${params.modelId}/basics`);
 			console.log("Fetched model basic details: ", response.data.ai_model);
 			return response.data;
 		} catch (error: any) {
@@ -58,7 +52,7 @@ export const fetchUserModelOwnerships = createAsyncThunk<UserOwnedModels[], void
 	"melody/fetchUserModelOwnerships",
 	async (_, { rejectWithValue }) => {
 		try {
-			const response = await api.get("/models/saved");
+			const response = await api.get("/melody/models/saved");
 			console.log(response.data.message);
 			return response.data.userOwnedModels;
 		} catch (error: any) {
@@ -78,7 +72,7 @@ export const fetchUserConversations = createAsyncThunk<Conversation[], void, { r
 	async (_, { rejectWithValue }) => {
 		try {
 			// No request data
-			const response = await api.get("/conversations");
+			const response = await api.get("/melody/conversations");
 			console.log(response.data.message);
 			return response.data.conversations;
 		} catch (error: any) {
@@ -103,7 +97,7 @@ export const createConversationMessage = createAsyncThunk<void, { conversationId
 			const requestData: { prompt: string } = {
 				prompt: params.prompt,
 			};
-			const response = await api.post(`/conversations`, requestData);
+			const response = await api.post(`/melody/conversations`, requestData);
 			return response.data; // should return an array of messages
 		} catch (error: any) {
 			if (error.response && error.response.data) {
@@ -120,10 +114,14 @@ export const fetchMessagesByConversationId = createAsyncThunk<ConversationMessag
 	"melody/fetchMessagesByConversationId",
 	async (params: { conversationId: string }, { rejectWithValue }) => {
 		try {
+			if (!params.conversationId) {
+				return rejectWithValue({ message: "Conversation ID is required", name: "MelodyError" });
+			}
+
 			console.log("Fetching messages by conversation id...");
 
 			// No request data
-			const response = await api.get(`/conversations/${params.conversationId}/messages`);
+			const response = await api.get(`/melody/conversations/${params.conversationId}/messages`);
 			return response.data.conversationMessages; // should return an array of messages
 		} catch (error: any) {
 			if (error.response && error.response.data) {
@@ -143,7 +141,7 @@ export const updateConversationTitle = createAsyncThunk<void, { conversationId: 
 			const requestData: { newTitle: string } = {
 				newTitle: params.newTitle,
 			};
-			const response = await api.patch(`/conversations/${params.conversationId}/title`, requestData);
+			const response = await api.patch(`/melody/conversations/${params.conversationId}/title`, requestData);
 			return response.data; // should return an array of messages
 		} catch (error: any) {
 			if (error.response && error.response.data) {
@@ -160,7 +158,7 @@ export const deleteConversation = createAsyncThunk<void, { conversationId: strin
 	"melody/deleteConversation",
 	async (params: { conversationId: string }, { rejectWithValue }) => {
 		try {
-			const response = await api.delete(`/conversations/${params.conversationId}`);
+			const response = await api.delete(`/melody/conversations/${params.conversationId}`);
 			return response.data; // should return an array of messages
 		} catch (error: any) {
 			if (error.response && error.response.data) {

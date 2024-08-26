@@ -5,11 +5,18 @@ import NavbarLink from "./NavbarLink";
 import { NAVBAR_LINKS } from "@/lib/constants";
 import AuthModal from "../AuthModal/AuthModal";
 import { RootState } from "@/store/store";
+import { useRouter, usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
-import { useRouter } from "next/navigation";
 
 const Navbar = () => {
 	const router = useRouter();
+
+	const pathname = usePathname();
+
+	if (pathname === "/") {
+		return null;
+	}
+
 	const [selectedPage, setSelectedPage] = useState<string>("");
 	const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 	const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
@@ -65,13 +72,7 @@ const Navbar = () => {
 		<div className="flex flex-col justify-between gap-[5px] px-[8px] pt-[14px] pb-[8px]">
 			<div className="flex flex-col w-full items-center gap-[3px]">
 				{NAVBAR_LINKS.map((link, index) => (
-					<NavbarLink
-						key={index}
-						href={link.href}
-						iconUrl={link.iconUrl}
-						onSelect={() => handlePageSelect(link.href)}
-						selectedPage={selectedPage}
-					/>
+					<NavbarLink key={index} href={link.href} iconUrl={link.iconUrl} onSelect={() => handlePageSelect(link.href)} selectedPage={selectedPage} />
 				))}
 			</div>
 			<div className="flex w-full items-center justify-center gap-2 mb-1 cursor-pointer">

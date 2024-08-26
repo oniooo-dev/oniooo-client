@@ -29,6 +29,10 @@ const ModelBanner: React.FC<ModelBannerProps> = ({ modelId, iconUrl, modelName }
 		setIsOptionsOpen((prev) => !prev);
 	};
 
+	const handleMouseEnter = () => {
+		setIsHovered(true);
+	};
+
 	const handleMouseLeave = () => {
 		setIsHovered(false);
 	};
@@ -49,11 +53,10 @@ const ModelBanner: React.FC<ModelBannerProps> = ({ modelId, iconUrl, modelName }
 	return (
 		<div ref={modelToolsRef} className="relative flex flex-row w-[260px]">
 			<div
-				className={`flex flex-row items-center justify-between w-full h-10 px-3 py-1 bg-opacity-20 rounded-[10px] cursor-pointer 
-					${isOptionsOpen ? "bg-white bg-opacity-5" : `${selectedModelId === modelId ? "bg-white hover:bg-opacity-20" : "hover:bg-white hover:bg-opacity-10"}`} 
-					duration-300`}
+				className={`flex flex-row items-center justify-between w-full h-12 px-3 bg-opacity-20 rounded-[10px] cursor-pointer duration-300
+							${isOptionsOpen ? "bg-white bg-opacity-5" : `${selectedModelId === modelId ? "bg-white hover:bg-opacity-20" : "hover:bg-white hover:bg-opacity-10"}`} `}
 				onClick={handleMouseClick}
-				onMouseEnter={() => setIsHovered(true)}
+				onMouseEnter={handleMouseEnter}
 				onMouseLeave={handleMouseLeave}
 			>
 				<div className="banner-container flex flex-row gap-3 items-center">

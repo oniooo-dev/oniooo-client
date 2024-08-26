@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import FileUploadIcon from "./FileUploadIcon";
 import FileUploadList from "./FileUploadList";
 import SendButton from "./SendButton";
@@ -12,9 +12,36 @@ interface ChatInputBoxProps {
 }
 
 const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onDragOver, onDrop, onFileDrop, onRemove }) => {
-	const [currentPrompt, setCurrentPrompt] = useState("");
-	const [isDraggingOver, setIsDraggingOver] = useState(false);
+	const [currentPrompt, setCurrentPrompt] = useState<string>("");
+	const [isDraggingOver, setIsDraggingOver] = useState<boolean>(false);
+	const [isPromptSuggestionHovered, setIsPromptSuggestionHovered] = useState<boolean>(false);
+	const [isPromptSuggestionOpen, setIsPromptSuggestionOpen] = useState<boolean>(false);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
+	const promptSuggestionRef = useRef<HTMLDivElement>(null);
+	const promptSuggestionButtonRef = useRef<HTMLDivElement>(null);
+
+	const handlePromptSuggestionHover = () => {
+		setIsPromptSuggestionHovered(true);
+	};
+
+	const handlePromptSuggestionLeave = () => {
+		setIsPromptSuggestionHovered(false);
+	};
+
+	const handlePromptSuggestionClick = () => {
+		setIsPromptSuggestionOpen(!isPromptSuggestionOpen);
+	};
+
+	const handlePromptSuggestionClickOutside = (event: MouseEvent) => {
+		if (
+			promptSuggestionRef.current &&
+			!promptSuggestionRef.current.contains(event.target as Node) &&
+			promptSuggestionButtonRef.current &&
+			!promptSuggestionButtonRef.current.contains(event.target as Node)
+		) {
+			setIsPromptSuggestionOpen(false);
+		}
+	};
 
 	const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
 		event.preventDefault(); // Prevent default behavior (Prevent file from being opened)
@@ -67,15 +94,18 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onDragOver, onDrop, 
 		}
 	};
 
+	useEffect(() => {
+		document.addEventListener("mousedown", handlePromptSuggestionClickOutside);
+		return () => {
+			document.removeEventListener("mousedown", handlePromptSuggestionClickOutside);
+		};
+	}, []);
+
 	return (
 		<div className="flex flex-col w-full justify-center items-center" onDragOver={handleDragOver} onDrop={handleDrop}>
-			<div className="w-full mb-2">
-				{files && files.length > 0 && (
-					<FileUploadList files={files} onRemove={onRemove} />
-				)}
-			</div>
+			<div className="w-full mb-2">{files && files.length > 0 && <FileUploadList files={files} onRemove={onRemove} />}</div>
 			<div className="flex flex-row w-full gap-2">
-				<div className="flex flex-col w-full px-4 rounded-[10px] bg-[#222222]">
+				<div className="flex flex-col w-full pl-5 pr-3 rounded-[10px] bg-[#222222]">
 					<div className="flex flex-row w-full gap-2 py-1">
 						<div className={`flex flex-row w-full ${currentPrompt.split("\n").length > 1 ? "" : "h-10"} gap-2`}>
 							<div className="mt-auto mb-[10px]">
@@ -90,8 +120,23 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onDragOver, onDrop, 
 								onKeyDown={handleKeyDown}
 								maxLength={4096}
 							/>
-							<div className="mt-auto mb-[10px]" style={{ flexShrink: 0 }}>
-								<img src="/icons/melody/magic-card.png" className="w-5 h-5 cursor-pointer object-contain" alt="Enhance your prompt" />
+							<div
+								ref={promptSuggestionButtonRef}
+								className={`mt-auto mb-[6px] hover:scale-110 hover:rotate-90 duration-500 ${isPromptSuggestionOpen && "scale-110 rotate-90"}`}
+								style={{ flexShrink: 0 }}
+								onMouseEnter={handlePromptSuggestionHover}
+								onMouseLeave={handlePromptSuggestionLeave}
+								onClick={handlePromptSuggestionClick}
+							>
+								{isPromptSuggestionHovered || isPromptSuggestionOpen ? (
+									<img
+										src="/icons/melody/suggest-prompt-full.png"
+										className="w-7 h-7 cursor-pointer object-contain"
+										alt="Enhance your prompt"
+									/>
+								) : (
+									<img src="/icons/melody/suggest-prompt.png" className="w-7 h-7 cursor-pointer object-contain" alt="Enhance your prompt" />
+								)}
 							</div>
 						</div>
 					</div>
@@ -100,6 +145,20 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onDragOver, onDrop, 
 					<SendButton onClick={handleSend} />
 				</div>
 			</div>
+			{/* Prompt Suggestor Div */}
+			{isPromptSuggestionOpen && (
+				<div
+					className="absolute top-0 flex flex-row w-full h-fit p-2 gap-2 bg-white bg-opacity-20 rounded-lg -translate-y-full"
+					ref={promptSuggestionRef}
+				>
+					<div className="w-full px-4 py-2 bg-white bg-opacity-10 rounded-lg">
+						<p>Prompt #1</p>
+					</div>
+					<div className="w-full px-4 py-2 bg-white bg-opacity-10 rounded-lg">
+						<p>Prompt #2</p>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 };

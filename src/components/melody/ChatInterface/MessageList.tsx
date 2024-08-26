@@ -15,6 +15,7 @@ const MessageList: React.FC<MessageListProps> = ({ files }) => {
 	const messages = useSelector((state: RootState) => state.melody.currentConversationMessages);
 	const conversationId = useSelector((state: RootState) => state.melody.selectedConversationId);
 	const currentSelectedModel = useSelector((state: RootState) => state.melody.currentSelectedModel);
+	const [lastSender, setLastSender] = useState<string>("");
 
 	// Fetch messages by conversation ID automatically
 	useEffect(() => {
@@ -22,11 +23,25 @@ const MessageList: React.FC<MessageListProps> = ({ files }) => {
 	}, [dispatch, conversationId]);
 
 	return (
-		<div className="flex flex-col w-full h-full gap-1 overflow-y-scroll hide-scrollbar">
+		<div className="flex flex-col w-full h-full gap-4 overflow-y-scroll hide-scrollbar">
 			{currentSelectedModel && <ChatHeader />}
 			{messages.map((message, index) => (
-				<div key={index} className="w-full">
-					<ConversationMessage iconUrl={message.iconUrl} senderType={message.senderType} senderName={message.senderName} content={message.content} />
+				<div key={index} className="flex flex-row w-full gap-2">
+					{message.senderType === "user" ? (
+						<div className="flex flex-row gap-2">
+							{lastSender !== message.senderName ? (
+								<img src={message.iconUrl} alt="User Icon" className="w-8 h-8 rounded-full" />
+							) : (
+								<div className="w-8 h-8 rounded-full"></div>
+							)}
+							<ConversationMessage content={message.content} />
+						</div>
+					) : (
+						<div className="flex flex-row gap-2">
+							<ConversationMessage content={message.content} />
+							<img src={message.iconUrl} alt="User Icon" className="w-8 h-8 rounded-full" />
+						</div>
+					)}
 				</div>
 			))}
 			{files && files.length > 0 ? <div className="mb-60"></div> : <div className="mb-24"></div>}

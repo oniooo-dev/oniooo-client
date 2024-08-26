@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { login, logout, register } from "./authThunks";
 import { User } from "@/lib/types";
+import { persistor } from "@/store/store";
 
 interface AuthState {
 	isAuthenticated: boolean;
@@ -27,17 +28,6 @@ const initialState: AuthState = {
 	error: null as string | null,
 };
 
-if (typeof window !== "undefined") {
-	// Check if there is a user stored in local storage
-	const storedUser = localStorage.getItem("user");
-	const storedToken = localStorage.getItem("token");
-
-	if (storedUser && storedToken) {
-		initialState.isAuthenticated = true;
-		initialState.user = JSON.parse(storedUser);
-	}
-}
-
 export const authSlice = createSlice({
 	name: "auth",
 	initialState,
@@ -57,10 +47,6 @@ export const authSlice = createSlice({
 				state.user = action.payload;
 				state.loading = false;
 				state.error = null;
-
-				// Store user in local storage
-				localStorage.setItem("isAuthenticated", "true");
-				localStorage.setItem("user", JSON.stringify(action.payload));
 			})
 			.addCase(login.rejected, (state, action: PayloadAction<AuthError | undefined>) => {
 				state.loading = false;
@@ -74,10 +60,6 @@ export const authSlice = createSlice({
 				state.user = action.payload;
 				state.loading = false;
 				state.error = null;
-
-				// Store user in local storage
-				localStorage.setItem("isAuthenticated", "true");
-				localStorage.setItem("user", JSON.stringify(action.payload));
 			})
 			.addCase(register.rejected, (state, action: PayloadAction<AuthError | undefined>) => {
 				state.loading = false;
@@ -91,6 +73,13 @@ export const authSlice = createSlice({
 				state.user = null;
 				state.loading = false;
 				state.error = null;
+
+				// Maybe
+				localStorage.clear();
+				if (persistor) {
+					persistor.purge();
+				}
+				return initialState;
 			})
 			.addCase(logout.rejected, (state, action: PayloadAction<AuthError | undefined>) => {
 				state.loading = false;
