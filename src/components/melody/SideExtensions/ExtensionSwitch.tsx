@@ -21,7 +21,7 @@ const ExtensionSwitch: React.FC<ExtensionSwitchProps> = ({ onSelect, selectedExt
 	}, [])
 	
 	return (
-		<div className="flex flex-row items-center h-8 gap-2">
+		<div className="flex flex-row items-center w-full h-8 gap-2">
 			<div onClick={() => onSelect(AvailableExtensions.ModelSelection)}>
 				<div className="rounded-lg cursor-pointer">
 					<p

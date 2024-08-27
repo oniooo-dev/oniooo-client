@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { login, logout, register } from "./authThunks";
 import { User } from "@/lib/types";
-import { persistor } from "@/store/store";
 
 interface AuthState {
 	isAuthenticated: boolean;
@@ -73,18 +72,11 @@ export const authSlice = createSlice({
 				state.user = null;
 				state.loading = false;
 				state.error = null;
-
-				// Maybe
-				localStorage.clear();
-				if (persistor) {
-					persistor.purge();
-				}
-				return initialState;
 			})
 			.addCase(logout.rejected, (state, action: PayloadAction<AuthError | undefined>) => {
 				state.loading = false;
 				state.error = action.payload ? action.payload.message : "Unknown authentication error";
-			});
+			})
 	},
 });
 

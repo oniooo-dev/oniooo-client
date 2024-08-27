@@ -57,7 +57,7 @@ const Navbar = () => {
 	}, []);
 
 	useEffect(() => {
-		console.log("Authentication status changed:", isAuthenticated);
+		console.log("Authentication status changed:", isAuthenticated ? "Authenticated" : "Not authenticated");
 		if (isAuthenticated) {
 			setIsAuthModalOpen(false);
 		}
@@ -71,7 +71,7 @@ const Navbar = () => {
 		<div className="flex flex-row gap-2 px-2 w-full">
 			<div
 				onClick={handleProfileIconClick}
-				className="flex items-center justify-center w-11 h-11 rounded-lg bg-white bg-opacity-0 hover:bg-opacity-20 duration-500"
+				className="flex items-center justify-center w-11 h-11 rounded-lg bg-white bg-opacity-0 hover:bg-opacity-20 duration-500 cursor-pointer"
 			>
 				{isAuthenticated ? (
 					<img src="/icons/navbar/shin-chan-pfp.png" className="w-8 h-8 rounded-full" />

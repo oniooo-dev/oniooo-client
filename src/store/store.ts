@@ -6,7 +6,6 @@ import melodyReducer from "./features/melody/melodySlice";
 import storage from "redux-persist/lib/storage";
 import { combineReducers } from "redux";
 import { PersistConfig, Persistor, persistReducer, persistStore } from "redux-persist";
-import { logoutMiddleware } from "./middleware/logoutMiddleware";
 
 export interface RootState {
 	auth: ReturnType<typeof authReducer>;
@@ -46,7 +45,7 @@ export const store = configureStore({
 			serializableCheck: {
 				ignoredActions: ["persist/PERSIST", "persist/REHYDRATE", "persist/REGISTER"],
 			},
-		}).concat(logoutMiddleware),
+		})
 });
 
 export const persistor: Persistor | null = isClient ? persistStore(store) : null;

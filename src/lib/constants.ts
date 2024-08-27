@@ -11,7 +11,7 @@ export const UNAUTH_MELODY_MODEL_ID = "8cc878e1-2e2c-4c20-abed-b8951f94fddf";
 
 export const NAVBAR_LINKS = [
 	{
-		href: "/",
+		href: "/home",
 		iconUrl: "icons/navbar/home.png",
 	},
 	{

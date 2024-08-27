@@ -6,6 +6,7 @@ import { useAppDispatch } from "@/store/hooks";
 import { selectModelById } from "@/store/features/melody/melodySlice";
 import { fetchModelBasicDetails } from "@/store/features/melody/melodyThunks";
 import { DaoYouMessage } from "@/lib/types";
+import Navbar from "@/components/Navbar/Navbar";
 
 const UnsignedChatInterface = () => {
 	const initialMessage: DaoYouMessage = {
@@ -30,6 +31,9 @@ const UnsignedChatInterface = () => {
 	  
 	return (
 		<div className="flex flex-col w-full h-full items-center">
+			<div className="absolute top-0 left-0 w-full h-full p-2">
+				<Navbar />
+			</div>
 			<div className="flex flex-col w-[90%] lg:w-[60%] h-full">
 				<UnsignedMessageList messages={messages} />
 				<div className="w-[100%] mb-9">

@@ -1,8 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-// import { AxiosError } from "axios";
 import { User } from "@/lib/types";
 import api from "@/store/api";
+import { persistor } from "@/store/store";
 
 interface AuthError {
 	message: string;
@@ -48,6 +47,14 @@ export const login = createAsyncThunk<User, { email: string; password: string },
 export const logout = createAsyncThunk<void, void, { rejectValue: AuthError }>("auth/logout", async (_, { rejectWithValue }) => {
 	try {
 		const response = await api.post("/auth/logout");
+		console.log("Logged out");
+
+		// Maybe
+		// localStorage.clear();
+		// if (persistor) {
+		// 	persistor.purge();
+		// }
+		
 		return;
 	} catch (error: any) {
 		if (error.response && error.response.data) {
