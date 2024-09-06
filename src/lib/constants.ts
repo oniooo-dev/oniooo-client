@@ -1,6 +1,6 @@
 export const NAVBAR_LINKS: { href: string; iconUrl: string }[] = [
 	{
-		href: "/",
+		href: "/home",
 		iconUrl: "icons/navbar/home.png",
 	},
 	{

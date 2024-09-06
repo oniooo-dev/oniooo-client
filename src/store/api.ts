@@ -11,7 +11,7 @@ api.interceptors.response.use(
 		if (error.response && error.response.status === 401) {
 			const { store } = await import("./store");
 			const { logout } = await import("./features/auth/authThunks");
-			store.dispatch(logout());
+			await store.dispatch(logout());
 		}
 		return Promise.reject(error);
 	},

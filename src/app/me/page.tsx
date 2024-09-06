@@ -13,11 +13,21 @@ const MePage = () => {
 	const router = useRouter();
 	const user = useSelector((state: RootState) => state.auth.user);
 
+<<<<<<< HEAD
+=======
+	const subscriptionBannerStyle = "w-full h-96 px-16 py-16 bg-white bg-opacity-20 rounded-lg";
+
+	const handleLogout = () => {
+		dispatch(logout());
+	};
+
+>>>>>>> 93a2e6609c7419898473533b42c078f7d6561893
 	if (!user) {
 		router.push("/home");
 	}
 
 	return (
+<<<<<<< HEAD
 		<div className="flex flex-col md:flex-row w-screen h-full md:h-screen px-16 py-16 bg-black text-white">
 			<BackButton />
 			<div className="flex flex-col w-full md:w-1/2 h-full">
@@ -28,6 +38,30 @@ const MePage = () => {
 					<p className="text-lg">Customize your background</p>
 					<CustomizeBackground />
 					<EditProfileBanner />
+=======
+		<div className="flex flex-row w-full h-full bg-black text-white">
+			<div className="w-[1px] bg-gray-300 bg-opacity-20 z-10"></div> {/* This is a line. */}
+			<div className="flex flex-col w-full p-4 gap-16">
+				<div className="flex flex-col w-full gap-4">
+					<p className="text-5xl font-bold">Account</p>
+					<div className="flex flex-row w-full gap-4 items-center">
+						<img src={user?.icon_url} className="w-36 h-36 rounded-full" />
+						<div className="flex flex-col w-full">
+							<p>Hi {user?.username}</p>
+							<p>Current logged in as {user?.email}</p>
+						</div>
+					</div>
+				</div>
+				<div className="flex flex-col w-full gap-4">
+					<p className="text-3xl font-bold">Subscriptions</p>
+					<div className="grid grid-cols-2 w-full gap-4 items-center">
+						<div className={subscriptionBannerStyle}></div>
+						<div className={subscriptionBannerStyle}></div>
+					</div>
+				</div>
+				<div className="px-4 py-2 rounded-lg bg-white bg-opacity-20 hover:bg-opacity-40 cursor-pointer" onClick={handleLogout}>
+					Logout
+>>>>>>> 93a2e6609c7419898473533b42c078f7d6561893
 				</div>
 			</div>
 		</div>

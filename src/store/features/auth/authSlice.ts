@@ -88,7 +88,7 @@ export const authSlice = createSlice({
 			.addCase(logout.rejected, (state, action: PayloadAction<AuthError | undefined>) => {
 				state.loading = false;
 				state.error = action.payload ? action.payload.message : "Unknown authentication error";
-			});
+			})
 	},
 });
 
