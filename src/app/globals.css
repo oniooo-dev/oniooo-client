@@ -85,9 +85,23 @@ body {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	width: 99%;
+	mask-image: linear-gradient(to right, rgba(0, 0, 0, 1) 95%, rgba(0, 0, 0, 0));
+	-webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 0)); /* For Safari */
+}
+
+.banner-container-clicked {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 	width: 90%;
 	mask-image: linear-gradient(to right, rgba(0, 0, 0, 1) 85%, rgba(0, 0, 0, 0));
 	-webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 1) 85%, rgba(0, 0, 0, 0)); /* For Safari */
+}
+
+.scrollable-vertical {
+	overflow-y: scroll;
+	overflow-x: visible;
 }
 
 .title-container {
@@ -114,4 +128,16 @@ body {
 
 .animate-pulse {
 	animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Add a blinking cursor to the incomplete message */
+.message.incomplete::after {
+	content: "|";
+	animation: blink 1s step-start 0s infinite;
+}
+
+@keyframes blink {
+	50% {
+		visibility: hidden;
+	}
 }

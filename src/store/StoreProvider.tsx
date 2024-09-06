@@ -2,35 +2,14 @@
 
 import React from "react";
 import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
-import { store, persistor } from "./store"; // Adjust the import according to your project structure
+import { store } from "./store";
 
 interface StoreProviderProps {
 	children: React.ReactNode;
 }
 
-const LoadingPage: React.FC = () => {
-	const imgUrl = "https://nofilmschool.com/media-library/the-thing.jpg?id=34081882&width=1245&height=700&quality=90&coordinates=148%2C0%2C148%2C0";
-	return (
-		<div className="absolute top-0 left-0 w-full h-full items-center justify-center bg-black text-white z-50">
-			{/* <img src={imgUrl} alt="Loading" className="w-full h-full" /> */}
-			<p>Loading ...</p>
-		</div>
-	);
-};
-
 const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
-	return (
-		<Provider store={store}>
-			{persistor ? (
-				<PersistGate loading={<LoadingPage />} persistor={persistor}>
-					{children}
-				</PersistGate>
-			) : (
-				<LoadingPage />
-			)}
-		</Provider>
-	);
+	return <Provider store={store}>{children}</Provider>;
 };
 
 export default StoreProvider;

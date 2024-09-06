@@ -1,47 +1,28 @@
+import { Friend } from "./enums";
+
+export interface DaoYouMessage {
+	type: "USER_TEXT" | "SYSTEM_TEXT";
+	content: string;
+	isComplete: boolean;
+}
+
 export interface User {
-	id: string;
+	user_id: string;
 	username: string;
 	email: string;
 	role: string;
 	icon_url: string;
 }
 
-export interface UserOwnedModels {
-	ai_model: {
-		model_id: string;
-		name: string;
-		icon_url: string;
-		short_description: string;
-	};
-}
-
-export interface AIModel {
-	ai_model: {
-		model_id: string;
-		name: string;
-		icon_url: string;
-		short_description: string;
-	};
-}
-
-export interface Conversation {
-	conversation_id: string;
-	model_id: string;
+export interface MelodyChat {
+	chat_id: string;
+	last_active: number;
+	friend: Friend;
 	title: string;
 }
 
-export interface ConversationMessage {
-	id: string;
-	iconUrl: string;
-	senderType: string;
-	senderName: string;
-	content: string;
-}
-
-// For unsigned chat interface
-export interface DaoYouMessage {
-	iconUrl: string;
-	senderType: string;
-	senderName: string;
+export interface MelodyMessage {
+	chat_id: string;
+	type: string;
 	content: string;
 }

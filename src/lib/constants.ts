@@ -1,15 +1,4 @@
-export const UNAUTH_MELODY_MODEL_ID = "8cc878e1-2e2c-4c20-abed-b8951f94fddf";
-
-// export const UNAUTH_MELODY_MODEL = { 
-// 	ai_model: {
-// 		model_id: '8cc878e1-2e2c-4c20-abed-b8951f94fddf', 
-// 		icon_url: 'https://static1.xdaimages.com/wordpress/wp-content/uploads/2024/02/google-gemini-ai-icon.png', 
-// 		name: 'Gemini', 
-// 		short_description: 'Never Online'
-// 	}
-// }
-
-export const NAVBAR_LINKS = [
+export const NAVBAR_LINKS: { href: string; iconUrl: string }[] = [
 	{
 		href: "/",
 		iconUrl: "icons/navbar/home.png",
@@ -24,25 +13,33 @@ export const NAVBAR_LINKS = [
 	},
 ];
 
-export const ME_MENU_LINKS = [
+export const PROMPT_BANNER_ITEMS: { title: string; subtitle: string; prompt: string }[] = [
 	{
-		item: "background",
-		title: "Background",
-		iconUrl: "/icons/me/me-icon.png",
+		title: "Create an illustration",
+		subtitle: "For a bakery in your neighborhood",
+		prompt: "Create an illustration for a bakery in your neighborhood",
 	},
 	{
-		item: "subscription",
-		title: "Subscription",
-		iconUrl: "/icons/me/settings-icon.png",
+		title: "Create an illustration",
+		subtitle: "For a bakery in your neighborhood",
+		prompt: "Create an illustration for a bakery in your neighborhood",
 	},
 	{
-		item: "settings",
-		title: "Settings",
-		iconUrl: "/icons/me/settings-icon.png",
+		title: "Create an illustration",
+		subtitle: "For a bakery in your neighborhood",
+		prompt: "Create an illustration for a bakery in your neighborhood",
 	},
 	{
-		item: "logout",
-		title: "Logout",
-		iconUrl: "/icons/me/settings-icon.png",
+		title: "Create an illustration",
+		subtitle: "For a bakery in your neighborhood",
+		prompt: "Create an illustration for a bakery in your neighborhood",
 	},
+];
+
+export const INITIAL_PROMPT: string[] = [
+	"Yoooo",
+	"Hey, what's up?",
+	"Hello, how can I help you?",
+	"Hey, how can I help you?",
+	"Hi, what's up?",
 ];
