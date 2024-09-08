@@ -41,7 +41,7 @@ const LoginPage = () => {
 		if (isAuthenticated) {
 			router.push("/melody");
 		}
-	}, [isAuthenticated]);
+	}, [isAuthenticated, router]);
 
 	return (
 		<div className={`flex flex-col w-screen h-screen items-center justify-center gap-3 bg-black bg-opacity-90`}>
