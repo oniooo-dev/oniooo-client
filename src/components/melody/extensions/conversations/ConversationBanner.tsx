@@ -5,11 +5,10 @@ import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "@/store/useAppDispatch";
 import { selectChat } from "@/store/features/melody/melodySlice";
-import { Friend } from "@/lib/enums";
 
 interface ConversationBannerProps {
 	chatId: string;
-	friend: Friend;
+	friend: string;
 	title: string;
 }
 
