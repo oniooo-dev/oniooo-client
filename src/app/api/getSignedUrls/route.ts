@@ -1,5 +1,4 @@
-import type { NextApiRequest } from "next";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { Storage } from "@google-cloud/storage";
 import dotenv from "dotenv";
 
@@ -10,7 +9,7 @@ const storage = new Storage({ keyFilename: "oniouu.json" });
 const bucketName = "melody-chat-files";
 
 // POST /api/getSignedUrls
-export async function POST(req: NextApiRequest) {
+export async function POST(req: NextRequest) {
 	try {
 		// Handle JSON stream explicitly if Next.js doesn't parse it automatically
 		const jsonResponse = await new Response(req.body).json();
