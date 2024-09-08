@@ -1,5 +1,3 @@
-import { Friend } from "./enums";
-
 export interface DaoYouMessage {
 	type: "USER_TEXT" | "SYSTEM_TEXT";
 	content: string;
@@ -17,12 +15,17 @@ export interface User {
 export interface MelodyChat {
 	chat_id: string;
 	last_active: number;
-	friend: Friend;
+	friend: "MELODY" | "MISU";
 	title: string;
 }
 
 export interface MelodyMessage {
 	chat_id: string;
 	type: string;
+	content: string;
+}
+
+export interface CSText {
+	type: "USER" | "SYSTEM";
 	content: string;
 }

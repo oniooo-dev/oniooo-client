@@ -24,7 +24,7 @@ const UnsignedChatInterface = () => {
 	}, []);
 
 	return (
-		<div className="flex flex-col w-full h-full items-center bg-white bg-opacity-20">
+		<div className="flex flex-col w-full h-full items-center">
 			<div className="flex flex-col w-[90%] lg:w-[70%] xl:w-[60%] 2xl:w-[50%] h-full">
 				<UnsignedMessageList messages={messages} />
 				<div className="w-[100%] mb-9">

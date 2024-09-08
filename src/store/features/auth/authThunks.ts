@@ -1,7 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { User } from "@/lib/types";
 import api from "@/store/api";
-import { persistor } from "@/store/store";
 
 interface AuthError {
 	message: string;
@@ -14,7 +13,6 @@ export const register = createAsyncThunk<
 	{ rejectValue: AuthError }
 >("auth/register", async (userData, { rejectWithValue }) => {
 	try {
-<<<<<<< HEAD
 		console.log("Registering with data:", userData);
 
 		if (userData.username === "" || userData.email === "" || userData.password === "") {
@@ -29,18 +27,6 @@ export const register = createAsyncThunk<
 
 		console.log(response.data);
 		return response.data;
-=======
-		const response = await api.post("/auth/logout");
-		console.log("Logged out");
-
-		// Maybe
-		// localStorage.clear();
-		// if (persistor) {
-		// 	persistor.purge();
-		// }
-		
-		return;
->>>>>>> 93a2e6609c7419898473533b42c078f7d6561893
 	} catch (error: any) {
 		if (error.response && error.response.data) {
 			// Assuming the backend sends { message: string } in the response body

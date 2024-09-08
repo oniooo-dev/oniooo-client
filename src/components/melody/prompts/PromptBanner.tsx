@@ -20,11 +20,11 @@ const PromptBanner: React.FC<PromptBannerProps> = ({ title, subtitle, prompt, on
 	};
 	return (
 		<div
-			className="flex flex-col w-full rounded-xl px-4 py-3 bg-black bg-opacity-40 hover:opacity-60 cursor-pointer duration-500"
+			className="flex flex-col w-full rounded-xl px-6 py-4 bg-black bg-opacity-40 hover:opacity-60 cursor-pointer duration-500"
 			onClick={handleClick}
 		>
-			<p className="text-sm">{title}</p>
-			<p className="text-sm text-white text-opacity-50">{subtitle}</p>
+			<p className="text-md">{title}</p>
+			<p className="text-md text-white text-opacity-50">{subtitle}</p>
 		</div>
 	);
 };
