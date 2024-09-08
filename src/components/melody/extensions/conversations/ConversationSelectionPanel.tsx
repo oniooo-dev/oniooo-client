@@ -29,7 +29,7 @@ const ConversationSelectionPanel = () => {
 						src="https://play-lh.googleusercontent.com/Yl_DmFMJrR7cLUqDd9A2OpevA-5dwbCDQkyxNOGUb0HwVykaxXxpHR8qFsDEJHuQDA8"
 						className="w-[100px] h-[100px]"
 					/>
-					<p className="text-white text-opacity-100">U ain't logged in!</p>
+					<p className="text-white text-opacity-100">{`U ain't logged in!`}</p>
 				</div>
 			)}
 		</ul>

@@ -91,7 +91,7 @@ const LoginPage = () => {
 			</form>
 			<div className="flex flex-col w-[300px] gap-2">
 				<div className="flex flex-row w-full justify-center gap-2 py-1 text-[13px]">
-					<p className="text-gray-300 opacity-70">Don't have an account ?</p>
+					<p className="text-gray-300 opacity-70">{`Don't have an account ?`}</p>
 					<p className="text-white font-medium cursor-pointer" onClick={handleSignup}>
 						Sign up
 					</p>
