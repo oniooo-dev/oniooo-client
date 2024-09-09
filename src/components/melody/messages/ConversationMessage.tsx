@@ -35,7 +35,7 @@ const ConversationMessage: React.FC<ConversationMessageProps> = ({ content }) =>
 
 	return (
 		<div className="flex flex-col max-w-full px-4 py-3 rounded-[10px] bg-black bg-opacity-40">
-			<ReactMarkdown
+			{/* <ReactMarkdown
 				remarkPlugins={[gfm]}
 				components={{
 					code({ node, inline, className, children, ...props }) {
@@ -65,7 +65,8 @@ const ConversationMessage: React.FC<ConversationMessageProps> = ({ content }) =>
 				}}
 			>
 				{preprocessedContent}
-			</ReactMarkdown>
+			</ReactMarkdown> */}
+			{content}
 		</div>
 	);
 };
