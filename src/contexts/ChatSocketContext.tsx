@@ -1,7 +1,5 @@
-import { DaoYouMessage } from "@/lib/types";
-import { RootState } from "@/store/store";
+import { MelodyMessage } from "@/lib/types";
 import React, { createContext, useState, useContext, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
 import { io, Socket } from "socket.io-client";
 
 type SocketStatus = "connected" | "connecting" | "disconnected" | "disconnecting" | "error";
@@ -10,7 +8,7 @@ interface IChatSocketContext {
 	prompt: string;
 	setPrompt: (newPrompt: string) => void;
 	currentChunks: string[];
-	messages: DaoYouMessage[];
+	messages: MelodyMessage[];
 	socket: Socket | null;
 	loading: boolean;
 	status: SocketStatus;
@@ -18,8 +16,6 @@ interface IChatSocketContext {
 	disconnect: () => void;
 	sendMessage: (message: string) => void;
 }
-
-const anotherInitialMessage: string = `Hello! I'm Melody, your friendly guide to the world of algorithms! 🤖`;
 
 export const ChatSocketContext = createContext<IChatSocketContext | undefined>(undefined);
 
@@ -34,18 +30,8 @@ export const useChatSocket = () => {
 };
 
 export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-	// ...
-	const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
-
-	// Initial message to display when the chat is opened
-	const initialMessage: DaoYouMessage = {
-		type: "SYSTEM_TEXT",
-		content: anotherInitialMessage,
-		isComplete: true,
-	};
-
 	const [prompt, setPrompt] = useState<string>("");
-	const [messages, setMessages] = useState<DaoYouMessage[]>([initialMessage]);
+	const [messages, setMessages] = useState<MelodyMessage[]>([]);
 	const [currentChunks, setCurrentChunks] = useState<string[]>([]);
 
 	const [socket, setSocket] = useState<Socket | null>(null);
@@ -62,7 +48,7 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 	}, [currentChunks]);
 
 	useEffect(() => {
-		const newSocket = io(url, { autoConnect: true });
+		const newSocket = io(url, { autoConnect: true, transports: ["websocket"] });
 
 		newSocket.on("connect", () => {
 			setStatus("connected");
@@ -112,7 +98,7 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 			newSocket.off("connect");
 			newSocket.off("disconnect");
 			newSocket.off("connect_error");
-			newSocket.off("melody_message");
+			newSocket.off("receive_stream");
 			newSocket.close();
 		};
 	}, [url]);

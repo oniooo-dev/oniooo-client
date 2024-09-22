@@ -8,11 +8,10 @@ import { selectChat } from "@/store/features/melody/melodySlice";
 
 interface ConversationBannerProps {
 	chatId: string;
-	friend: string;
 	title: string;
 }
 
-const ConversationBanner: React.FC<ConversationBannerProps> = ({ chatId, friend, title }) => {
+const ConversationBanner: React.FC<ConversationBannerProps> = ({ chatId, title }) => {
 	const dispatch = useAppDispatch();
 	const selectedChatId = useSelector((state: RootState) => state.melody.selectedChatId);
 	const [isHovered, setIsHovered] = useState(false);
@@ -21,7 +20,7 @@ const ConversationBanner: React.FC<ConversationBannerProps> = ({ chatId, friend,
 
 	const handleMouseClick = () => {
 		console.log("Selected conversation id: ", chatId);
-		dispatch(selectChat({ chatId, friend }));
+		dispatch(selectChat({ chatId }));
 	};
 
 	const handleOptionsClick = (event: React.MouseEvent<HTMLDivElement>) => {

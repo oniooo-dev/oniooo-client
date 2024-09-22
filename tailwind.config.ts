@@ -13,6 +13,12 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      boxShadow: {
+        'moderate-white-glow': '0 0 5px rgba(255,255,255,0.2), 0 0 10px rgba(255,255,255,0.2), 0 0 15px rgba(255,255,255,0.2), 0 0 20px rgba(255,255,255,0.2)',
+      },
+      fontFamily: {
+        sans: ['Poppins', 'sans-serif'],
+      },
     },
     screens: {
       'sm': '640px',
@@ -31,6 +37,8 @@ const config: Config = {
       // => @media (min-width: 1536px) { ... }
     }
   },
-  plugins: [],
+  plugins: [
+    require('tailwindcss-gradients'), // Pour les gradients
+  ],
 };
 export default config;

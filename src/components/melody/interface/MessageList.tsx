@@ -2,10 +2,9 @@ import React, { useEffect, useRef } from "react";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import ConversationMessage from "../messages/ConversationMessage";
-import ChatHeader from "./ChatHeader";
 import { useAppDispatch } from "@/store/useAppDispatch";
 import { fetchMessagesByChatId } from "@/store/features/melody/melodyThunks";
-import { motion, AnimatePresence } from "framer-motion";
+import ImageFile from "../messages/files/ImageFile";
 
 interface MessageListProps {
 	files: File[];
@@ -15,6 +14,10 @@ const MessageList: React.FC<MessageListProps> = ({ files }) => {
 	const dispatch = useAppDispatch();
 	const messages = useSelector((state: RootState) => state.melody.messages);
 	const chatId = useSelector((state: RootState) => state.melody.selectedChatId);
+	const user = useSelector((state: RootState) => state.auth.user);
+
+	// Melody's icon url
+	const melodyIconUrl = "https://tr.rbxcdn.com/196d20775e64758b25c76b4b2e470d89/420/420/Hat/Webp";
 
 	// Create a ref for the messages container
 	const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -34,19 +37,9 @@ const MessageList: React.FC<MessageListProps> = ({ files }) => {
 	}, [dispatch, chatId]);
 
 	return (
-		<div className="flex flex-col max-w-full h-full gap-4 overflow-y-scroll hide-scrollbar">
-			<ChatHeader />
-			<AnimatePresence>
-				{messages.length === 0 && (
-					<motion.div className="flex flex-row w-full gap-4">
-						<img
-							src="https://tr.rbxcdn.com/196d20775e64758b25c76b4b2e470d89/420/420/Hat/Webp"
-							className="w-8 h-8 rounded-full mt-[8px]"
-						/>
-						<ConversationMessage content={"Hi"} />
-					</motion.div>
-				)}
-			</AnimatePresence>
+		<div className="flex flex-col max-w-full h-full gap-3 overflow-y-scroll hide-scrollbar">
+			<div className="h-40"></div>
+			<ImageFile imgUrl={null} />
 			{messages.map((message, index) => {
 				if (message.type === "SYSTEM_TEXT") {
 					let currLastSender = lastSender;
@@ -55,7 +48,7 @@ const MessageList: React.FC<MessageListProps> = ({ files }) => {
 						<div key={index} className="flex flex-row w-full gap-4">
 							{currLastSender !== "SYSTEM" ? (
 								<img
-									src="https://tr.rbxcdn.com/196d20775e64758b25c76b4b2e470d89/420/420/Hat/Webp"
+									src={melodyIconUrl}
 									className="w-8 h-8 rounded-full mt-[8px]"
 								/>
 							) : (
@@ -73,7 +66,7 @@ const MessageList: React.FC<MessageListProps> = ({ files }) => {
 								<ConversationMessage content={message.content} />
 								{currLastSender !== "USER" ? (
 									<img
-										src="https://pbs.twimg.com/media/F-28_vlXcAAcJFP.jpg"
+										src={user?.icon_url}
 										className="w-8 h-8 rounded-full mt-[8px]"
 									/>
 								) : (

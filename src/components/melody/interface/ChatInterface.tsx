@@ -1,20 +1,10 @@
 import React, { useState } from "react";
 import ChatInputBox from "./ChatInputBox";
 import MessageList from "./MessageList";
-import UserCurrencyBalance from "@/components/layout/UserCurrencyBalance";
-import UserProfileIcon from "@/components/layout/UserProfileIcon";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import AuthButton from "@/components/layout/AuthButton";
 
-interface ChatInterfaceProps {
-	isSideExtensionsOpen: boolean;
-}
-
-const ChatInterface: React.FC<ChatInterfaceProps> = ({ isSideExtensionsOpen }) => {
+const ChatInterface: React.FC = () => {
 	const [files, setFiles] = useState<File[]>([]);
 	const [isDraggingOver, setIsDraggingOver] = useState<boolean>(false);
-	const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
 	const handleFileBufferReset = () => {
 		setFiles([]);
@@ -47,9 +37,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ isSideExtensionsOpen }) =
 
 	return (
 		<div
-			className={`relative flex flex-col w-full h-full items-center ${isSideExtensionsOpen ? "rounded-l-2xl" : ""} bg-white bg-opacity-[0.1]`}
+			className={`relative flex flex-col w-full h-full items-center`}
 			onDragOver={handleDragOver}
 		>
+			{/* Drag and drop interface */}
 			{isDraggingOver && (
 				<div
 					className="absolute top-0 left-0 flex w-full h-full items-center justify-center bg-black bg-opacity-40 z-10"
@@ -64,13 +55,13 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ isSideExtensionsOpen }) =
 					/>
 				</div>
 			)}
-			<div className="flex flex-row w-full justify-between pt-5 pb-4 px-6 bg-white bg-opacity-0">
-				{isAuthenticated ? <UserCurrencyBalance /> : <div></div>}
-				{isAuthenticated ? <UserProfileIcon /> : <AuthButton />}
-			</div>
+
+			{/* Message list */}
 			<div className="w-[90%] lg:w-[60%] h-full">
 				<MessageList files={files} />
 			</div>
+
+			{/* Chat input box */}
 			<div className="absolute bottom-0 flex w-[90%] lg:w-[60%] mb-8">
 				<ChatInputBox
 					files={files}

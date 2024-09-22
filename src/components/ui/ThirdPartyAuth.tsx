@@ -12,13 +12,13 @@ const ThirdPartyAuth = () => {
 	return (
 		<div className="flex flex-row gap-2 w-full mt-2">
 			<div className="flex flex-row items-center gap-2 w-full">
-				<p className="text-white cursor-pointer">Google</p>
+				<p className="text-[#f2f2f2] cursor-pointer">Google</p>
 			</div>
 			<div className="flex flex-row items-center gap-2 w-full" onClick={handleDiscord}>
-				<p className="text-white cursor-pointer">Discord</p>
+				<p className="text-[#f2f2f2] cursor-pointer">Discord</p>
 			</div>
 			<div className="flex flex-row items-center gap-2 w-full">
-				<p className="text-white cursor-pointer">Microsoft</p>
+				<p className="text-[#f2f2f2] cursor-pointer">Microsoft</p>
 			</div>
 		</div>
 	);

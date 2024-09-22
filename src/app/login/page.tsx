@@ -7,7 +7,6 @@ import { login } from "../../store/features/auth/authThunks";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import BackButton from "@/components/layout/BackButton";
-import ThirdPartyAuth from "@/components/ui/ThirdPartyAuth";
 
 const LoginPage = () => {
 	const router = useRouter();
@@ -52,16 +51,16 @@ const LoginPage = () => {
 				/>
 			</div>
 			<BackButton />
-			<div className="absolute inset-x-0 bottom-0 flex flex-row justify-center gap-2 mx-auto w-max text-white text-opacity-60 text-[13px] mb-6">
-				<p className="cursor-pointer text-white text-opacity-60 hover:text-opacity-100 duration-500">
+			<div className="absolute inset-x-0 bottom-0 flex flex-row justify-center gap-2 mx-auto w-max text-[#f2f2f2] text-opacity-60 text-[13px] mb-6">
+				<p className="cursor-pointer text-[#f2f2f2] text-opacity-60 hover:text-opacity-100 duration-500">
 					Terms of Service
 				</p>
 				<p>|</p>
-				<p className="cursor-pointer text-white text-opacity-60 hover:text-opacity-100 duration-500">
+				<p className="cursor-pointer text-[#f2f2f2] text-opacity-60 hover:text-opacity-100 duration-500">
 					Privacy Policy
 				</p>
 			</div>
-			<form className="flex flex-col items-center gap-3 text-white text-[14px]" onSubmit={handleSubmit}>
+			<form className="flex flex-col items-center gap-3 text-[#f2f2f2] text-[14px]" onSubmit={handleSubmit}>
 				<p className="text-xl font-semibold mb-2">Login</p>
 				<input
 					type="email"
@@ -79,7 +78,7 @@ const LoginPage = () => {
 				/>
 				{error && (
 					<div className="flex items-center justify-center px-4 border border-red-600 border-opacity-50 w-full h-[45px] rounded-[10px]">
-						<p className="text-white text-xs">{error}</p>
+						<p className="text-[#f2f2f2] text-xs">{error}</p>
 					</div>
 				)}
 				<button
@@ -92,7 +91,7 @@ const LoginPage = () => {
 			<div className="flex flex-col w-[300px] gap-2">
 				<div className="flex flex-row w-full justify-center gap-2 py-1 text-[13px]">
 					<p className="text-gray-300 opacity-70">{`Don't have an account ?`}</p>
-					<p className="text-white font-medium cursor-pointer" onClick={handleSignup}>
+					<p className="text-[#f2f2f2] font-medium cursor-pointer" onClick={handleSignup}>
 						Sign up
 					</p>
 				</div>
@@ -101,7 +100,6 @@ const LoginPage = () => {
 					<p className="text-gray-500 opacity-80">OR</p>
 					<hr className="border-gray-500 w-full" />
 				</div>
-				<ThirdPartyAuth />
 			</div>
 		</div>
 	);

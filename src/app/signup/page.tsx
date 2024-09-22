@@ -55,7 +55,7 @@ const SignupPage = () => {
 			</div>
 			<div
 				className={`absolute top-0 left-0 flex flex-row items-center px-10 py-8 gap-2 hover:gap-3 duration-500 
-							text-white text-opacity-50 hover:text-opacity-100 hover:scale-[1.01] cursor-pointer`}
+							text-[#f2f2f2] text-opacity-50 hover:text-opacity-100 hover:scale-[1.01] cursor-pointer`}
 				onClick={handleBack}
 			>
 				<img
@@ -64,16 +64,16 @@ const SignupPage = () => {
 				/>
 				<p>Back</p>
 			</div>
-			<div className="absolute inset-x-0 bottom-0 flex flex-row justify-center gap-2 mx-auto w-max text-white text-opacity-60 text-[13px] mb-6">
-				<p className="cursor-pointer text-white text-opacity-60 hover:text-opacity-100 duration-500">
+			<div className="absolute inset-x-0 bottom-0 flex flex-row justify-center gap-2 mx-auto w-max text-[#f2f2f2] text-opacity-60 text-[13px] mb-6">
+				<p className="cursor-pointer text-[#f2f2f2] text-opacity-60 hover:text-opacity-100 duration-500">
 					Terms of Service
 				</p>
 				<p>|</p>
-				<p className="cursor-pointer text-white text-opacity-60 hover:text-opacity-100 duration-500">
+				<p className="cursor-pointer text-[#f2f2f2] text-opacity-60 hover:text-opacity-100 duration-500">
 					Privacy Policy
 				</p>
 			</div>
-			<form className="flex flex-col items-center gap-3 text-white text-[14px]" onSubmit={handleSubmit}>
+			<form className="flex flex-col items-center gap-3 text-[#f2f2f2] text-[14px]" onSubmit={handleSubmit}>
 				<p className="text-xl font-semibold mb-2">Create an account</p>
 				<input
 					type="text"
@@ -98,7 +98,7 @@ const SignupPage = () => {
 				/>
 				{error && (
 					<div className="flex items-center justify-center px-4 border border-red-600 border-opacity-50 w-full h-[45px] rounded-[10px]">
-						<p className="text-white text-xs">{error}</p>
+						<p className="text-[#f2f2f2] text-xs">{error}</p>
 					</div>
 				)}
 				<button
@@ -111,7 +111,7 @@ const SignupPage = () => {
 			<div className="flex flex-col w-[300px] gap-2">
 				<div className="flex flex-row w-full justify-center gap-2 py-1 text-[13px]">
 					<p className="text-gray-300 opacity-70">Already have an account ?</p>
-					<p className="text-white font-medium cursor-pointer" onClick={handleLogin}>
+					<p className="text-[#f2f2f2] font-medium cursor-pointer" onClick={handleLogin}>
 						Log in
 					</p>
 				</div>
@@ -123,13 +123,13 @@ const SignupPage = () => {
 				<div className="flex flex-row gap-2 w-full mt-2">
 					<div className="flex flex-row gap-2 w-full mt-2">
 						<div className="flex flex-row items-center gap-2 w-full">
-							<p className="text-white cursor-pointer">Google</p>
+							<p className="text-[#f2f2f2] cursor-pointer">Google</p>
 						</div>
 						<div className="flex flex-row items-center gap-2 w-full">
-							<p className="text-white cursor-pointer">Discord</p>
+							<p className="text-[#f2f2f2] cursor-pointer">Discord</p>
 						</div>
 						<div className="flex flex-row items-center gap-2 w-full">
-							<p className="text-white cursor-pointer">Microsoft</p>
+							<p className="text-[#f2f2f2] cursor-pointer">Microsoft</p>
 						</div>
 					</div>
 				</div>

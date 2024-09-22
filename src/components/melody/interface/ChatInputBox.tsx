@@ -7,7 +7,6 @@ import { RootState } from "@/store/store";
 import { useAppDispatch } from "@/store/useAppDispatch";
 import { createChat, createChatMessage } from "@/store/features/melody/melodyThunks";
 import { ChatState } from "@/lib/enums";
-import PromptBanner from "../prompts/PromptBanner";
 import { PROMPT_BANNER_ITEMS } from "@/lib/constants";
 
 interface ChatInputBoxProps {
@@ -22,7 +21,6 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onFileDrop, onRemove
 	const dispatch = useAppDispatch();
 	const chatState = useSelector((state: RootState) => state.melody.chatState);
 	const selectedChatId = useSelector((state: RootState) => state.melody.selectedChatId);
-	const friendWhoIsThere = useSelector((state: RootState) => state.melody.friendWhoIsThere);
 	const loading = useSelector((state: RootState) => state.melody.loading);
 
 	// ...
@@ -33,6 +31,10 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onFileDrop, onRemove
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const promptImproveRef = useRef<HTMLDivElement>(null);
 	const promptImproveButtonRef = useRef<HTMLDivElement>(null);
+
+	const handleClose = () => {
+		setShowPromptBanner(false);
+	};
 
 	const handlePromptImproveHover = () => {
 		setIsPromptImproveHovered(true);
@@ -166,7 +168,7 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onFileDrop, onRemove
 
 			if (chatState === ChatState.NEW_CHAT) {
 				// Create a new chat
-				dispatch(createChat({ friend: friendWhoIsThere, firstPrompt: currentPrompt }));
+				dispatch(createChat({ firstPrompt: currentPrompt }));
 			} else {
 				// Send the message to the backend
 				dispatch(createChatMessage({ chatId: selectedChatId, message: currentPrompt }));
@@ -191,18 +193,26 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onFileDrop, onRemove
 		const textarea = textareaRef.current;
 		if (!textarea) return;
 
-		const minHeight = 50; // Set the minimum height to 50px
-		const maxHeight = 300; // Maximum number of rows
+		const lineHeight = parseInt(getComputedStyle(textarea).lineHeight);
+		const minHeight = lineHeight; // Single line height
+		const maxHeight = lineHeight * 5; // 5 lines maximum, adjust as needed
 
-		// Automatically adjust height to fit content
-		textarea.style.height = "inherit"; // Reset height to default to accurately read scrollHeight
-		textarea.style.height = `${Math.min(maxHeight, Math.max(minHeight, textarea.scrollHeight))}px`; // Set height based on content, ensuring it stays within the min and max height
+		// Reset height to min-height to accurately calculate scrollHeight
+		textarea.style.height = `${minHeight}px`;
+
+		const newHeight = Math.min(Math.max(textarea.scrollHeight, minHeight), maxHeight);
+		textarea.style.height = `${newHeight}px`;
+
+		// Add scrollbar if content exceeds maxHeight
+		textarea.style.overflowY = textarea.scrollHeight > maxHeight ? 'auto' : 'hidden';
 	};
 
-	const handleClose = () => {
-		setShowPromptBanner(false);
-	};
+	// Initial height adjustment for the textarea
+	useEffect(() => {
+		adjustHeight();
+	}, []);
 
+	// Add event listener for clicking outside of the prompt improve div
 	useEffect(() => {
 		document.addEventListener("mousedown", handlePromptImproveClickOutside);
 		return () => {
@@ -210,6 +220,7 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onFileDrop, onRemove
 		};
 	}, []);
 
+	// Show the prompt banner if the chat state is NEW_CHAT
 	useEffect(() => {
 		if (chatState === ChatState.NEW_CHAT) {
 			setShowPromptBanner(true);
@@ -218,26 +229,33 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onFileDrop, onRemove
 		}
 	}, [chatState]);
 
+	// Reset the prompt and file buffer
 	useEffect(() => {
 		setCurrentPrompt("");
 		handleFileBufferReset();
-	}, [friendWhoIsThere, selectedChatId]);
+	}, [selectedChatId]);
 
 	return (
 		<div className="flex flex-col w-full justify-center items-center">
 			<div className="w-full mb-2">
 				{files && files.length > 0 && <FileUploadList files={files} onRemove={onRemove} />}
 			</div>
+			{/* Yes, all those divs are necessary. */}
 			<div className="flex flex-row w-full gap-2">
-				<div className="flex flex-col w-full pl-5 pr-3 rounded-[10px] bg-black bg-opacity-30">
+				<div className="flex flex-col w-full pl-5 pr-3 rounded-3xl bg-black bg-opacity-40">
 					<div className="flex flex-row w-full gap-2 py-1">
-						<div className={`flex flex-row w-full gap-2`}>
+						<div className="flex flex-row items-center w-full gap-2">
+							{/* File Upload Icon */}
 							<div className="mt-auto mb-[10px]">
 								<FileUploadIcon onFileDrop={handleFileDrop} />
 							</div>
 							<textarea
 								ref={textareaRef}
-								className="w-full px-1 py-2 rounded-lg bg-transparent ring-0 focus:outline-none resize-none"
+								className="w-full px-1 py-2 rounded-lg bg-transparent ring-0 focus:outline-none resize-none overflow-hidden"
+								style={{
+									minHeight: 'calc(1em + 16px)', // Adjust based on your font size and padding
+									lineHeight: '1.5', // Adjust as needed
+								}}
 								placeholder="Message"
 								value={currentPrompt}
 								onChange={handlePromptChange}
@@ -269,9 +287,7 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onFileDrop, onRemove
 						</div>
 					</div>
 				</div>
-				<div
-					className={`mt-auto ${loading || (currentPrompt === "" && files.length === 0) ? "opacity-50" : "hover:opacity-80 duration-300"}`}
-				>
+				<div className={`mt-auto ${loading || (currentPrompt === "" && files.length === 0) ? "opacity-50" : "hover:opacity-60 duration-500"}`}>
 					<SendButton onClick={handleSendMessage} />
 				</div>
 			</div>
@@ -287,22 +303,6 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onFileDrop, onRemove
 					<div className="w-full px-4 py-2 bg-white bg-opacity-10 rounded-lg" onClick={handlePromptImprove}>
 						<p>Prompt #2</p>
 					</div>
-				</div>
-			)}
-			{showPromptBanner && (
-				<div
-					className="absolute top-0 grid grid-cols-2 w-full py-2 gap-2 -translate-y-full"
-					ref={promptImproveRef}
-				>
-					{PROMPT_BANNER_ITEMS.slice(0, 4).map((item, index) => (
-						<PromptBanner
-							key={index}
-							title={item.title}
-							subtitle={item.subtitle}
-							prompt={item.prompt}
-							onClose={handleClose}
-						/>
-					))}
 				</div>
 			)}
 		</div>

@@ -42,8 +42,8 @@ const FileUploadItem: React.FC<FileUploadItemProps> = memo(({ file, onRemove }) 
 							<p>{file.type}</p>
 						</div>
 						<div className="flex flex-col justify-center">
-							<p className="text-white text-xs text-nowrap">{file.name}</p>
-							<p className="text-white text-opacity-80 text-xs text-nowrap">{file.size} KB</p>
+							<p className="text-[#f2f2f2] text-xs text-nowrap">{file.name}</p>
+							<p className="text-[#f2f2f2] text-opacity-80 text-xs text-nowrap">{file.size} KB</p>
 						</div>
 					</>
 				)}

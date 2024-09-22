@@ -12,7 +12,6 @@ import {
 
 interface MelodyState {
 	chatState: ChatState;
-	friendWhoIsThere: string;
 	loading: boolean;
 	error: string | null;
 	chats: MelodyChat[];
@@ -22,7 +21,6 @@ interface MelodyState {
 
 const initialState: MelodyState = {
 	chatState: ChatState.NEW_CHAT,
-	friendWhoIsThere: "MELODY",
 	loading: false,
 	chats: [],
 	selectedChatId: "",
@@ -34,10 +32,9 @@ export const melodySlice = createSlice({
 	name: "melody",
 	initialState,
 	reducers: {
-		selectChat(state, action: PayloadAction<{ chatId: string; friend: string }>) {
+		selectChat(state, action: PayloadAction<{ chatId: string }>) {
 			state.loading = true;
 			state.chatState = ChatState.EXISTING_CHAT;
-			state.friendWhoIsThere = action.payload.friend;
 			state.selectedChatId = action.payload.chatId;
 			state.error = null;
 			state.loading = false;
@@ -45,16 +42,6 @@ export const melodySlice = createSlice({
 		startNewMelodyChat(state) {
 			state.loading = true;
 			state.chatState = ChatState.NEW_CHAT;
-			state.friendWhoIsThere = "MELODY";
-			state.selectedChatId = "";
-			state.messages = [];
-			state.error = null;
-			state.loading = false;
-		},
-		startNewMisuChat(state) {
-			state.loading = true;
-			state.chatState = ChatState.NEW_CHAT;
-			state.friendWhoIsThere = "MISU";
 			state.selectedChatId = "";
 			state.messages = [];
 			state.error = null;
@@ -71,7 +58,6 @@ export const melodySlice = createSlice({
 				(state, action: PayloadAction<{ newChat: MelodyChat; newMessage: MelodyMessage }>) => {
 					state.loading = false;
 					state.chatState = ChatState.EXISTING_CHAT;
-					state.friendWhoIsThere = "MELODY";
 					state.chats = [action.payload.newChat, ...state.chats];
 					state.selectedChatId = action.payload.newChat.chat_id;
 					state.messages = [action.payload.newMessage];
@@ -145,5 +131,5 @@ export const melodySlice = createSlice({
 	},
 });
 
-export const { selectChat, startNewMelodyChat, startNewMisuChat } = melodySlice.actions;
+export const { selectChat, startNewMelodyChat } = melodySlice.actions;
 export default melodySlice.reducer;

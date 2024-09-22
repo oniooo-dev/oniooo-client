@@ -1,37 +1,27 @@
-"use client";
-
-import React, { useCallback, useEffect, useState } from "react";
-// import NavbarLink from "./NavbarLink";
-import { NAVBAR_LINKS } from "@/lib/constants";
-import { usePathname } from "next/navigation";
+import React from 'react'
+import UserProfileIcon from '../layout/UserProfileIcon';
+import AuthButton from '../layout/AuthButton';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 const Navbar = () => {
-	const pathname = usePathname();
+    const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+    return (
+        <div className="flex-horizontal items-center justify-between w-full px-12 py-3 bg-white bg-opacity-10 z-10 text-[13px]">
+            <div className="flex-horizontal items-center justify-between gap-8">
+                <p className="text-[#e1ccff]">Melody</p>
+                <p className="text-[#fec4c6]">Mochi Shop</p>
+                <p className="text-[#fff0c0]">Meowvice</p>
+            </div>
+            <div className="flex-horizontal items-center justify-between gap-6">
+                <div className="w-8 h-8 bg-white bg-opacity-10 rounded-full"></div>
+                <div className="w-8 h-8 bg-white bg-opacity-10 rounded-full"></div>
+                {
+                    isAuthenticated ? <UserProfileIcon /> : <AuthButton />
+                }
+            </div>
+        </div>
+    )
+}
 
-	const [selectedPage, setSelectedPage] = useState<string>("");
-
-	const handlePageSelect = useCallback((href: string) => {
-		setSelectedPage(href);
-		window.history.pushState({}, "", href);
-	}, []);
-
-	useEffect(() => {
-		setSelectedPage(pathname);
-	}, [pathname]);
-
-	return (
-		<div className="flex flex-row gap-2 w-full">
-			{/* {NAVBAR_LINKS.map((link, index) => (
-				<NavbarLink
-					key={index}
-					href={link.href}
-					iconUrl={link.iconUrl}
-					onSelect={() => handlePageSelect(link.href)}
-					selectedPage={selectedPage}
-				/>
-			))} */}
-		</div>
-	);
-};
-
-export default Navbar;
+export default Navbar

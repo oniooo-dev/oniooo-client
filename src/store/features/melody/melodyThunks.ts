@@ -5,12 +5,11 @@ import api from "@/store/api";
 // should return an array of messages
 export const createChat = createAsyncThunk<
 	{ newChat: MelodyChat; newMessage: MelodyMessage },
-	{ friend: string; firstPrompt: string },
+	{ firstPrompt: string },
 	{ rejectValue: MelodyError }
->("melody/createChat", async (params: { friend: string; firstPrompt: string }, { rejectWithValue }) => {
+>("melody/createChat", async (params: { firstPrompt: string }, { rejectWithValue }) => {
 	try {
-		const requestData: { friend: string; firstPrompt: string } = {
-			friend: params.friend,
+		const requestData: { firstPrompt: string } = {
 			firstPrompt: params.firstPrompt,
 		};
 		const response = await api.post(`/melody/chats`, requestData);

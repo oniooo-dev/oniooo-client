@@ -9,17 +9,21 @@ const ConversationSelectionPanel = () => {
 	const dispatch = useAppDispatch();
 	const chats = useSelector((state: RootState) => state.melody.chats);
 	const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+
 	useEffect(() => {
 		// Fetch the conversations
-		dispatch(fetchChats());
-	}, [dispatch]);
+		if (isAuthenticated) {
+			dispatch(fetchChats());
+		}
+	}, [dispatch, isAuthenticated]);
+
 	return (
-		<ul className="flex flex-col h-full gap-1 hide-scrollbar" style={{ overflowY: "auto", overflowX: "visible" }}>
+		<ul className="flex flex-col w-[260px] h-full gap-2 hide-scrollbar" style={{ overflowY: "auto", overflowX: "visible" }}>
 			{isAuthenticated ? (
 				chats.map((chat, index) => {
 					return (
 						<li key={index}>
-							<ConversationBanner chatId={chat.chat_id} friend={chat.friend} title={chat.title} />
+							<ConversationBanner chatId={chat.chat_id} title={chat.title} />
 						</li>
 					);
 				})
@@ -29,7 +33,7 @@ const ConversationSelectionPanel = () => {
 						src="https://play-lh.googleusercontent.com/Yl_DmFMJrR7cLUqDd9A2OpevA-5dwbCDQkyxNOGUb0HwVykaxXxpHR8qFsDEJHuQDA8"
 						className="w-[100px] h-[100px]"
 					/>
-					<p className="text-white text-opacity-100">{`U ain't logged in!`}</p>
+					<p className="text-[#f2f2f2] text-opacity-100">{`U ain't logged in!`}</p>
 				</div>
 			)}
 		</ul>

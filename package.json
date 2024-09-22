@@ -2,6 +2,7 @@
 	"name": "oniooo-client",
 	"version": "0.1.0",
 	"private": true,
+	"proxy": "http://localhost:5001",
 	"scripts": {
 		"dev": "next dev",
 		"build": "next build",
@@ -15,10 +16,13 @@
 		"@hcaptcha/react-hcaptcha": "^1.11.0",
 		"@mui/material": "^5.16.7",
 		"@reduxjs/toolkit": "^2.2.7",
+		"@stripe/react-stripe-js": "^2.8.0",
+		"@stripe/stripe-js": "^4.5.0",
 		"axios": "^1.7.3",
 		"dompurify": "^3.1.6",
 		"dotenv": "^16.4.5",
 		"framer-motion": "^11.3.28",
+		"ldrs": "^1.0.2",
 		"marked": "^14.1.0",
 		"next": "^14.2.6",
 		"react": "^18.3.1",
@@ -34,7 +38,8 @@
 		"redux-persist": "^6.0.0",
 		"redux-thunk": "^3.1.0",
 		"remark-gfm": "^4.0.0",
-		"socket.io-client": "^4.7.5"
+		"socket.io-client": "^4.7.5",
+		"tailwindcss-gradients": "^3.0.0"
 	},
 	"devDependencies": {
 		"@types/dompurify": "^3.0.5",
