@@ -13,33 +13,9 @@ export const NAVBAR_LINKS: { href: string; iconUrl: string }[] = [
 	},
 ];
 
-export const PROMPT_BANNER_ITEMS: { title: string; subtitle: string; prompt: string }[] = [
-	{
-		title: "Create an illustration",
-		subtitle: "For a bakery in your neighborhood",
-		prompt: "Create an illustration for a bakery in your neighborhood",
-	},
-	{
-		title: "Create an illustration",
-		subtitle: "For a bakery in your neighborhood",
-		prompt: "Create an illustration for a bakery in your neighborhood",
-	},
-	{
-		title: "Create an illustration",
-		subtitle: "For a bakery in your neighborhood",
-		prompt: "Create an illustration for a bakery in your neighborhood",
-	},
-	{
-		title: "Create an illustration",
-		subtitle: "For a bakery in your neighborhood",
-		prompt: "Create an illustration for a bakery in your neighborhood",
-	},
-];
-
-export const INITIAL_PROMPT: string[] = [
-	"Yoooo",
-	"Hey, what's up?",
-	"Hello, how can I help you?",
-	"Hey, how can I help you?",
-	"Hi, what's up?",
+export const PROMPT_SUGGESTIONS: string[] = [
+	"Create an illustration for a bakery in your neighborhood",
+	"Create an illustration for a bakery in your neighborhood",
+	"Create an illustration for a bakery in your neighborhood",
+	"Create an illustration for a bakery in your neighborhood",
 ];

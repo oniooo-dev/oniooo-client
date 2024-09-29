@@ -66,31 +66,6 @@ export const login = createAsyncThunk<{ user: User }, { email: string; password:
 	},
 );
 
-export const discord = createAsyncThunk<void, void, { rejectValue: AuthError }>(
-	"auth/discord",
-	async (_, { rejectWithValue }) => {
-		try {
-			console.log("Logging in with discord...");
-
-			const response = await api.get("/auth/discord/oauth");
-
-			if (response.status === 200) {
-				return response.data;
-			}
-
-			console.log(response.data);
-			return response.data.user;
-		} catch (error: any) {
-			if (error.response && error.response.data) {
-				// Assuming the backend sends { message: string } in the response body
-				return rejectWithValue({ message: error.response.data.message, name: "AuthError" });
-			} else {
-				return rejectWithValue({ message: error.message, name: "AuthError" });
-			}
-		}
-	},
-);
-
 export const logout = createAsyncThunk<void, void, { rejectValue: AuthError }>(
 	"auth/logout",
 	async (_, { rejectWithValue }) => {

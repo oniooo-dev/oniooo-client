@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { discord, login, logout, register } from "./authThunks";
+import { login, logout, register } from "./authThunks";
 import { User } from "@/lib/types";
 
 interface AuthState {
@@ -61,18 +61,6 @@ export const authSlice = createSlice({
 				state.error = null;
 			})
 			.addCase(login.rejected, (state, action: PayloadAction<AuthError | undefined>) => {
-				state.loading = false;
-				state.error = action.payload ? action.payload.message : "Unknown authentication error";
-			})
-			.addCase(discord.pending, (state) => {
-				state.loading = true;
-			})
-			.addCase(discord.fulfilled, (state) => {
-				state.isAuthenticated = true;
-				state.loading = false;
-				state.error = null;
-			})
-			.addCase(discord.rejected, (state, action: PayloadAction<AuthError | undefined>) => {
 				state.loading = false;
 				state.error = action.payload ? action.payload.message : "Unknown authentication error";
 			})

@@ -4,9 +4,9 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const storage = new Storage({ keyFilename: "oniouu.json" });
+const storage = new Storage({ keyFilename: "oniuuu.json" });
 
-const bucketName = "melody-chat-files";
+const bucketName = "melody-files";
 
 // POST /api/getSignedUrls
 export async function POST(req: NextRequest) {

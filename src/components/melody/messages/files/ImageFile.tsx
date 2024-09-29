@@ -19,7 +19,7 @@ const ImageFile: React.FC<ImageFileProps> = ({ imgUrl }) => {
     };
 
     return (
-        <div className={`relative w-96 p-3 ${!imgUrl && "h-80"} bg-black bg-opacity-40 rounded-xl`}>
+        <div className={`relative w-96 p-3 ${!imgUrl && "h-80"} object-contain bg-white bg-opacity-15 rounded-xl`}>
             {
                 imgUrl ?
                     (

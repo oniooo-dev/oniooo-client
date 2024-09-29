@@ -12,12 +12,6 @@ const MochiPage = () => {
       </div>
       {/* Mochi Banners */}
       <MochiMenu />
-      {/* <div className="flex-vertical gap-3 p-4 bg-white bg-opacity-60 rounded-xl">
-        <div>Restaurant Menu</div>
-        <div>Chow Man</div>
-        <div>General Chicken</div>
-        <div>Low Mein</div>
-      </div> */}
     </div>
   )
 }

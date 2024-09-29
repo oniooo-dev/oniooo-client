@@ -4,10 +4,8 @@ import FileUploadList from "./FileUploadList";
 import SendButton from "./SendButton";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { useAppDispatch } from "@/store/useAppDispatch";
-import { createChat, createChatMessage } from "@/store/features/melody/melodyThunks";
 import { ChatState } from "@/lib/enums";
-import { PROMPT_BANNER_ITEMS } from "@/lib/constants";
+import { useChatSocket } from "@/contexts/ChatSocketContext";
 
 interface ChatInputBoxProps {
 	files: File[];
@@ -17,14 +15,13 @@ interface ChatInputBoxProps {
 }
 
 const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onFileDrop, onRemove, onReset }) => {
-	// ...
-	const dispatch = useAppDispatch();
+	// Redux Stuff
 	const chatState = useSelector((state: RootState) => state.melody.chatState);
 	const selectedChatId = useSelector((state: RootState) => state.melody.selectedChatId);
-	const loading = useSelector((state: RootState) => state.melody.loading);
 
-	// ...
-	const [currentPrompt, setCurrentPrompt] = useState<string>("");
+	// Context Provider
+	const { prompt, setPrompt, sendMessage, loading } = useChatSocket();
+
 	const [isPromptImproveHovered, setIsPromptImproveHovered] = useState<boolean>(false);
 	const [isPromptImproveOpen, setIsPromptImproveOpen] = useState<boolean>(false);
 	const [showPromptBanner, setShowPromptBanner] = useState<boolean>(false);
@@ -79,7 +76,7 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onFileDrop, onRemove
 	};
 
 	const handlePromptChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-		setCurrentPrompt(event.target.value);
+		setPrompt(event.target.value);
 		adjustHeight();
 	};
 
@@ -98,7 +95,7 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onFileDrop, onRemove
 		try {
 			const serializedFiles = JSON.stringify({ files: fileData });
 
-			const response = await fetch("http://localhost:3000/api/getSignedUrls", {
+			const response = await fetch("/api/getSignedUrls", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -149,7 +146,11 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onFileDrop, onRemove
 	}
 
 	const handleSendMessage = async () => {
-		if (loading || (currentPrompt === "" && files.length === 0)) {
+		if (loading) {
+			console.log("Cannot send message while loading");
+			return;
+		}
+		if (prompt === "" && files.length === 0) {
 			console.log("Cannot send empty message");
 			return;
 		}
@@ -157,26 +158,19 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onFileDrop, onRemove
 		// Get the current prompt
 		// Send the prompt and signed URLs to the backend
 		try {
-			// const signedUrls = await fetchSignedUrls(files);
-			// const uploadedFiles = await uploadFiles(files, signedUrls);
+			const signedUrls = await fetchSignedUrls(files);
+			const uploadedFiles = await uploadFiles(files, signedUrls);
 
-			// const newTextMessage: MelodyMessage = {
-			// 	chat_id: selectedChatId,
-			// 	type: "USER_TEXT",
-			// 	content: currentPrompt,
-			// };
+			console.log(signedUrls, uploadedFiles);
 
-			if (chatState === ChatState.NEW_CHAT) {
-				// Create a new chat
-				dispatch(createChat({ firstPrompt: currentPrompt }));
-			} else {
-				// Send the message to the backend
-				dispatch(createChatMessage({ chatId: selectedChatId, message: currentPrompt }));
-			}
+			// Create a USER_TEXT message with the current prompt
+			sendMessage(prompt);
+
+			// Reset the prompt
+			setPrompt("");
 
 			// Clear UI
-			setCurrentPrompt("");
-			// handleFileBufferReset();
+			handleFileBufferReset();
 		} catch (error) {
 			console.log("Error uploading files:", error);
 		}
@@ -231,19 +225,19 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onFileDrop, onRemove
 
 	// Reset the prompt and file buffer
 	useEffect(() => {
-		setCurrentPrompt("");
+		setPrompt("");
 		handleFileBufferReset();
 	}, [selectedChatId]);
 
 	return (
 		<div className="flex flex-col w-full justify-center items-center">
-			<div className="w-full mb-2">
+			<div className="w-full mb-4">
 				{files && files.length > 0 && <FileUploadList files={files} onRemove={onRemove} />}
 			</div>
 			{/* Yes, all those divs are necessary. */}
 			<div className="flex flex-row w-full gap-2">
-				<div className="flex flex-col w-full pl-5 pr-3 rounded-3xl bg-black bg-opacity-40">
-					<div className="flex flex-row w-full gap-2 py-1">
+				<div className="flex flex-col w-full pl-5 pr-4 rounded-xl bg-white bg-opacity-15 backdrop-filter backdrop-blur-lg">
+					<div className="flex flex-row w-full gap-2 py-2">
 						<div className="flex flex-row items-center w-full gap-2">
 							{/* File Upload Icon */}
 							<div className="mt-auto mb-[10px]">
@@ -251,26 +245,28 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onFileDrop, onRemove
 							</div>
 							<textarea
 								ref={textareaRef}
-								className="w-full px-1 py-2 rounded-lg bg-transparent ring-0 focus:outline-none resize-none overflow-hidden"
+								className="w-full px-1 py-2 rounded-lg bg-transparent ring-0 focus:outline-none resize-none overflow-hidden placeholder-gray-300"
 								style={{
 									minHeight: 'calc(1em + 16px)', // Adjust based on your font size and padding
 									lineHeight: '1.5', // Adjust as needed
 								}}
-								placeholder="Message"
-								value={currentPrompt}
+								placeholder="Talk with Melody"
+								value={prompt}
 								onChange={handlePromptChange}
 								onKeyDown={handleKeyDown}
 								maxLength={4096}
+								onFocus={(e) => e.target.placeholder = ""}
+								onBlur={(e) => e.target.placeholder = "Talk with Melody"}
 							/>
 							<div
 								ref={promptImproveButtonRef}
-								className={`mt-auto mb-[6px] hover:scale-110 hover:rotate-90 duration-500 ${isPromptImproveOpen && "scale-110 rotate-90"}`}
+								className={`mt-auto mb-[5px] hover:scale-110 hover:rotate-90 duration-500 ${isPromptImproveOpen && "scale-110 rotate-90"}`}
 								style={{ flexShrink: 0 }}
 								onMouseEnter={handlePromptImproveHover}
 								onMouseLeave={handlePromptImproveLeave}
 								onClick={handlePromptImproveClick}
 							>
-								{isPromptImproveHovered || isPromptImproveOpen ? (
+								{/* {isPromptImproveHovered || isPromptImproveOpen ? (
 									<img
 										src="/icons/melody/suggest-prompt-full.png"
 										className="w-7 h-7 cursor-pointer object-contain"
@@ -282,17 +278,17 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onFileDrop, onRemove
 										className="w-7 h-7 cursor-pointer object-contain"
 										alt="Enhance your prompt"
 									/>
-								)}
+								)} */}
 							</div>
 						</div>
 					</div>
 				</div>
-				<div className={`mt-auto ${loading || (currentPrompt === "" && files.length === 0) ? "opacity-50" : "hover:opacity-60 duration-500"}`}>
+				<div className={`mt-auto ${loading || (prompt === "" && files.length === 0) ? "opacity-100 hover:bg-red-700" : "hover:opacity-60"} rounded-xl duration-500`}>
 					<SendButton onClick={handleSendMessage} />
 				</div>
 			</div>
 			{/* Prompt Suggestor Div */}
-			{isPromptImproveOpen && (
+			{/* {isPromptImproveOpen && (
 				<div
 					className="absolute top-0 flex flex-row w-full h-fit p-2 gap-2 bg-white bg-opacity-20 rounded-lg -translate-y-full"
 					ref={promptImproveRef}
@@ -304,7 +300,7 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onFileDrop, onRemove
 						<p>Prompt #2</p>
 					</div>
 				</div>
-			)}
+			)} */}
 		</div>
 	);
 };

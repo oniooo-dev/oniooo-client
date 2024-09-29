@@ -7,6 +7,7 @@ import { login } from "../../store/features/auth/authThunks";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import BackButton from "@/components/layout/BackButton";
+import ThirdPartyAuth from "@/components/ui/ThirdPartyAuth";
 
 const LoginPage = () => {
 	const router = useRouter();
@@ -43,7 +44,7 @@ const LoginPage = () => {
 	}, [isAuthenticated, router]);
 
 	return (
-		<div className={`flex flex-col w-screen h-screen items-center justify-center gap-3 bg-black bg-opacity-90`}>
+		<div className={`flex flex-col w-screen h-screen items-center justify-center gap-0 bg-black bg-opacity-90`}>
 			<div className="absolute top-0 left-0 w-full h-full" style={{ zIndex: -1 }}>
 				<img
 					src="https://www.hdwallpapers.in/download/anime_weathering_with_you_4k_hd-3840x2160.jpg"
@@ -61,8 +62,8 @@ const LoginPage = () => {
 				</p>
 			</div>
 			<form className="flex flex-col items-center gap-3 text-[#f2f2f2] text-[14px]" onSubmit={handleSubmit}>
-				<p className="text-xl font-semibold mb-2">Login</p>
-				<input
+				<p className="text-xl font-semibold mb-2">Welcome Back !</p>
+				{/* <input
 					type="email"
 					placeholder="Email"
 					value={email}
@@ -86,20 +87,23 @@ const LoginPage = () => {
 					type="submit"
 				>
 					<p className="text-black font-semibold">Login</p>
-				</button>
+				</button> */}
 			</form>
 			<div className="flex flex-col w-[300px] gap-2">
-				<div className="flex flex-row w-full justify-center gap-2 py-1 text-[13px]">
-					<p className="text-gray-300 opacity-70">{`Don't have an account ?`}</p>
-					<p className="text-[#f2f2f2] font-medium cursor-pointer" onClick={handleSignup}>
+				{/* <div className="flex flex-row w-full justify-center gap-2 py-1">
+					<p className="text-gray-300 opacity-70 text-[12px]">
+						Don't have an account ?
+					</p>
+					<p className="text-[#f2f2f2] font-medium cursor-pointer text-[12px]" onClick={handleSignup}>
 						Sign up
 					</p>
 				</div>
-				<div className="flex flex-row items-center w-full px-2 gap-2 text-[13px]">
+				<div className="flex flex-row items-center w-full px-2 gap-2">
 					<hr className="border-gray-500 w-full" />
 					<p className="text-gray-500 opacity-80">OR</p>
 					<hr className="border-gray-500 w-full" />
-				</div>
+				</div> */}
+				<ThirdPartyAuth />
 			</div>
 		</div>
 	);

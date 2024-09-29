@@ -10,8 +10,8 @@ const ChatInterface: React.FC = () => {
 		setFiles([]);
 	};
 
-	const removeFile = (file: File) => {
-		setFiles(files.filter((f) => f !== file));
+	const removeFile = (fileToRemove: File) => {
+		setFiles(prevFiles => prevFiles.filter(file => file !== fileToRemove));
 	};
 
 	const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
@@ -21,18 +21,18 @@ const ChatInterface: React.FC = () => {
 
 	const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
 		event.preventDefault();
-		setIsDraggingOver(false); // Set the dragging over state to false
+		setIsDraggingOver(false);
 		if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
-			const newFiles = Array.from(event.dataTransfer.files); // Get the dropped files
-			const updatedFiles = [...files, ...newFiles]; // Combine the new files with the existing files
-			setFiles(updatedFiles); // Update the state with the combined files
-			event.dataTransfer.clearData(); // Clear the drag data cache (for all formats/types)
+			const newFiles = Array.from(event.dataTransfer.files);
+			const updatedFiles = [...files, ...newFiles];
+			setFiles(updatedFiles);
+			event.dataTransfer.clearData();
 		}
 	};
 
 	const handleFileDrop = (file: File) => {
-		const updatedFiles = [...files, file]; // Combine the new file with the existing files
-		setFiles(updatedFiles); // Update the state with the combined files
+		const updatedFiles = [...files, file];
+		setFiles(updatedFiles);
 	};
 
 	return (
@@ -57,12 +57,12 @@ const ChatInterface: React.FC = () => {
 			)}
 
 			{/* Message list */}
-			<div className="w-[90%] lg:w-[60%] h-full">
+			<div className="w-[90%] lg:w-[60%] max-h-[95%] overflow-y-auto hide-scrollbar">
 				<MessageList files={files} />
 			</div>
 
 			{/* Chat input box */}
-			<div className="absolute bottom-0 flex w-[90%] lg:w-[60%] mb-8">
+			<div className="absolute bottom-4 flex w-[90%] lg:w-[70%]">
 				<ChatInputBox
 					files={files}
 					onFileDrop={handleFileDrop}

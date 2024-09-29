@@ -1,20 +1,24 @@
 import { MelodyMessage } from "@/lib/types";
-import React, { createContext, useState, useContext, useEffect, useRef } from "react";
+import { useAppDispatch } from "@/store/useAppDispatch";
+import { createChatMessage, fetchMessagesByChatId } from "@/store/features/melody/melodyThunks";
+import React, { createContext, useState, useContext, useEffect, useCallback } from "react";
 import { io, Socket } from "socket.io-client";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 type SocketStatus = "connected" | "connecting" | "disconnected" | "disconnecting" | "error";
 
 interface IChatSocketContext {
 	prompt: string;
 	setPrompt: (newPrompt: string) => void;
-	currentChunks: string[];
 	messages: MelodyMessage[];
 	socket: Socket | null;
 	loading: boolean;
 	status: SocketStatus;
-	connect: () => void;
-	disconnect: () => void;
 	sendMessage: (message: string) => void;
+	error: string | null;
+	connect: () => void; // Add connect function to the interface
+	disconnect: () => void; // Add disconnect function to the interface
 }
 
 export const ChatSocketContext = createContext<IChatSocketContext | undefined>(undefined);
@@ -30,22 +34,29 @@ export const useChatSocket = () => {
 };
 
 export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-	const [prompt, setPrompt] = useState<string>("");
-	const [messages, setMessages] = useState<MelodyMessage[]>([]);
-	const [currentChunks, setCurrentChunks] = useState<string[]>([]);
+	const dispatch = useAppDispatch();
+	const selectedChatId = useSelector((state: RootState) => state.melody.selectedChatId);
+	const selectedChatMessages = useSelector((state: RootState) => state.melody.messages);
 
+	const [prompt, setPrompt] = useState<string>("");
+	const [messages, setMessages] = useState<MelodyMessage[]>(selectedChatMessages);
 	const [socket, setSocket] = useState<Socket | null>(null);
 	const [status, setStatus] = useState<SocketStatus>("disconnected");
 	const [loading, setLoading] = useState<boolean>(false);
+	const [error, setError] = useState<string | null>(null);
 
-	const currentChunksRef = useRef<string[]>([]);
+	const url = process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:8080";
 
-	const url = "http://localhost:8080";
-
-	// Update the ref every time currentChunks changes
 	useEffect(() => {
-		currentChunksRef.current = currentChunks;
-	}, [currentChunks]);
+		setMessages([]);
+		if (selectedChatId) {
+			dispatch(fetchMessagesByChatId({ chatId: selectedChatId }));
+		}
+	}, [selectedChatId, dispatch]);
+
+	useEffect(() => {
+		setMessages(selectedChatMessages);
+	}, [selectedChatMessages]);
 
 	useEffect(() => {
 		const newSocket = io(url, { autoConnect: true, transports: ["websocket"] });
@@ -60,35 +71,42 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 			console.log("Disconnected from socket!");
 		});
 
-		newSocket.on("connect_error", (error) => {
+		newSocket.on("connect_error", (err) => {
 			setStatus("error");
-			console.error("Connection error: ", error);
+			setError("Connection error: " + err.message);
+			console.error("Connection error: ", err);
 		});
 
-		// Listen for data chunks (Melody messages)
-		newSocket.on("receive_stream", (chunk) => {
-			const newChunk = chunk.text as string;
-			if (newChunk === "") {
-				// End of stream
-				setMessages((prevMessages) =>
-					prevMessages.map((msg, idx, arr) => (idx === arr.length - 1 ? { ...msg, isComplete: true } : msg)),
-				);
-				setCurrentChunks([]);
-				setLoading(false);
-			} else {
-				setMessages((prevMessages) => {
-					const lastMessage = prevMessages[prevMessages.length - 1];
-					if (lastMessage && !lastMessage.isComplete) {
-						// Append to the last message if it's not complete
-						return [
-							...prevMessages.slice(0, -1),
-							{ ...lastMessage, content: lastMessage.content + newChunk },
-						];
-					} else {
-						// Start a new message
-						return [...prevMessages, { type: "SYSTEM_TEXT", content: newChunk, isComplete: false }];
+		newSocket.on("receive_stream", (data: { text: string }) => {
+			const isDataFinal = !data.text || data.text === '';
+			console.log("Received stream: ", isDataFinal ? "Final chunk" : data.text);
+
+			setMessages((prevMessages) => {
+				const updatedMessages = [...prevMessages];
+				const lastMessage = updatedMessages[updatedMessages.length - 1];
+
+				if (isDataFinal) {
+					if (lastMessage && !lastMessage.isComplete && lastMessage.type === "SYSTEM_TEXT") {
+						updatedMessages[updatedMessages.length - 1] = { ...lastMessage, isComplete: true };
+						dispatch(fetchMessagesByChatId({ chatId: selectedChatId }));
 					}
-				});
+				} else {
+					if (lastMessage && !lastMessage.isComplete && lastMessage.type === "SYSTEM_TEXT") {
+						updatedMessages[updatedMessages.length - 1] = {
+							...lastMessage,
+							content: lastMessage.content + data.text
+						};
+					} else {
+						updatedMessages.push({ type: "SYSTEM_TEXT", content: data.text, isComplete: false });
+					}
+				}
+
+				console.log("Updated messages: ", updatedMessages);
+				return updatedMessages;
+			});
+
+			if (isDataFinal) {
+				setLoading(false);
 			}
 		});
 
@@ -103,49 +121,32 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 		};
 	}, [url]);
 
-	const connect = () => {
-		setStatus("connecting");
-		if (socket) {
-			socket.connect();
-		}
-	};
+	const sendMessage = useCallback((message: string) => {
+		if (!socket || !selectedChatId) return;
 
-	const disconnect = () => {
-		setStatus("disconnecting");
-		if (socket) {
-			socket.disconnect();
-		}
-	};
-
-	const sendMessage = (message: string) => {
 		setLoading(true);
-		setMessages((prevMessages) => [
-			...prevMessages,
-			{
-				type: "USER_TEXT",
-				content: message,
-				isComplete: true,
-			},
-		]);
+		setError(null);
 
-		if (socket) {
-			// Send message to the server to start the stream
-			socket.emit("start_stream", message);
-			console.log("Sent message:", message);
-		}
-	};
+		const newUserMessage: MelodyMessage = { type: "USER_TEXT", content: message, isComplete: true };
+		setMessages((prevMessages) => [...prevMessages, newUserMessage]);
+
+		// Dispatch to DB
+		dispatch(createChatMessage({ chatId: selectedChatId, message }));
+
+		socket.emit("start_stream", { chatId: selectedChatId, prompt: message });
+	}, [socket, selectedChatId, dispatch]);
 
 	return (
 		<ChatSocketContext.Provider
 			value={{
 				prompt,
 				setPrompt,
-				currentChunks,
-				loading,
 				messages,
+				loading,
+				error,
 				socket,
-				connect,
-				disconnect,
+				connect: () => socket?.connect(),  // Simplified connect
+				disconnect: () => socket?.disconnect(), // Simplified disconnect
 				sendMessage,
 				status,
 			}}

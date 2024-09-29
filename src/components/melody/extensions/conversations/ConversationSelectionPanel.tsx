@@ -18,7 +18,7 @@ const ConversationSelectionPanel = () => {
 	}, [dispatch, isAuthenticated]);
 
 	return (
-		<ul className="flex flex-col w-[260px] h-full gap-2 hide-scrollbar" style={{ overflowY: "auto", overflowX: "visible" }}>
+		<ul className="flex flex-col w-[220px] h-full gap-2 hide-scrollbar overflow-y-scroll">
 			{isAuthenticated ? (
 				chats.map((chat, index) => {
 					return (
@@ -28,7 +28,7 @@ const ConversationSelectionPanel = () => {
 					);
 				})
 			) : (
-				<div className="flex flex-col items-center justify-center w-[260px] h-full gap-2">
+				<div className="flex flex-col items-center justify-center w-full h-full gap-2">
 					<img
 						src="https://play-lh.googleusercontent.com/Yl_DmFMJrR7cLUqDd9A2OpevA-5dwbCDQkyxNOGUb0HwVykaxXxpHR8qFsDEJHuQDA8"
 						className="w-[100px] h-[100px]"

@@ -7,7 +7,7 @@ const UserProfileIcon = () => {
 
 	return (
 		<div className="cursor-pointer">
-			<img src={iconUrl} className="w-8 h-8 rounded-full bg-white hover:opacity-50 duration-500" />
+			<img src={iconUrl} className="w-[22px] h-[22px] rounded-full bg-white hover:opacity-50 duration-500" />
 		</div>
 	);
 };

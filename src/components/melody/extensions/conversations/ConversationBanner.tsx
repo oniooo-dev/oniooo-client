@@ -50,10 +50,10 @@ const ConversationBanner: React.FC<ConversationBannerProps> = ({ chatId, title }
 	}, [conversationBannerRef]);
 
 	return (
-		<div ref={conversationBannerRef} className="relative flex flex-row w-[260px]">
+		<div ref={conversationBannerRef} className="relative flex flex-row w-[220px]">
 			<div
-				className={`relative flex flex-row items-center justify-between w-full h-12 px-3 py-3 bg-opacity-20 rounded-[10px] cursor-pointer duration-300
-							${isOptionsOpen ? "bg-white bg-opacity-[0.1]" : `${selectedChatId === chatId ? "bg-white hover:bg-opacity-[0.15]" : "hover:bg-white hover:bg-opacity-[0.15]"}`}`}
+				className={`relative flex flex-row items-center justify-between w-full h-12 px-3 py-3 bg-opacity-10 rounded-[10px] cursor-pointer duration-300
+							${isOptionsOpen ? "bg-white bg-opacity-[0.05]" : `${selectedChatId === chatId ? "bg-black hover:bg-opacity-[0.20]" : "hover:bg-black hover:bg-opacity-[0.20]"}`}`}
 				onMouseEnter={handleMouseEnter}
 				onMouseLeave={handleMouseLeave}
 				onClick={handleMouseClick}
@@ -67,7 +67,7 @@ const ConversationBanner: React.FC<ConversationBannerProps> = ({ chatId, title }
 				</div>
 				{(isOptionsOpen || isHovered) && (
 					<div
-						className={`absolute right-2 p-2 rounded-full bg-white bg-opacity-0 ${isOptionsOpen ? "bg-opacity-20" : "hover:bg-opacity-20"} opacity-60 hover:opacity-100 duration-500`}
+						className={`absolute right-2 p-2 rounded-full bg-white bg-opacity-0 ${isOptionsOpen ? "bg-opacity-5" : "hover:bg-opacity-20"} opacity-60 hover:opacity-100 duration-500`}
 						onClick={handleOptionsClick}
 					>
 						<img src="/icons/melody/bars-sort.png" alt="options icon" className="w-3 h-3" />

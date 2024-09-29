@@ -34,7 +34,7 @@ const FileUploadIcon: React.FC<FileUploadIconProps> = ({ onFileDrop }) => {
 			/>
 			<img
 				src="/icons/melody/paperclip.png"
-				className="w-[24px] h-[24px] cursor-pointer object-contain -rotate-45"
+				className="w-[20px] h-[20px] cursor-pointer object-contain scale-x-[-1] rotate-45 opacity-60 hover:opacity-100 duration-500"
 				alt="Attach file"
 				onClick={handleIconClick}
 				style={{ flexShrink: 0 }}
