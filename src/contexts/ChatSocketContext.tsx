@@ -45,7 +45,9 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 
-	const url = process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:8080";
+	const url = process.env.NODE_ENV === "production"
+		? process.env.NEXT_PUBLIC_BACKEND_SOCKET_URL_PROD || "https://prod-backend-url.com"
+		: process.env.NEXT_PUBLIC_BACKEND_SOCKET_URL_DEV || "http://localhost:8081";
 
 	useEffect(() => {
 		setMessages([]);
