@@ -63,7 +63,7 @@ const LoginPage = () => {
 			</div>
 			<form className="flex flex-col items-center gap-3 text-[#f2f2f2] text-[14px]" onSubmit={handleSubmit}>
 				<p className="text-xl font-semibold mb-2">Welcome Back !</p>
-				{/* <input
+				<input
 					type="email"
 					placeholder="Email"
 					value={email}
@@ -87,7 +87,7 @@ const LoginPage = () => {
 					type="submit"
 				>
 					<p className="text-black font-semibold">Login</p>
-				</button> */}
+				</button>
 			</form>
 			<div className="flex flex-col w-[300px] gap-2">
 				{/* <div className="flex flex-row w-full justify-center gap-2 py-1">
