@@ -58,7 +58,7 @@ const NewChatTextArea: React.FC = () => {
 
     return (
         <div className="relative flex items-center justify-center w-full h-fit pr-2 rounded-3xl bg-gradient-to-r from-red-400 via-purple-400 via-pink-300 to-cyan-500 text-white opacity-80">
-            {/* Blended background */}
+            {/* Blended background mdr */}
             <div className="absolute inset-0 m-[2px] rounded-3xl bg-black bg-opacity-90" />
 
             {/* Content container */}
