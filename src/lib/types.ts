@@ -1,5 +1,5 @@
 export interface User {
-	user_id: string;
+	userId: string;
 	username: string;
 	email: string;
 	icon_url: string;
@@ -14,11 +14,5 @@ export interface MelodyChat {
 
 export interface MelodyMessage {
 	type: string;
-	content: string;
-	isComplete: boolean;
-}
-
-export interface CSText {
-	type: "USER" | "SYSTEM";
 	content: string;
 }

@@ -4,21 +4,23 @@ import { useSelector } from "react-redux";
 import ConversationBanner from "./ConversationBanner";
 import { useEffect } from "react";
 import { fetchChats } from "@/store/features/melody/melodyThunks";
+import { useAuth } from "@/contexts/AuthContext";
 
 const ConversationSelectionPanel = () => {
 	const dispatch = useAppDispatch();
 	const chats = useSelector((state: RootState) => state.melody.chats);
-	const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+	const { isAuthenticated } = useAuth();
 
 	useEffect(() => {
 		// Fetch the conversations
 		if (isAuthenticated) {
+			console.log('Fetching chats ...')
 			dispatch(fetchChats());
 		}
 	}, [dispatch, isAuthenticated]);
 
 	return (
-		<ul className="flex flex-col w-[220px] h-full gap-2 hide-scrollbar overflow-y-scroll">
+		<ul className="flex flex-col w-[220px] h-full gap-2 hide-scrollbar overflow-y-auto">
 			{isAuthenticated ? (
 				chats.map((chat, index) => {
 					return (

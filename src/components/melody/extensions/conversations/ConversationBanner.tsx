@@ -4,7 +4,7 @@ import ConversationTools from "./ConversationTools";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "@/store/useAppDispatch";
-import { selectChat } from "@/store/features/melody/melodySlice";
+import { useChatSocket } from "@/contexts/ChatSocketContext";
 
 interface ConversationBannerProps {
 	chatId: string;
@@ -12,7 +12,7 @@ interface ConversationBannerProps {
 }
 
 const ConversationBanner: React.FC<ConversationBannerProps> = ({ chatId, title }) => {
-	const dispatch = useAppDispatch();
+	const { changeChat } = useChatSocket();
 	const selectedChatId = useSelector((state: RootState) => state.melody.selectedChatId);
 	const [isHovered, setIsHovered] = useState(false);
 	const [isOptionsOpen, setIsOptionsOpen] = useState(false);
@@ -20,7 +20,7 @@ const ConversationBanner: React.FC<ConversationBannerProps> = ({ chatId, title }
 
 	const handleMouseClick = () => {
 		console.log("Selected conversation id: ", chatId);
-		dispatch(selectChat({ chatId }));
+		changeChat(chatId);
 	};
 
 	const handleOptionsClick = (event: React.MouseEvent<HTMLDivElement>) => {

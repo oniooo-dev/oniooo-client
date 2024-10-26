@@ -1,18 +1,14 @@
 import React, { useEffect, useRef } from "react";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
 import ConversationMessage from "../messages/ConversationMessage";
 import { useChatSocket } from "@/contexts/ChatSocketContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface MessageListProps {
 	files: File[];
 }
 
 const MessageList: React.FC<MessageListProps> = ({ files }) => {
-	// Redux Stuff
-	const user = useSelector((state: RootState) => state.auth.user);
-
-	// Context Provider
+	const { user } = useAuth();
 	const { messages } = useChatSocket();
 
 	// Stuff ...
@@ -26,7 +22,7 @@ const MessageList: React.FC<MessageListProps> = ({ files }) => {
 	}, [messages]);
 
 	return (
-		<div className="flex flex-col max-w-full h-full gap-4 pt-12 overflow-y-scroll hide-scrollbar">
+		<div className="flex flex-col max-w-full h-full gap-4 pt-36 overflow-y-scroll hide-scrollbar">
 			{
 				messages.map((message, index) => {
 					const isSystem = message.type === "SYSTEM_TEXT";
@@ -34,7 +30,7 @@ const MessageList: React.FC<MessageListProps> = ({ files }) => {
 						<div key={index} className={`flex flex-row w-full gap-4`}>
 							{
 								<img
-									src={isSystem ? melodyIconUrl : user?.icon_url}
+									src={isSystem ? melodyIconUrl : user?.iconUrl}
 									className="w-9 h-9 rounded-full mt-[4px]"
 								/>
 							}

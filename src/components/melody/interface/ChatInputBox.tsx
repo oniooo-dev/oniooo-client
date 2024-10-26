@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import FileUploadIcon from "./FileUploadIcon";
 import FileUploadList from "./FileUploadList";
 import SendButton from "./SendButton";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { ChatState } from "@/lib/enums";
 import { useChatSocket } from "@/contexts/ChatSocketContext";
 
 interface ChatInputBoxProps {
@@ -15,60 +14,9 @@ interface ChatInputBoxProps {
 }
 
 const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onFileDrop, onRemove, onReset }) => {
-	// Redux Stuff
-	const chatState = useSelector((state: RootState) => state.melody.chatState);
 	const selectedChatId = useSelector((state: RootState) => state.melody.selectedChatId);
-
-	// Context Provider
 	const { prompt, setPrompt, sendMessage, loading } = useChatSocket();
-
-	const [isPromptImproveHovered, setIsPromptImproveHovered] = useState<boolean>(false);
-	const [isPromptImproveOpen, setIsPromptImproveOpen] = useState<boolean>(false);
-	const [showPromptBanner, setShowPromptBanner] = useState<boolean>(false);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
-	const promptImproveRef = useRef<HTMLDivElement>(null);
-	const promptImproveButtonRef = useRef<HTMLDivElement>(null);
-
-	const handleClose = () => {
-		setShowPromptBanner(false);
-	};
-
-	const handlePromptImproveHover = () => {
-		setIsPromptImproveHovered(true);
-	};
-
-	const handlePromptImproveLeave = () => {
-		setIsPromptImproveHovered(false);
-	};
-
-	const handlePromptImproveClick = () => {
-		if (chatState === ChatState.NEW_CHAT) {
-			if (isPromptImproveOpen) {
-				setShowPromptBanner(true);
-			} else {
-				setShowPromptBanner(false);
-			}
-		}
-		setIsPromptImproveOpen((prevOpen) => !prevOpen);
-	};
-
-	const handlePromptImprove = () => {
-		console.log("Prompt improved");
-	};
-
-	const handlePromptImproveClickOutside = (event: MouseEvent) => {
-		if (
-			promptImproveRef.current &&
-			!promptImproveRef.current.contains(event.target as Node) &&
-			promptImproveButtonRef.current &&
-			!promptImproveButtonRef.current.contains(event.target as Node)
-		) {
-			if (chatState === ChatState.NEW_CHAT) {
-				setShowPromptBanner(true);
-			}
-			setIsPromptImproveOpen(false);
-		}
-	};
 
 	// When user uploads using the clip icon
 	const handleFileDrop = (file: File) => {
@@ -146,17 +94,18 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onFileDrop, onRemove
 	}
 
 	const handleSendMessage = async () => {
+		// Prevent sending messages while loading
 		if (loading) {
 			console.log("Cannot send message while loading");
 			return;
 		}
+
+		// Prevent sending empty messages
 		if (prompt === "" && files.length === 0) {
 			console.log("Cannot send empty message");
 			return;
 		}
-		// Get Signed URLs for the files
-		// Get the current prompt
-		// Send the prompt and signed URLs to the backend
+
 		try {
 			const signedUrls = await fetchSignedUrls(files);
 			const uploadedFiles = await uploadFiles(files, signedUrls);
@@ -206,23 +155,6 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onFileDrop, onRemove
 		adjustHeight();
 	}, []);
 
-	// Add event listener for clicking outside of the prompt improve div
-	useEffect(() => {
-		document.addEventListener("mousedown", handlePromptImproveClickOutside);
-		return () => {
-			document.removeEventListener("mousedown", handlePromptImproveClickOutside);
-		};
-	}, []);
-
-	// Show the prompt banner if the chat state is NEW_CHAT
-	useEffect(() => {
-		if (chatState === ChatState.NEW_CHAT) {
-			setShowPromptBanner(true);
-		} else {
-			setShowPromptBanner(false);
-		}
-	}, [chatState]);
-
 	// Reset the prompt and file buffer
 	useEffect(() => {
 		setPrompt("");
@@ -258,49 +190,13 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, onFileDrop, onRemove
 								onFocus={(e) => e.target.placeholder = ""}
 								onBlur={(e) => e.target.placeholder = "Talk with Melody"}
 							/>
-							<div
-								ref={promptImproveButtonRef}
-								className={`mt-auto mb-[5px] hover:scale-110 hover:rotate-90 duration-500 ${isPromptImproveOpen && "scale-110 rotate-90"}`}
-								style={{ flexShrink: 0 }}
-								onMouseEnter={handlePromptImproveHover}
-								onMouseLeave={handlePromptImproveLeave}
-								onClick={handlePromptImproveClick}
-							>
-								{/* {isPromptImproveHovered || isPromptImproveOpen ? (
-									<img
-										src="/icons/melody/suggest-prompt-full.png"
-										className="w-7 h-7 cursor-pointer object-contain"
-										alt="Enhance your prompt"
-									/>
-								) : (
-									<img
-										src="/icons/melody/suggest-prompt.png"
-										className="w-7 h-7 cursor-pointer object-contain"
-										alt="Enhance your prompt"
-									/>
-								)} */}
-							</div>
 						</div>
 					</div>
 				</div>
-				<div className={`mt-auto ${loading || (prompt === "" && files.length === 0) ? "opacity-100 hover:bg-red-700" : "hover:opacity-60"} rounded-xl duration-500`}>
+				<div className={`mt-auto ${loading || (prompt === "" && files.length === 0) ? "opacity-20 hover:bg-red-700" : "hover:opacity-60"} rounded-xl duration-500`}>
 					<SendButton onClick={handleSendMessage} />
 				</div>
 			</div>
-			{/* Prompt Suggestor Div */}
-			{/* {isPromptImproveOpen && (
-				<div
-					className="absolute top-0 flex flex-row w-full h-fit p-2 gap-2 bg-white bg-opacity-20 rounded-lg -translate-y-full"
-					ref={promptImproveRef}
-				>
-					<div className="w-full px-4 py-2 bg-white bg-opacity-10 rounded-lg" onClick={handlePromptImprove}>
-						<p>Prompt #1</p>
-					</div>
-					<div className="w-full px-4 py-2 bg-white bg-opacity-10 rounded-lg" onClick={handlePromptImprove}>
-						<p>Prompt #2</p>
-					</div>
-				</div>
-			)} */}
 		</div>
 	);
 };

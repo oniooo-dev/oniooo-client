@@ -6,7 +6,7 @@ import React, { useState, KeyboardEvent, ChangeEvent, useRef, useEffect } from '
 
 const NewChatTextArea: React.FC = () => {
     const dispatch = useAppDispatch();
-    const [inputValue, setInputValue] = useState<string>('');
+    const [inputValue, setInputValue] = useState<string>('');   // Current input value
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     // Context Provider
@@ -34,6 +34,7 @@ const NewChatTextArea: React.FC = () => {
         adjustHeight();
     };
 
+    // Adjusts the height of the textarea
     const adjustHeight = () => {
         const textarea = textareaRef.current;
         if (!textarea) return;
