@@ -13,14 +13,14 @@ interface ConversationBannerProps {
 
 const ConversationBanner: React.FC<ConversationBannerProps> = ({ chatId, title }) => {
 	const { changeChat } = useChatSocket();
-	const selectedChatId = useSelector((state: RootState) => state.melody.selectedChatId);
+	const { selectedChatId, modelName } = useSelector((state: RootState) => state.melody);
 	const [isHovered, setIsHovered] = useState(false);
 	const [isOptionsOpen, setIsOptionsOpen] = useState(false);
 	const conversationBannerRef = useRef<HTMLDivElement>(null);
 
 	const handleMouseClick = () => {
 		console.log("Selected conversation id: ", chatId);
-		changeChat(chatId);
+		changeChat(chatId, modelName);
 	};
 
 	const handleOptionsClick = (event: React.MouseEvent<HTMLDivElement>) => {
