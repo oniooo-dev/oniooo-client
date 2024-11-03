@@ -2,17 +2,17 @@ import React from 'react'
 import { useRouter } from 'next/navigation';
 import { useAppDispatch } from '@/store/useAppDispatch';
 import { startNewMelodyChat } from '@/store/features/melody/melodySlice';
-import NewChatButton from '../interface/NewChatButton';
 import ConversationSelectionPanel from './conversations/ConversationSelectionPanel';
 import { useAuth } from '@/contexts/AuthContext';
+import ChooseModel from './ChooseModel';
 
 const LeftPanel = () => {
     const dispatch = useAppDispatch();
     const router = useRouter();
     const { user } = useAuth();
 
-    const handleNewChat = () => {
-        dispatch(startNewMelodyChat());
+    const handleNewChat = (modelName: ModelName) => {
+        dispatch(startNewMelodyChat({ modelName }));
     };
 
     const handleMochiClick = () => {
@@ -20,9 +20,9 @@ const LeftPanel = () => {
     };
 
     return (
-        <div className="flex flex-col gap-3 w-fit h-[94%]">
+        <div className="flex flex-col gap-3 w-fit h-full">
             <div className="flex flex-col w-full h-full gap-2 p-2 rounded-2xl bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg">
-                <NewChatButton onClick={handleNewChat} />
+                <ChooseModel onClick={handleNewChat} />
                 <ConversationSelectionPanel />
             </div>
             <div

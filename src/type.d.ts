@@ -1,0 +1,1 @@
+type ModelName = "flash" | "claude";

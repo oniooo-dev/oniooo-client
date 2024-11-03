@@ -1,24 +1,24 @@
-import { useChatSocket } from '@/contexts/ChatSocketContext';
-import { selectChat } from '@/store/features/melody/melodySlice';
-import { createChat } from '@/store/features/melody/melodyThunks';
-import { useAppDispatch } from '@/store/useAppDispatch';
 import React, { useState, KeyboardEvent, ChangeEvent, useRef, useEffect } from 'react';
+import { useChatSocket } from '@/contexts/ChatSocketContext';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store';
 
 const NewChatTextArea: React.FC = () => {
-    const dispatch = useAppDispatch();
+    const { modelName } = useSelector((state: RootState) => state.melody)
     const [inputValue, setInputValue] = useState<string>('');   // Current input value
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     // Context Provider
-    const { sendMessage } = useChatSocket();
+    const { createNewChat } = useChatSocket();
 
+    // Handle send (for new chat)
     const handleSend = (): void => {
         if (inputValue.trim()) {
             // Create a new chat
-            dispatch(selectChat({ chatId: "" })); // Deselect the chat
-            dispatch(createChat({ firstPrompt: inputValue }));
-            sendMessage(inputValue);
-            setInputValue(''); // Clear the input after sending
+            createNewChat(inputValue, modelName);
+
+            // Clear the input after sending
+            setInputValue('');
         }
     };
 

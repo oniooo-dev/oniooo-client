@@ -1,5 +1,5 @@
 import { MelodyMessage } from "@/lib/types";
-import { createChatMessage, fetchMessagesByChatId } from "@/store/features/melody/melodyThunks";
+import { createChat, createChatMessage, fetchMessagesByChatId } from "@/store/features/melody/melodyThunks";
 import { RootState } from "@/store/store";
 import { useAppDispatch } from "@/store/useAppDispatch";
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
@@ -18,12 +18,14 @@ interface IChatSocketContext {
 	messages: MelodyMessage[];
 	socket: Socket | null;
 	loading: boolean;
+	waitingForMessageState: string | null;
 	status: SocketStatus;
 	sendMessage: (message: string) => void;
 	error: string | null;
 	connect: () => void;
 	disconnect: () => void;
-	changeChat: (chatId: string) => void; // Add changeChat function
+	changeChat: (chatId: string, modelName: ModelName) => void;
+	createNewChat: (firstPrompt: string, modelName: ModelName) => void;
 }
 
 export const ChatSocketContext = createContext<IChatSocketContext | undefined>(undefined);
@@ -38,6 +40,7 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 	const [socket, setSocket] = useState<Socket | null>(null);
 	const [status, setStatus] = useState<SocketStatus>("disconnected");
 	const [loading, setLoading] = useState<boolean>(false);
+	const [waitingForMessageState, setWaitingForMessageState] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
 
 	// Set Backend Configuration
@@ -64,11 +67,6 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 			setMessages([]);
 		}
 	}, [selectedChatId, dispatch]);
-
-	// Not sure what the point of this is
-	// useEffect(() => {
-	// 	setMessages(selectedChatMessages);
-	// }, [selectedChatMessages]);
 
 	// Log the state of loading
 	useEffect(() => {
@@ -104,18 +102,35 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 		newSocket.on("error", (err) => {
 			setStatus("error");
 			setError("Connection error: " + err.message);
+			setLoading(false);
 			console.error("Connection error: ", err);
 		});
 
 		// Receive from Melody
-		newSocket.on("receive_melody_message", (data: { text: string }) => {
+		newSocket.on("receive_melody_message", (data: { text?: string; fileUri?: string }) => {
 			console.log('Received message from Melody:', data);
 
-			// Append system message to local state
-			addMessageToLocalState({ type: 'SYSTEM_TEXT', content: data.text });
+			// Check if the data contains text and handle it accordingly
+			if (data.text) {
+				// Append system message to local state as text
+				addMessageToLocalState({ type: 'SYSTEM_TEXT', content: data.text });
+			} else if (data.fileUri) {
+				// Handle the file URI message case
+				addMessageToLocalState({ type: 'SYSTEM_FILE', content: data.fileUri });
+			} else {
+				// Log or handle cases where neither text nor fileUri is present
+				console.error('Received undefined message type from Melody');
+			}
 
+			setWaitingForMessageState(null);
 			setLoading(false);
 		});
+
+		// TYPING, GENERATING_IMAGE, ...
+		newSocket.on("melody_state_update", (data: { state: string }) => {
+			console.log("Melody's current state: " + data.state);
+			setWaitingForMessageState(data.state);
+		})
 
 		setSocket(newSocket);
 
@@ -127,33 +142,6 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 			newSocket.close();
 		};
 	}, [isAuthenticated, jwtToken, backendUrl, backendPort]);
-
-	// Change Chat
-	const changeChat = useCallback((chatId: string) => {
-		if (!socket) return;
-
-		socket.emit("change_chat", chatId);
-		dispatch(selectChat({ chatId })); // Handle Redux State
-
-		// // Reset local message state
-		setMessages([]);
-		setError(null);
-		setLoading(false);
-
-		// Fetch new chat messages
-		dispatch(fetchMessagesByChatId({ chatId }))
-			.unwrap()	// Wait for the fetch to complete
-			.then(fetchedMessages => {
-				setMessages(fetchedMessages);	// Set messages in local state
-			})
-			.catch(err => {
-				setError('Failed to load messages');
-				console.error('Error fetching messages:', err);
-			})
-			.finally(() => {
-				setLoading(false);
-			});
-	}, [socket, dispatch]);
 
 	// Send to Melody
 	const sendMessage = useCallback((message: string) => {
@@ -176,6 +164,64 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 		});
 	}, [socket, selectedChatId, dispatch]);
 
+	// Change Chat
+	const changeChat = useCallback((chatId: string, modelName: ModelName) => {
+		if (!socket) return;
+
+		socket.emit("change_chat", chatId);
+		dispatch(selectChat({ chatId, modelName })); // Handle Redux State
+
+		// // Reset local message state
+		setMessages([]);
+		setError(null);
+		setLoading(false);
+
+		// Fetch new chat messages
+		dispatch(fetchMessagesByChatId({ chatId }))
+			.unwrap()	// Wait for the fetch to complete
+			.then(fetchedMessages => {
+				setMessages(fetchedMessages);	// Set messages in local state
+			})
+			.catch(err => {
+				setError('Failed to load messages');
+				console.error('Error fetching messages:', err);
+			})
+			.finally(() => {
+				setLoading(false);
+			});
+	}, [socket, dispatch]);
+
+	const createNewChat = useCallback((firstPrompt: string, modelName: ModelName) => {
+		if (!socket) return;
+
+		setLoading(true);
+		setError(null);
+
+		dispatch(selectChat({ chatId: "", modelName: modelName })); // Deselect the chat
+		dispatch(createChat({ firstPrompt: firstPrompt, modelName: modelName }))
+			.unwrap()	// Wait for the fetch to complete
+			.then(({ newChat, newMessage }) => {
+				// dispatch(selectChat({ chatId: newChat.chat_id }))
+				// setMessages([newMessage]);
+
+				changeChat(newChat.chat_id, newChat.model_name);
+
+				// Send the message to Melody through WebSocket
+				socket.emit("send_to_melody", {
+					chatId: newChat.chat_id,
+					prompt: newMessage.content
+				});
+			})
+			.catch(err => {
+				setError('Failed to create chat');
+				console.error('Error fetching messages:', err);
+			})
+			.finally(() => {
+				setLoading(false);
+			});
+		setLoading(false);
+	}, [socket, backendUrl, backendPort, jwtToken, dispatch]);
+
 	return (
 		<ChatSocketContext.Provider
 			value={{
@@ -183,13 +229,15 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 				setPrompt,
 				messages,
 				loading,
+				waitingForMessageState,
 				error,
 				socket,
 				connect: () => socket?.connect(),  // Simplified connect
 				disconnect: () => socket?.disconnect(), // Simplified disconnect
 				sendMessage,
 				status,
-				changeChat
+				changeChat,
+				createNewChat
 			}}
 		>
 			{children}

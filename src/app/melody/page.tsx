@@ -19,7 +19,7 @@ export default function MelodyPage() {
 						<UserCorner />
 					</div>
 					<Background />
-					<div className="flex flex-row w-full h-full p-4">
+					<div className="flex flex-row w-full h-[94.5vh] p-4">
 						<LeftPanel />
 						<Chat />
 					</div>

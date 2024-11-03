@@ -17,6 +17,7 @@ interface MelodyState {
 	chats: MelodyChat[];
 	selectedChatId: string;
 	messages: MelodyMessage[];
+	modelName: ModelName;
 }
 
 const initialState: MelodyState = {
@@ -26,26 +27,29 @@ const initialState: MelodyState = {
 	selectedChatId: "",
 	messages: [],
 	error: null,
+	modelName: "flash"
 };
 
 export const melodySlice = createSlice({
 	name: "melody",
 	initialState,
 	reducers: {
-		selectChat(state, action: PayloadAction<{ chatId: string }>) {
+		selectChat(state, action: PayloadAction<{ chatId: string, modelName: ModelName }>) {
 			state.loading = true;
 			state.chatState = ChatState.EXISTING_CHAT;
 			state.selectedChatId = action.payload.chatId;
 			state.error = null;
 			state.loading = false;
+			state.modelName = action.payload.modelName;
 		},
-		startNewMelodyChat(state) {
+		startNewMelodyChat(state, action: PayloadAction<{ modelName: ModelName }>) {
 			state.loading = true;
 			state.chatState = ChatState.NEW_CHAT;
 			state.selectedChatId = "";
 			state.messages = [];
 			state.error = null;
 			state.loading = false;
+			state.modelName = action.payload.modelName;
 		},
 	},
 	extraReducers: (builder) => {
@@ -62,6 +66,7 @@ export const melodySlice = createSlice({
 					state.selectedChatId = action.payload.newChat.chat_id;
 					state.messages = [action.payload.newMessage];
 					state.error = null;
+					state.modelName = action.payload.newChat.model_name;
 				},
 			)
 			.addCase(createChat.rejected, (state, action: PayloadAction<MelodyError | undefined>) => {

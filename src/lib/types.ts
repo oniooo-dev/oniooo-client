@@ -10,6 +10,7 @@ export interface MelodyChat {
 	chat_id: string;
 	last_active: number;
 	title: string;
+	model_name: ModelName;
 }
 
 export interface MelodyMessage {

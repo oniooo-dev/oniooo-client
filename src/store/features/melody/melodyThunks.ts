@@ -5,14 +5,17 @@ import api from "@/store/api";
 // should return an array of messages
 export const createChat = createAsyncThunk<
 	{ newChat: MelodyChat; newMessage: MelodyMessage },
-	{ firstPrompt: string },
+	{ firstPrompt: string, modelName: string },
 	{ rejectValue: MelodyError }
->("melody/createChat", async (params: { firstPrompt: string }, { rejectWithValue }) => {
+>("melody/createChat", async (params: { firstPrompt: string, modelName: string }, { rejectWithValue }) => {
 	try {
-		const requestData: { firstPrompt: string } = {
+		const requestData: { firstPrompt: string, modelName: string } = {
 			firstPrompt: params.firstPrompt,
+			modelName: params.modelName
 		};
 		const response = await api.post(`/melody/chats`, requestData);
+
+		// returns newMessage
 		return response.data;
 	} catch (error: any) {
 		if (error.response && error.response.data) {
@@ -31,7 +34,7 @@ export const fetchChats = createAsyncThunk<MelodyChat[], void, { rejectValue: Me
 		try {
 			// No request data
 			const response = await api.get("/melody/chats");
-			console.log(response.data.message);
+			console.log(response.data);
 			return response.data.chats;
 		} catch (error: any) {
 			if (error.response && error.response.data) {
