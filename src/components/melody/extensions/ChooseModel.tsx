@@ -32,7 +32,7 @@ const ChooseModel: React.FC<ChooseModelProps> = ({ onClick }) => {
                         ?
                         "Gemini Flash 1.5"
                         :
-                        "Claude Sonnet 3.5"
+                        "Claude Sonnet 3.5" // yo
                 }
             </button>
             {isOpen && (
