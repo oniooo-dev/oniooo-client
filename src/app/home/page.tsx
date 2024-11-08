@@ -1,5 +1,6 @@
 "use client"
 
+import BackButton from '@/components/layout/BackButton';
 import { useRouter } from 'next/navigation'
 import React from 'react'
 
@@ -16,10 +17,7 @@ export default function CompanyPage() {
             />
             <div className="flex flex-row items-center justify-between w-full h-16 px-10">
                 <div>
-                    <img
-                        src="/images/oniooo-logo.png"
-                        className="h-8"
-                    />
+                    <BackButton />
                 </div>
                 <div className="flex flex-row gap-8">
                     <p className="cursor-pointer underline underline-offset-8 duration-500">
