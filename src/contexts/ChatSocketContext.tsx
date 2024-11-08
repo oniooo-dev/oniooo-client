@@ -20,12 +20,12 @@ interface IChatSocketContext {
 	loading: boolean;
 	waitingForMessageState: string | null;
 	status: SocketStatus;
-	sendMessage: (message: string) => void;
+	sendMessage: (message: string, fileUris: string[]) => void;
 	error: string | null;
 	connect: () => void;
 	disconnect: () => void;
 	changeChat: (chatId: string, modelName: ModelName) => void;
-	createNewChat: (firstPrompt: string, modelName: ModelName) => void;
+	createNewChat: (firstPrompt: string, uploadedFiles: string[], modelName: ModelName) => void;
 }
 
 export const ChatSocketContext = createContext<IChatSocketContext | undefined>(undefined);
@@ -143,30 +143,48 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 		};
 	}, [isAuthenticated, jwtToken, backendUrl, backendPort]);
 
-	// Send to Melody
-	const sendMessage = useCallback((message: string) => {
+	// Send to Melody (prompt, URIs for files uploaded to Bucket)
+	const sendMessage = useCallback((prompt: string, fileUris: string[]) => {
+
+		// Skip if no connection
 		if (!socket || !selectedChatId) return;
 
 		setLoading(true);
 		setError(null);
 
-		// Create a new user message and add it to the state
-		const newUserMessage: MelodyMessage = { type: "USER_TEXT", content: message };
-		addMessageToLocalState(newUserMessage);
+		// Create new user file messages and add to state
+		if (fileUris && fileUris.length > 0) {
+			for (const fileUri in fileUris) {
+				const newUserFileMessage: MelodyMessage = { type: "USER_FILE", content: fileUri };
+				addMessageToLocalState(newUserFileMessage);
 
-		// Save the user message to the database
-		dispatch(createChatMessage({ chatId: selectedChatId, message }));
+				// Handle Supabase Message Create
+			}
+		}
+
+		if (prompt && prompt !== "") {
+			// Create a new user message and add it to the state
+			const newUserMessage: MelodyMessage = { type: "USER_TEXT", content: prompt };
+			addMessageToLocalState(newUserMessage);
+
+			// Save the user message to the database
+			dispatch(createChatMessage({ chatId: selectedChatId, message: prompt }));
+		}
 
 		// Send the message to Melody through WebSocket
 		socket.emit("send_to_melody", {
 			chatId: selectedChatId,
-			prompt: message
+			prompt: prompt,
+			fileUris: fileUris
 		});
 	}, [socket, selectedChatId, dispatch]);
 
 	// Change Chat
 	const changeChat = useCallback((chatId: string, modelName: ModelName) => {
-		if (!socket) return;
+
+		if (!socket) {
+			return;
+		}
 
 		socket.emit("change_chat", chatId);
 		dispatch(selectChat({ chatId, modelName })); // Handle Redux State
@@ -191,18 +209,18 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 			});
 	}, [socket, dispatch]);
 
-	const createNewChat = useCallback((firstPrompt: string, modelName: ModelName) => {
-		if (!socket) return;
+	const createNewChat = useCallback((firstPrompt: string, uploadedFiles: string[], modelName: ModelName) => {
+
+		if (!socket) {
+			return;
+		}
 
 		setLoading(true);
 		setError(null);
 
-		dispatch(selectChat({ chatId: "", modelName: modelName })); // Deselect the chat
 		dispatch(createChat({ firstPrompt: firstPrompt, modelName: modelName }))
 			.unwrap()	// Wait for the fetch to complete
 			.then(({ newChat, newMessage }) => {
-				// dispatch(selectChat({ chatId: newChat.chat_id }))
-				// setMessages([newMessage]);
 
 				changeChat(newChat.chat_id, newChat.model_name);
 

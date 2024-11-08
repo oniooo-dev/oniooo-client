@@ -6,7 +6,6 @@ import config from '@/config';
 // Defines the structure for user data throughout the application.
 type User = {
     userId: string;
-    username: string;
     email: string;
     iconUrl: string;
     mochiBalance: number;
@@ -89,7 +88,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setIsAuthenticated(true);
             setJwtToken(session.access_token);
             await fetchUserData(session.access_token, session.user.id);
-        } else {
+        }
+        else {
             setIsAuthenticated(false);
             setUser(null);
             setJwtToken(undefined);
@@ -98,10 +98,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     // Fetches user data from the backend and updates local state.
     const fetchUserData = async (token: string, userId: string) => {
+
         setLoading(true);
         setError(null);
+
         try {
-            console.log('Fetching user data...');  // Debugging log
+
+            // Debugging log
+            console.log('Fetching user data...');
+
             const response = await fetch(`${config.backendUrl}/users/${userId}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -111,19 +116,32 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
             if (!response.ok) {
                 const errorText = await response.text();
-                console.error('Fetch user data failed:', errorText);  // Log the response error
-                setError('Failed to fetch user data');
+                switch (response.status) {
+                    case 400:
+                        console.error('Fetch user data failed, user not found:', errorText);
+                        setError('User not found');
+                        break;
+                    case 500:
+                        console.error('Server error when fetching user data:', errorText);
+                        setError('Server error');
+                        break;
+                    default:
+                        console.error('Fetch user data failed:', errorText);
+                        setError('Failed to fetch user data');
+                }
                 return;
             }
 
             const userData = await response.json();
             console.log('User data fetched:', userData.userData);  // Debugging log
             setUser(userData.userData);
-        } catch (error) {
+        }
+        catch (error) {
             console.error('Error fetching user data:', error);
             setError('Error fetching user data');
             logout();
-        } finally {
+        }
+        finally {
             setLoading(false);
         }
     };

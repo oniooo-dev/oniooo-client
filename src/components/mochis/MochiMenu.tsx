@@ -3,13 +3,13 @@ import MochiBanner from "./MochiBanner";
 
 const MochiMenu = () => {
 	return (
-		<div className="grid grid-cols-3 w-2/3 h-3/5 gap-4">
-			<MochiBanner name="Tiny" price={5} amount={400} />
-			<MochiBanner name="Small" price={10} amount={820} />
-			<MochiBanner name="Medium" price={20} amount={1700} />
-			<MochiBanner name="Large" price={40} amount={3500} />
-			<MochiBanner name="Medium" price={20} amount={1700} />
-			<MochiBanner name="Large" price={40} amount={3500} />
+		<div className="grid grid-cols-3 w-1/2 h-1/2 gap-4">
+			<MochiBanner name="Lite" price={4.99} amount={500} />
+			<MochiBanner name="Elite" price={9.99} amount={1000} />
+			<MochiBanner name="Premier" price={19.99} amount={2000} />
+			<MochiBanner name="Master" price={39.99} amount={4000} />
+			<MochiBanner name="Supreme" price={79.99} amount={8000} />
+			<MochiBanner name="Eternal" price={199.99} amount={20000} />
 		</div>
 	);
 };

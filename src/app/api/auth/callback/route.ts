@@ -2,12 +2,12 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/utils/supabase/server'
 import config from '@/config'
 
-// Server-Side Google Authentication
 export async function GET(request: Request) {
-    const { searchParams, origin } = new URL(request.url)
-    const code = searchParams.get('code')
+    const { searchParams, origin } = new URL(request.url);
+    const code = searchParams.get('code');
 
     if (!code) {
+        console.error('Authorization code is missing');
         return new Response(JSON.stringify({ error: 'Authorization code is missing' }), {
             status: 400,
             headers: { 'Content-Type': 'application/json' }
@@ -15,8 +15,7 @@ export async function GET(request: Request) {
     }
 
     const supabase = createClient();
-
-    const { data: sessionData, error } = await supabase.auth.exchangeCodeForSession(code)
+    const { data: sessionData, error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (error || !sessionData) {
         console.error('Failed to exchange code for session:', error);
@@ -31,8 +30,9 @@ export async function GET(request: Request) {
     }
 
     try {
-        // Call the Express backend to fetch user data
-        const response = await fetch(`${config.backendUrl}/api/users/${session.user.id}`, {
+
+        // If user doesn't exist, create it in the backend
+        const response = await fetch(`${config.backendUrl}/users/${session.user.id}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${session.access_token}`,
@@ -40,25 +40,18 @@ export async function GET(request: Request) {
             }
         });
 
-        // Handle the response from the Express backend
         if (!response.ok) {
-            const errorText = await response.text();
-            console.error('Failed to fetch user data from Express:', errorText);
-            return new Response(JSON.stringify({ error: 'Failed to fetch user data' }), {
-                status: response.status,
-                headers: { 'Content-Type': 'application/json' }
-            });
+            console.error('User not found, attempting to create a new user');
         }
 
         const user = await response.json();
 
-        // Return the user data as a response
         return new Response(JSON.stringify(user), {
             status: 200,
             headers: { 'Content-Type': 'application/json' }
         });
-
-    } catch (err) {
+    }
+    catch (err) {
         console.error('Error calling Express backend:', err);
         return new Response(JSON.stringify({ error: 'Internal server error' }), {
             status: 500,

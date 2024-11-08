@@ -7,11 +7,24 @@ interface FileUploadListProps {
 }
 
 const FileUploadList: React.FC<FileUploadListProps> = ({ files, onRemove }) => {
+
+	const handleFileRemove = (file: File) => {
+		onRemove(file);
+	}
+
 	return (
-		<div className="flex flex-row w-full gap-2 pt-8 pb-2 px-2 overflow-x-auto">
-			{files.map((file, index) => (
-				<FileUploadItem key={index} file={file} onRemove={onRemove} />
-			))}
+		<div className="flex flex-row w-full gap-2 pt-8 pb-2 px-2 overflow-x-auto hide-scrollbar">
+			{
+				files.map((file, index) => (
+					<FileUploadItem
+						key={index}
+						file={file}
+						onRemove={
+							file => handleFileRemove(file)
+						}
+					/>
+				))
+			}
 		</div>
 	);
 };

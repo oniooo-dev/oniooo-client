@@ -1,9 +1,17 @@
-import React from 'react'
+import React from 'react';
 
-const VideoFile: React.FC = () => {
-    return (
-        <div>VideoFile</div>
-    )
+interface VideoFileProps {
+    uri: string;
 }
 
-export default VideoFile
+const VideoFile: React.FC<VideoFileProps> = ({ uri }) => {
+    return (
+        <div className="video-container" style={{ maxWidth: '100%' }}>
+            <video controls style={{ width: '100%' }}>
+                <source src={uri} type="video/mp4" />
+            </video>
+        </div>
+    );
+}
+
+export default VideoFile;

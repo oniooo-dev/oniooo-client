@@ -3,10 +3,10 @@ import Loader from '@/components/loaders/Loader'
 import SpinningCircleLoader from '@/components/loaders/SpinningCircleLoader';
 
 interface ImageFileProps {
-    imgUrl: string | null
+    uri: string | null
 }
 
-const ImageFile: React.FC<ImageFileProps> = ({ imgUrl }) => {
+const ImageFile: React.FC<ImageFileProps> = ({ uri }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [duration, setDuration] = useState(2000);
 
@@ -19,11 +19,11 @@ const ImageFile: React.FC<ImageFileProps> = ({ imgUrl }) => {
     };
 
     return (
-        <div className={`relative w-96 p-3 ${!imgUrl && "h-80"} object-contain bg-white bg-opacity-15 rounded-xl`}>
+        <div className={`relative w-96 p-2 h-80 object-contain bg-white bg-opacity-15 rounded-2xl`}>
             {
-                imgUrl ?
+                uri ?
                     (
-                        <img src={imgUrl} alt="Image" className="w-full h-full" />
+                        <img src={uri} alt="Image" className="w-full h-full rounded-xl" />
                     ) :
                     (
                         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">

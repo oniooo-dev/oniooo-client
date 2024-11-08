@@ -1,6 +1,5 @@
 export interface User {
 	userId: string;
-	username: string;
 	email: string;
 	icon_url: string;
 	mochi_balance: number;

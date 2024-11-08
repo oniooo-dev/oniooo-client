@@ -2,6 +2,11 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function updateSession(request: NextRequest) {
+    // Bypass middleware for API routes
+    if (request.nextUrl.pathname.startsWith('/api/')) {
+        return NextResponse.next(); // Proceed without any modifications for API routes
+    }
+
     let supabaseResponse = NextResponse.next({
         request,
     })
@@ -37,7 +42,9 @@ export async function updateSession(request: NextRequest) {
 
     if (
         !user &&
-        !request.nextUrl.pathname.startsWith('/melody')  // Avoid redirect loop on /melody
+        !request.nextUrl.pathname.startsWith('/melody') &&      // Avoid redirect loop on /melody
+        !request.nextUrl.pathname.startsWith('/home') &&
+        !request.nextUrl.pathname.startsWith('/shop')
     ) {
         // no user, potentially respond by redirecting the user to the login page
         const url = request.nextUrl.clone()

@@ -1,45 +1,91 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ChatInputBox from "./ChatInputBox";
 import MessageList from "./MessageList";
 
 const ChatInterface: React.FC = () => {
+
+	// ...
+	const [showScrollButton, setShowScrollButton] = useState<boolean>(false);
+
+	// Maximum file size in bytes (5 MB)
+	const MAX_FILE_SIZE = 20 * 1024 * 1024;
+
+	// Files
+	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [files, setFiles] = useState<File[]>([]);
 	const [isDraggingOver, setIsDraggingOver] = useState<boolean>(false);
+
+	const removeFile = (fileToRemove: File) => {
+		setFiles(prevFiles => prevFiles.filter(file => file !== fileToRemove));
+
+		// Resetting the input field safely
+		if (fileInputRef.current) {
+			fileInputRef.current.value = '';
+		}
+	};
 
 	const handleFileBufferReset = () => {
 		setFiles([]);
 	};
 
-	const removeFile = (fileToRemove: File) => {
-		setFiles(prevFiles => prevFiles.filter(file => file !== fileToRemove));
-	};
-
 	const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
-		event.preventDefault(); // Prevent default behavior (Prevent file from being opened)
-		setIsDraggingOver(true); // Set the dragging over state to true
+		event.preventDefault();
+		setIsDraggingOver(true);
 	};
 
 	const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
 		event.preventDefault();
 		setIsDraggingOver(false);
+
 		if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
-			const newFiles = Array.from(event.dataTransfer.files);
+			const newFiles = Array.from(event.dataTransfer.files).filter(file => {
+				if (file.size > MAX_FILE_SIZE) {
+					alert(`File ${file.name} exceeds the maximum file size of 20MB.`);
+					return false;
+				}
+				return true;
+			});
 			const updatedFiles = [...files, ...newFiles];
 			setFiles(updatedFiles);
 			event.dataTransfer.clearData();
 		}
 	};
 
-	const handleFileDrop = (file: File) => {
-		const updatedFiles = [...files, file];
+	const handleFileDrop = (newFiles: File[]) => {
+
+		// Validate File Buffer Size
+		const validFiles = newFiles.filter(file => {
+			if (file.size > MAX_FILE_SIZE) {
+				alert(`File ${file.name} exceeds the maximum file size of 20MB.`);
+				return false;
+			}
+			return true;
+		});
+
+		const updatedFiles = [...files, ...validFiles];
 		setFiles(updatedFiles);
 	};
+
+	// ...
+	const messagesContainerRef = useRef<HTMLDivElement>(null);
+
+	// Scroll to the bottom of the messages list
+	const scrollToBottom = () => {
+		setTimeout(() => {  // Ensure scroll adjustments happen after DOM updates
+			messagesContainerRef.current?.lastElementChild?.scrollIntoView({ behavior: "smooth" });
+		}, 0);
+	};
+
+	useEffect(() => {
+		console.log('Files: ' + files);
+	}, [files])
 
 	return (
 		<div
 			className={`relative flex flex-col w-full h-full items-center`}
 			onDragOver={handleDragOver}
 		>
+
 			{/* Drag and drop interface */}
 			{isDraggingOver && (
 				<div
@@ -57,14 +103,28 @@ const ChatInterface: React.FC = () => {
 			)}
 
 			{/* Message list */}
-			<div className="w-[90%] lg:w-[60%] max-h-[95%] overflow-y-auto hide-scrollbar">
-				<MessageList files={files} />
+			<div className="w-[90%] lg:w-[70%] h-[95%] overflow-y-auto hide-scrollbar">
+				<MessageList messagesContainerRef={messagesContainerRef} setShowScrollButton={setShowScrollButton} scrollToBottom={scrollToBottom} files={files} />
 			</div>
+
+			{
+				showScrollButton &&
+				(
+					<button className="fixed bottom-24 px-6 py-4 bg-black bg-opacity-60 hover:bg-opacity-80 text-white rounded-full z-50 duration-500" onClick={scrollToBottom}>
+						<img
+							src="https://cdn-icons-png.flaticon.com/512/60/60564.png"
+							className="w-4 h-4 filter invert rotate-180"
+							style={{ flexShrink: 0 }}
+						/>
+					</button>
+				)
+			}
 
 			{/* Chat input box */}
 			<div className="absolute bottom-4 flex w-[90%] lg:w-[70%]">
 				<ChatInputBox
 					files={files}
+					fileInputRef={fileInputRef}
 					onFileDrop={handleFileDrop}
 					onRemove={removeFile}
 					onReset={handleFileBufferReset}

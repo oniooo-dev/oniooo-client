@@ -1,1 +1,1 @@
-type ModelName = "flash" | "claude";
+type ModelName = "gemini" | "claude";

@@ -27,7 +27,7 @@ const initialState: MelodyState = {
 	selectedChatId: "",
 	messages: [],
 	error: null,
-	modelName: "flash"
+	modelName: "gemini"
 };
 
 export const melodySlice = createSlice({

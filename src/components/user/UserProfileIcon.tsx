@@ -6,18 +6,21 @@ interface UserProfileIconProps {
 }
 
 const UserProfileIcon: React.FC<UserProfileIconProps> = ({ onClick }) => {
+
 	const { user } = useAuth();
+
 	const handleClick = () => {
 		if (onClick) {
 			onClick();
 		}
 	}
+
 	return (
 		<div className="cursor-pointer" onClick={handleClick}>
 			<img
 				src={user?.iconUrl}
-				className="w-[36px] h-[36px] rounded-full bg-white hover:opacity-50 duration-500 
-						   border-4 border-white border-opacity-20 ml-auto"
+				className="w-[40px] h-[40px] rounded-full bg-white hover:opacity-50 duration-500 
+						   border-0 border-white border-opacity-20 ml-auto"
 			/>
 		</div>
 	);

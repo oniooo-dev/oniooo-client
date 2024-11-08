@@ -1,10 +1,9 @@
 "use client";
 
 import EpicBackground from "@/components/background/EpicBackground";
-import Background from "@/components/layout/Background";
 import Chat from "@/components/layout/Chat";
 import UserCorner from "@/components/layout/UserCorner";
-import LeftPanel from "@/components/melody/extensions/LeftPanel";
+import LeftPanel from "@/components/melody/panel/LeftPanel";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ChatSocketProvider } from "@/contexts/ChatSocketContext";
 
@@ -12,19 +11,19 @@ export default function MelodyPage() {
 	return (
 		<AuthProvider>
 			<ChatSocketProvider>
-				<div className="relative flex flex-col w-screen h-screen bg-black bg-opacity-50 text-white">
-					<Background />
+				<div className="relative flex flex-col w-screen h-screen bg-black bg-opacity-80 text-white">
 					<EpicBackground />
-					<div className="absolute top-4 right-4">
+					<div className="absolute top-4 right-4 z-10">
 						<UserCorner />
 					</div>
-					<Background />
-					<div className="flex flex-row w-full h-[94.5vh] p-4">
-						<LeftPanel />
+					<div className="flex flex-row w-full h-full pl-4">
+						<div className="w-fit h-full py-4">
+							<LeftPanel />
+						</div>
 						<Chat />
 					</div>
 				</div>
-			</ChatSocketProvider >
+			</ChatSocketProvider>
 		</AuthProvider>
 	);
 }
