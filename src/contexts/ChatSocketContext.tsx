@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { io, Socket } from "socket.io-client";
 import { useAuth } from "./AuthContext";
 import { selectChat } from "@/store/features/melody/melodySlice";
+import config from "@/config";
 
 // Socket Status
 type SocketStatus = "connected" | "connecting" | "disconnected" | "disconnecting" | "error";
@@ -78,7 +79,8 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 		// Doesn't need to connect if not authenticated
 		if (!isAuthenticated || !jwtToken) return;
 
-		const newSocket = io(`${backendUrl}:${backendPort}`, {
+		// ${backendUrl}:${backendPort}
+		const newSocket = io(`${config.backendUrl}`, {
 			autoConnect: true,
 			transports: ["websocket"],
 			auth: {
