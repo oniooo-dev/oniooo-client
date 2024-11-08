@@ -54,10 +54,13 @@ const MessageList: React.FC<MessageListProps> = ({ messagesContainerRef, setShow
 			return "...";
 		}
 		else if (state === "GENERATING_IMAGE") {
-			return "Generating an image for you"
+			return "Generating some pretty pictures"
 		}
 		else if (state === "GENERATING_VIDEO") {
-			return "Generating a video for you"
+			return "Generating a visually stunning masterpiece"
+		}
+		else if (state === "GENERATING_MUSIC") {
+			return "Generating melody ..."
 		}
 		else {
 			return "Loading ..."
