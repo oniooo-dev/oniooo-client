@@ -79,8 +79,6 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 		// Doesn't need to connect if not authenticated
 		if (!isAuthenticated || !jwtToken) return;
 
-		console.log('Sockets connected!');
-
 		// ${backendUrl}:${backendPort}
 		const newSocket = io(`${config.socketUrl}`, {
 			path: '/socket.io',
@@ -138,6 +136,8 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 		})
 
 		setSocket(newSocket);
+
+		console.log("Sockets successfully setup on " + config.socketUrl);
 
 		return () => {
 			newSocket.off("connect");
