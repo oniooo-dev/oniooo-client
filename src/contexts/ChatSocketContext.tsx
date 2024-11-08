@@ -45,7 +45,7 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
 	// Set Backend Configuration
 	const backendUrl = process.env.NODE_ENV === "production"
-		? process.env.NEXT_PUBLIC_PRODUCTION_BACKEND_URL || "https://prod-backend-url.com"
+		? process.env.NEXT_PUBLIC_PRODUCTION_BACKEND_URL || "https://api.oniooo.com"
 		: process.env.NEXT_PUBLIC_DEVELOPMENT_BACKEND_URL || "http://localhost";
 
 	const backendPort = process.env.NEXT_PUBLIC_BACKEND_PORT || 8080;
