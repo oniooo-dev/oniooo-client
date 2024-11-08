@@ -70,7 +70,7 @@ const MessageList: React.FC<MessageListProps> = ({ messagesContainerRef, setShow
 	return (
 		<div ref={messagesContainerRef} className="relative flex flex-col w-full h-full gap-6 pt-36 overflow-y-scroll hide-scrollbar">
 			{chatState === ChatState.NEW_CHAT ? (
-				<div className="absolute flex mt-80 items-center justify-center mb-[10%]">
+				<div className="absolute flex w-full h-full items-center justify-center">
 					<img src="/images/welcome-oniooo.png" className="w-[50%]" />
 				</div>
 			) : (
