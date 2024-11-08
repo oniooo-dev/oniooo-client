@@ -1,6 +1,7 @@
 // Define an interface for your configuration to benefit from TypeScript's type checking
 interface Config {
     backendUrl: string;
+    socketUrl: string;
 }
 
 // Load port from environment variables or use default
@@ -23,9 +24,14 @@ const backendUrl = process.env.NODE_ENV === 'production' ?
     `${backendBaseUrl}/api/${apiVersion}` :
     `${backendBaseUrl}:${port}/api/${apiVersion}`
 
+const socketUrl = process.env.NODE_ENV === 'production' ?
+    `${backendBaseUrl}/api` :
+    `${backendBaseUrl}:${port}/api`
+
 // Properly append the port to the backend URL
 const config: Config = {
     backendUrl: backendUrl,
+    socketUrl: socketUrl
     // other production-specific or development-specific configs
 };
 

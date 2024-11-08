@@ -82,7 +82,7 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 		console.log('Sockets connected!');
 
 		// ${backendUrl}:${backendPort}
-		const newSocket = io(`${config.backendUrl}`, {
+		const newSocket = io(`${config.socketUrl}`, {
 			path: '/socket.io',
 			autoConnect: true,
 			transports: ["websocket"],
