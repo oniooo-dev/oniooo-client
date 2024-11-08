@@ -156,10 +156,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                     //     // access_type: "offline",
                     //     prompt: "consent"
                     // },
-                    redirectTo: `
-                    ${'https://www.oniooo.com/api'
-                        }
-                        /auth/callback`,
+                    redirectTo: `https://www.oniooo.com/api/auth/callback`,
                 },
             })
 
