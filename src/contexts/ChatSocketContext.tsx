@@ -79,8 +79,11 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 		// Doesn't need to connect if not authenticated
 		if (!isAuthenticated || !jwtToken) return;
 
+		console.log('Sockets connected!');
+
 		// ${backendUrl}:${backendPort}
 		const newSocket = io(`${config.backendUrl}`, {
+			path: '/socket.io',
 			autoConnect: true,
 			transports: ["websocket"],
 			auth: {
