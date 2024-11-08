@@ -25,8 +25,8 @@ const backendUrl = process.env.NODE_ENV === 'production' ?
     `${backendBaseUrl}:${port}/api/${apiVersion}`
 
 const socketUrl = process.env.NODE_ENV === 'production' ?
-    `${backendBaseUrl}/api` :
-    `${backendBaseUrl}:${port}/api`
+    `${backendBaseUrl}` :
+    `${backendBaseUrl}:${port}`
 
 // Properly append the port to the backend URL
 const config: Config = {
