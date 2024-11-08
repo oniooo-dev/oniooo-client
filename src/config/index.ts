@@ -19,7 +19,9 @@ if (!backendBaseUrl) {
 }
 
 // Properly append the port and API version to the backend URL
-const backendUrl = `${backendBaseUrl}:${port}/api/${apiVersion}`;
+const backendUrl = process.env.NODE_ENV === 'production' ?
+    `${backendBaseUrl}/api/${apiVersion}` :
+    `${backendBaseUrl}:${port}/api/${apiVersion}`
 
 // Properly append the port to the backend URL
 const config: Config = {
