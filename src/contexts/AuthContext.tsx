@@ -105,7 +105,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         try {
 
             // Debugging log
-            console.log('Fetching user data...');
+            console.log('Fetching user data...' + config.backendUrl);
 
             const response = await fetch(`${config.backendUrl}/users/${userId}`, {
                 headers: {
