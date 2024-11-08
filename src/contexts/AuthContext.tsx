@@ -153,10 +153,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 provider: "google",
                 options: {
                     queryParams: {
-                        // access_type: "offline",
+                        access_type: "offline",
                         prompt: "consent"
                     },
-                    redirectTo: `/auth/callback`,
+                    // redirectTo: `http://localhost:3000/auth/callback`,
+                    redirectTo: `http://localhost:3000/melody`,
                 },
             })
 

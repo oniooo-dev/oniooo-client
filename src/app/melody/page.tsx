@@ -11,7 +11,7 @@ export default function MelodyPage() {
 	return (
 		<AuthProvider>
 			<ChatSocketProvider>
-				<div className="relative flex flex-col w-screen h-screen bg-black bg-opacity-80 text-white">
+				<div className="relative flex flex-col w-[100vw] h-[100vh] bg-black bg-opacity-80 text-white">
 					<EpicBackground />
 					<div className="absolute top-4 right-4 z-10">
 						<UserCorner />

@@ -89,16 +89,22 @@ const ChatInterface: React.FC = () => {
 			{/* Drag and drop interface */}
 			{isDraggingOver && (
 				<div
-					className="absolute top-0 left-0 flex w-full h-full items-center justify-center bg-black bg-opacity-40 z-10"
+					className="absolute top-0 left-0 flex flex-col gap-2 w-full h-full items-center justify-center bg-black bg-opacity-40 z-10"
 					onDragLeave={() => setIsDraggingOver(false)}
 					onDragEnd={() => setIsDraggingOver(false)}
 					onDrop={handleDrop}
 				>
 					<img
-						src="https://media4.giphy.com/media/iGSaH0DyjNhPpLaXSY/200.gif?cid=6c09b952w6beaukw1x86acc0bfkayk6t42f1o0oqnpyxrtzw&ep=v1_gifs_search&rid=200.gif&ct=g"
+						src="/images/drag-and-drop.png"
 						alt="Drag and drop"
-						className="w-96 h-96"
+						className="w-48 h-48"
 					/>
+					<p className="text-xl font-medium">
+						Add anything
+					</p>
+					<p className="text-md">
+						Drop any file here to add it to the conversation
+					</p>
 				</div>
 			)}
 
