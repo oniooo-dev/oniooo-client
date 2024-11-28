@@ -1,1 +1,0 @@
-type ModelName = "gemini" | "claude";

@@ -19,7 +19,10 @@ const ImageFile: React.FC<ImageFileProps> = ({ uri }) => {
     };
 
     return (
-        <div className={`relative w-96 p-2 h-80 object-contain bg-white bg-opacity-15 rounded-2xl`}>
+        <div className={`relative w-96 p-2 h-80 object-contain bg-white bg-opacity-20 hover:bg-opacity-60
+                        rounded-2xl cursor-pointer duration-500`}
+            onClick={() => window.open(uri || '', '_blank')}
+        >
             {
                 uri ?
                     (

@@ -8,18 +8,27 @@ const PDFFile: React.FC<PDFFileProps> = ({ uri }) => {
 
     // Function to get the PDF File name
     function getFilenameFromUri(uri: string) {
-        return uri.substring(uri.lastIndexOf('/') + 1);
+        try {
+            const url = new URL(uri);
+            const pathname = url.pathname;  // Extracts the path part of the URL
+            return pathname.split('/').pop();  // Gets the last segment after the last '/'
+        } catch (error) {
+            console.error('Invalid URL:', error);
+            return '';  // Return an empty string or handle the error as needed
+        }
     }
-
     const filename = getFilenameFromUri(uri);
 
     return (
-        <div className="flex flex-row items-center py-2 px-4 gap-2 bg-white bg-opacity-40 rounded-[20px] h-16">
+        <div className="flex flex-row items-center py-2 px-4 gap-2 bg-white bg-opacity-20 hover:bg-opacity-40
+                        rounded-[20px] h-16 cursor-pointer duration-500"
+            onClick={() => window.open(uri, '_blank')}
+        >
             <img
-                src="https://banner2.cleanpng.com/20180612/ulg/aa89pkfqh.webp"
-                className="w-[22px] h-[22px]"
+                src="/icons/files/pdf.png"
+                className="w-[30px] h-[30px]"
             />
-            <p>{filename}</p>
+            <p className="text-sm overflow-hidden max-w-xs truncate">{filename}</p>
         </div>
     )
 }

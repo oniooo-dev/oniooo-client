@@ -2,9 +2,8 @@ import React, { RefObject, useEffect, useRef } from "react";
 import FileUploadIcon from "./FileUploadIcon";
 import FileUploadList from "./FileUploadList";
 import SendButton from "./SendButton";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
 import { useChatSocket } from "@/contexts/ChatSocketContext";
+import { uploadFiles } from "@/lib/files";
 
 interface ChatInputBoxProps {
 	files: File[];
@@ -16,9 +15,10 @@ interface ChatInputBoxProps {
 
 const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, fileInputRef, onFileDrop, onRemove, onReset }) => {
 
-	// ...
-	const selectedChatId = useSelector((state: RootState) => state.melody.selectedChatId);
-	const { prompt, setPrompt, sendMessage, createNewChat, loading } = useChatSocket();
+	// Chat Socket Context
+	const { prompt, setPrompt, sendMessage, loading, selectedChatId } = useChatSocket();
+
+	// Textarea Ref
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 
 	// When user uploads using the clip icon
@@ -26,11 +26,13 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, fileInputRef, onFile
 		onFileDrop(files);
 	};
 
+	// Handle prompt change
 	const handlePromptChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setPrompt(event.target.value);
 		adjustHeight();
 	};
 
+	// Reset the file buffer
 	const handleFileBufferReset = () => {
 		onReset();
 
@@ -40,89 +42,10 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, fileInputRef, onFile
 		}
 	};
 
-	// Fetch signed URLs for the files
-	async function fetchSignedUrls(files: File[]): Promise<string[]> {
-
-		// Convert the files array to an array of objects with name and type properties
-		const fileData: { name: string; type: string }[] = files.map((file) => ({
-			name: file.name,
-			type: file.type,
-		}));
-
-		try {
-
-			const response = await fetch(
-				"/api/getSignedUrls",
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({ files: fileData }),
-				}
-			);
-
-			if (!response.ok) {
-				console.log("Response Status:", response.status);
-				const responseBody = await response.text();  // Read response as text to see what it is
-				console.log("Failed Response Body:", responseBody);
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-
-			const data = await response.json();
-
-			// The backend returns an object with a signedUrls array
-			return data.signedUrls;
-		}
-		catch (error) {
-			console.error("Failed to fetch signed URLs:", error);
-			return [];
-		}
-	}
-
-	// Upload files to the signed URLs
-	async function uploadFiles(files: File[], signedUrls: string[]): Promise<string[]> {
-
-		if (!signedUrls || signedUrls.length === 0) {
-			console.error("Invalid or empty signed URLs array");
-			return [];
-		}
-
-		try {
-
-			const bucketName = 'melody-files';
-			const baseUrl = `https://storage.googleapis.com/${bucketName}/`;
-
-			const uploadPromises = files.map((file, index) => {
-
-				const url = signedUrls[index];
-
-				return fetch(url, {
-					method: "PUT",
-					headers: {
-						"Content-Type": file.type,
-					},
-					body: file,
-				}).then(response => ({
-					response,
-					filePath: `${baseUrl}${encodeURIComponent(file.name)}`
-				}));
-			});
-
-			const responses = await Promise.all(uploadPromises);
-
-			console.log("Upload responses:", responses);
-
-			// Filter responses to ensure they are OK and map them to the public URLs
-			return responses
-				.filter(({ response }) => response.ok)
-				.map(({ filePath }) => filePath);
-		}
-		catch (error) {
-			console.error("Failed to upload files:", error);
-			return [];
-		}
-	}
+	const handleUpload = async (files: File[]) => {
+		const urls = await uploadFiles(files);
+		return urls;
+	};
 
 	const handleSendMessage = async () => {
 
@@ -140,27 +63,25 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, fileInputRef, onFile
 
 		try {
 
-			/* Handle File URIs */
-			const signedUrls = await fetchSignedUrls(files);
-			const uploadedFiles = await uploadFiles(files, signedUrls);
+			// Upload files to S3
+			const uploadedFileUrls = await handleUpload(files);
 
-			console.log(signedUrls, uploadedFiles);
+			console.log("UPLOADED: " + uploadedFileUrls);
 
-			if (selectedChatId === "") {
-				// Create a new chat
-				createNewChat(prompt, uploadedFiles, "gemini");
-			}
-			else {
-				// Create a USER_TEXT message with the current prompt
-				sendMessage(prompt, uploadedFiles);
-			}
+			// Create a USER_TEXT message with the current prompt
+			sendMessage(prompt, uploadedFileUrls);
 
 			// Reset the prompt
 			setPrompt("");
 
 			// Clear UI
 			handleFileBufferReset();
-		} catch (error) {
+
+			// Adjust the height of the textarea
+			adjustHeight();
+
+		}
+		catch (error) {
 			console.log("Error uploading files:", error);
 		}
 	};

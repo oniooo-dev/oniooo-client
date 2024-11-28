@@ -3,7 +3,7 @@ import React from 'react'
 
 const UserAccount = () => {
 
-    const { user, logout } = useAuth();
+    const { isAuthenticated, user, logout } = useAuth();
 
     return (
         <div className="flex flex-col gap-4">
@@ -11,15 +11,22 @@ const UserAccount = () => {
                 Account
             </p>
             <div className="flex flex-row gap-4 text-lg">
-                <p>
-                    Logged in as {user?.email}
-                </p>
-                <p
-                    className="underline underline-offset-8 cursor-pointer"
-                    onClick={() => logout()}
-                >
-                    Logout
-                </p>
+                {isAuthenticated ?
+                    <p>
+                        Logged in as {user?.email}
+                    </p> :
+                    <p>
+                        Pliz an account we beg u!
+                    </p>
+                }
+                {isAuthenticated &&
+                    <p
+                        className="underline underline-offset-8 cursor-pointer"
+                        onClick={() => logout()}
+                    >
+                        Logout
+                    </p>
+                }
             </div>
         </div>
     )

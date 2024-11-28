@@ -1,13 +1,13 @@
-import { MelodyMessage } from "@/lib/types";
-import { createChat, createChatMessage, fetchMessagesByChatId } from "@/store/features/melody/melodyThunks";
-import { RootState } from "@/store/store";
-import { useAppDispatch } from "@/store/useAppDispatch";
+
+/*
+ * Handles the WebSocket connection and message handling for the chat.
+*/
+
+import config from "@/config";
+import { MelodyChat, MelodyMessage } from "@/lib/types";
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { io, Socket } from "socket.io-client";
 import { useAuth } from "./AuthContext";
-import { selectChat } from "@/store/features/melody/melodySlice";
-import config from "@/config";
 
 // Socket Status
 type SocketStatus = "connected" | "connecting" | "disconnected" | "disconnecting" | "error";
@@ -19,55 +19,120 @@ interface IChatSocketContext {
 	messages: MelodyMessage[];
 	socket: Socket | null;
 	loading: boolean;
-	waitingForMessageState: string | null;
 	status: SocketStatus;
+	chats: MelodyChat[];
 	sendMessage: (message: string, fileUris: string[]) => void;
+	selectedChatId: string | null;
+	selectChat: (chatId: string | null) => void;
+	fetchMessagesByChatId: (chatId: string) => Promise<void>;
+	fetchChats: () => Promise<void>;
 	error: string | null;
 	connect: () => void;
 	disconnect: () => void;
-	changeChat: (chatId: string, modelName: ModelName) => void;
-	createNewChat: (firstPrompt: string, uploadedFiles: string[], modelName: ModelName) => void;
 }
 
 export const ChatSocketContext = createContext<IChatSocketContext | undefined>(undefined);
 
 export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+
+	// Auth
 	const { isAuthenticated, jwtToken } = useAuth();
-	const dispatch = useAppDispatch();
-	const selectedChatId = useSelector((state: RootState) => state.melody.selectedChatId);
-	const selectedChatMessages = useSelector((state: RootState) => state.melody.messages);
+
+	// State
 	const [prompt, setPrompt] = useState<string>("");
-	const [messages, setMessages] = useState<MelodyMessage[]>(selectedChatMessages);
+	const [messages, setMessages] = useState<MelodyMessage[]>([]);
+	const [chats, setChats] = useState<MelodyChat[]>([]);
 	const [socket, setSocket] = useState<Socket | null>(null);
 	const [status, setStatus] = useState<SocketStatus>("disconnected");
 	const [loading, setLoading] = useState<boolean>(false);
-	const [waitingForMessageState, setWaitingForMessageState] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
-
-	// Set Backend Configuration
-	const backendUrl = process.env.NODE_ENV === "production"
-		? process.env.NEXT_PUBLIC_PRODUCTION_BACKEND_URL || "https://api.oniooo.com"
-		: process.env.NEXT_PUBLIC_DEVELOPMENT_BACKEND_URL || "http://localhost";
-
-	const backendPort = process.env.NEXT_PUBLIC_BACKEND_PORT || 8080;
+	const [lastChunkId, setLastChunkId] = useState<string | null>(null);
+	const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
 
 	const addMessageToLocalState = (newMessage: MelodyMessage) => {
 		setMessages((prevMessages) => {
-			// Error Handling Logging
-			console.log('Previous Messages:', prevMessages);
-			console.log('New Message:', newMessage);
 			return [...prevMessages, newMessage]
 		});
 	};
 
-	// Fetch messages on chat id change or dispatch
+	// Function to append a new chunk to the latest message or start a new one
+	const appendChunkToMessage =
+		useCallback(
+			(chunk: string) => {
+				setMessages(prevMessages => {
+
+					// Check if the last message can be appended to
+					if (prevMessages.length > 0 && prevMessages[prevMessages.length - 1].type === 'SYSTEM_TEXT') {
+						// Create a new array with all but the last message
+						const newMessages = prevMessages.slice(0, -1);
+
+						// Create a new last message object with the appended content
+						const lastMessage = {
+							...prevMessages[prevMessages.length - 1],
+							content: prevMessages[prevMessages.length - 1].content + chunk
+						};
+
+						// Return the new array with the modified last message
+						return [...newMessages, lastMessage];
+					}
+					else {
+						// Start a new message if no suitable last message exists
+						return [...prevMessages, { type: 'SYSTEM_TEXT', content: chunk }];
+					}
+				});
+			}, []);
+
+	const selectChat = (chatId: string | null) => {
+		setSelectedChatId(chatId);
+	}
+
+	const fetchMessagesByChatId = async (chatId: string): Promise<void> => {
+		try {
+
+			// Fetch messages from backend
+			const response = await fetch(`${config.backendUrl}/melody/chats/${chatId}/messages`, {
+				headers: {
+					'Authorization': `Bearer ${jwtToken}`
+				}
+			});
+
+			// Parse response
+			const { messages }: { messages: MelodyMessage[] } = await response.json();
+
+			// Return messages
+			setMessages(messages || []);
+		}
+		catch (error) {
+			console.error('Error fetching messages:', error);
+			setError('Failed to fetch messages');
+		}
+	}
+
+	const fetchChats = async (): Promise<void> => {
+
+		// Fetch chats from backend
+		const response = await fetch(
+			`${config.backendUrl}/melody/chats`, {
+			headers: {
+				'Authorization': `Bearer ${jwtToken}`
+			}
+		});
+
+		// Parse response
+		const { chats }: { chats: MelodyChat[] } = await response.json();
+
+		// Return chats
+		setChats(chats || []);
+	}
+
+	// Fetch messages on chat id change
 	useEffect(() => {
 		if (selectedChatId) {
-			dispatch(fetchMessagesByChatId({ chatId: selectedChatId }));
+			fetchMessagesByChatId(selectedChatId);
 		} else {
 			setMessages([]);
 		}
-	}, [selectedChatId, dispatch]);
+	}, [selectedChatId]);
 
 	// Log the state of loading
 	useEffect(() => {
@@ -76,8 +141,9 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
 	// Websockets
 	useEffect(() => {
+
 		// Doesn't need to connect if not authenticated
-		if (!isAuthenticated || !jwtToken) return;
+		if (!isAuthenticated || !jwtToken) return undefined;
 
 		// ${backendUrl}:${backendPort}
 		const newSocket = io(`${config.socketUrl}`, {
@@ -110,30 +176,64 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 		});
 
 		// Receive from Melody
-		newSocket.on("receive_melody_message", (data: { text?: string; fileUri?: string }) => {
-			console.log('Received message from Melody:', data);
+		newSocket.on(
+			"llm_response",
+			(data: { text?: string; fileUri?: string, chunkId: string }) => {
 
-			// Check if the data contains text and handle it accordingly
-			if (data.text) {
-				// Append system message to local state as text
-				addMessageToLocalState({ type: 'SYSTEM_TEXT', content: data.text });
-			} else if (data.fileUri) {
-				// Handle the file URI message case
-				addMessageToLocalState({ type: 'SYSTEM_FILE', content: data.fileUri });
-			} else {
-				// Log or handle cases where neither text nor fileUri is present
-				console.error('Received undefined message type from Melody');
+				if (data.text) {
+
+					// Log the chunk
+					console.log(`Received chunk ${data.chunkId}: `, data.text);
+
+					// Append chunk if it's not a duplicate
+					if (data.chunkId !== lastChunkId) {
+						appendChunkToMessage(data.text);
+						setLastChunkId(data.chunkId);
+					}
+					else {
+						console.log('Duplicate chunk detected and ignored:', data.chunkId);
+					}
+				}
+				else if (data.fileUri) {
+					console.log('Received file URI:', data.fileUri);
+					addMessageToLocalState(
+						{
+							type: 'SYSTEM_FILE',
+							content: data.fileUri
+						}
+					);
+				}
+
+				setLoading(false);
 			}
+		);
 
-			setWaitingForMessageState(null);
+		newSocket.on("image_response", (data: { imageUrl: string }) => {
+			console.log('Received image URI:', data.imageUrl);
+			addMessageToLocalState(
+				{
+					type: 'SYSTEM_FILE',
+					content: data.imageUrl
+				}
+			);
+		});
+
+		// Not Sure if this is needed
+		newSocket.on('llm_response_end', () => {
+			console.log('Complete message received');
 			setLoading(false);
 		});
 
-		// TYPING, GENERATING_IMAGE, ...
-		newSocket.on("melody_state_update", (data: { state: string }) => {
-			console.log("Melody's current state: " + data.state);
-			setWaitingForMessageState(data.state);
-		})
+		// Listen for new chat creation
+		newSocket.on(
+			'new_chat_created',
+			({ chatId }: { chatId: string }) => {
+				console.log('New chat created with ID:', chatId);
+				setSelectedChatId(chatId);
+				fetchMessagesByChatId(chatId);
+				fetchChats();
+			}
+		);
 
 		setSocket(newSocket);
 
@@ -143,107 +243,67 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 			newSocket.off("connect");
 			newSocket.off("disconnect");
 			newSocket.off("error");
-			newSocket.off("receive_melody_message");
+			newSocket.off("llm_response");
+			newSocket.off("llm_response_end");
+			newSocket.off('new_chat_created');
+			newSocket.off("melody_state_update");
 			newSocket.close();
 		};
-	}, [isAuthenticated, jwtToken, backendUrl, backendPort]);
+	}, [isAuthenticated, jwtToken]);
 
 	// Send to Melody (prompt, URIs for files uploaded to Bucket)
 	const sendMessage = useCallback((prompt: string, fileUris: string[]) => {
 
 		// Skip if no connection
-		if (!socket || !selectedChatId) return;
+		if (!socket) {
+			return;
+		}
 
+		// Set loading
 		setLoading(true);
 		setError(null);
 
 		// Create new user file messages and add to state
 		if (fileUris && fileUris.length > 0) {
-			for (const fileUri in fileUris) {
-				const newUserFileMessage: MelodyMessage = { type: "USER_FILE", content: fileUri };
-				addMessageToLocalState(newUserFileMessage);
 
-				// Handle Supabase Message Create
+			// Loop through file URIs
+			for (const fileUri of fileUris) {
+
+				// Create a new user file message
+				const newUserFileMessage: MelodyMessage = {
+					type: "USER_FILE",
+					content: fileUri
+				};
+
+				// Add the new user file message to the state
+				addMessageToLocalState(newUserFileMessage);
 			}
 		}
 
 		if (prompt && prompt !== "") {
-			// Create a new user message and add it to the state
-			const newUserMessage: MelodyMessage = { type: "USER_TEXT", content: prompt };
-			addMessageToLocalState(newUserMessage);
 
-			// Save the user message to the database
-			dispatch(createChatMessage({ chatId: selectedChatId, message: prompt }));
+			// Create a new user message and add it to the state
+			const newUserMessage: MelodyMessage = {
+				type: "USER_TEXT",
+				content: prompt
+			};
+
+			// Add the new user message to the state
+			addMessageToLocalState(newUserMessage);
 		}
+
+		console.log("Chat ID: " + selectedChatId + " Sending message to Melody: " + prompt);
 
 		// Send the message to Melody through WebSocket
-		socket.emit("send_to_melody", {
-			chatId: selectedChatId,
-			prompt: prompt,
-			fileUris: fileUris
-		});
-	}, [socket, selectedChatId, dispatch]);
-
-	// Change Chat
-	const changeChat = useCallback((chatId: string, modelName: ModelName) => {
-
-		if (!socket) {
-			return;
-		}
-
-		socket.emit("change_chat", chatId);
-		dispatch(selectChat({ chatId, modelName })); // Handle Redux State
-
-		// // Reset local message state
-		setMessages([]);
-		setError(null);
-		setLoading(false);
-
-		// Fetch new chat messages
-		dispatch(fetchMessagesByChatId({ chatId }))
-			.unwrap()	// Wait for the fetch to complete
-			.then(fetchedMessages => {
-				setMessages(fetchedMessages);	// Set messages in local state
-			})
-			.catch(err => {
-				setError('Failed to load messages');
-				console.error('Error fetching messages:', err);
-			})
-			.finally(() => {
-				setLoading(false);
-			});
-	}, [socket, dispatch]);
-
-	const createNewChat = useCallback((firstPrompt: string, uploadedFiles: string[], modelName: ModelName) => {
-
-		if (!socket) {
-			return;
-		}
-
-		setLoading(true);
-		setError(null);
-
-		dispatch(createChat({ firstPrompt: firstPrompt, modelName: modelName }))
-			.unwrap()	// Wait for the fetch to complete
-			.then(({ newChat, newMessage }) => {
-
-				changeChat(newChat.chat_id, newChat.model_name);
-
-				// Send the message to Melody through WebSocket
-				socket.emit("send_to_melody", {
-					chatId: newChat.chat_id,
-					prompt: newMessage.content
-				});
-			})
-			.catch(err => {
-				setError('Failed to create chat');
-				console.error('Error fetching messages:', err);
-			})
-			.finally(() => {
-				setLoading(false);
-			});
-		setLoading(false);
-	}, [socket, backendUrl, backendPort, jwtToken, dispatch]);
+		socket.emit(
+			"query_llm",
+			{
+				chatId: selectedChatId,
+				userTextQuery: prompt,
+				fileURIs: fileUris
+			}
+		);
+	}, [socket, selectedChatId]);
 
 	return (
 		<ChatSocketContext.Provider
@@ -252,15 +312,17 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 				setPrompt,
 				messages,
 				loading,
-				waitingForMessageState,
 				error,
+				chats,
 				socket,
+				selectedChatId,
+				selectChat,
+				fetchMessagesByChatId,
+				fetchChats,
 				connect: () => socket?.connect(),  // Simplified connect
 				disconnect: () => socket?.disconnect(), // Simplified disconnect
 				sendMessage,
 				status,
-				changeChat,
-				createNewChat
 			}}
 		>
 			{children}

@@ -1,13 +1,12 @@
 import React from 'react'
+import { useChatSocket } from '@/contexts/ChatSocketContext';
 
-interface NewChatProps {
-    onClick: (modelName: ModelName) => void;
-}
+const NewChat: React.FC = () => {
 
-const NewChat: React.FC<NewChatProps> = ({ onClick }) => {
+    const { selectChat } = useChatSocket();
 
     const handleClick = () => {
-        onClick("gemini");
+        selectChat(null);
     }
 
     return (

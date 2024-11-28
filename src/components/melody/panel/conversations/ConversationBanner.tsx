@@ -1,9 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 import ConversationTools from "./ConversationTools";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
-import { useAppDispatch } from "@/store/useAppDispatch";
 import { useChatSocket } from "@/contexts/ChatSocketContext";
 
 interface ConversationBannerProps {
@@ -12,15 +9,18 @@ interface ConversationBannerProps {
 }
 
 const ConversationBanner: React.FC<ConversationBannerProps> = ({ chatId, title }) => {
-	const { changeChat } = useChatSocket();
-	const { selectedChatId, modelName } = useSelector((state: RootState) => state.melody);
+
+	// Contexts
+	const { selectedChatId, selectChat } = useChatSocket();
+
+	// States
 	const [isHovered, setIsHovered] = useState(false);
 	const [isOptionsOpen, setIsOptionsOpen] = useState(false);
 	const conversationBannerRef = useRef<HTMLDivElement>(null);
 
 	const handleMouseClick = () => {
 		console.log("Selected conversation id: ", chatId);
-		changeChat(chatId, modelName);
+		selectChat(chatId);
 	};
 
 	const handleOptionsClick = (event: React.MouseEvent<HTMLDivElement>) => {

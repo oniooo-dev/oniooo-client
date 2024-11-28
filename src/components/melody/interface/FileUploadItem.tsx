@@ -44,7 +44,7 @@ const FileUploadItem: React.FC<FileUploadItemProps> = memo(({ file, onRemove }) 
 						<img
 							src="/icons/files/pdf.png"
 						/>
-						<p>{file.name}</p>
+						<p className="text-xs truncate">{file.name}</p>
 					</div>
 				) : file.type.includes("py") ? (
 					<div className="absolute top-0 left-0 flex flex-col w-full h-full justify-center items-center gap-2 p-2 bg-black bg-opacity-20 hover:bg-opacity-80 rounded-lg duration-500">
