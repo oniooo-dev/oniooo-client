@@ -11,15 +11,6 @@ const poppins = Poppins({
 export const metadata: Metadata = {
 	title: "Oniooo",
 	description: "Your new description here that accurately describes your website.",
-	icons: {
-		icon: [
-			{ url: "/favicon.ico" },
-			{ url: "/favicon.svg", type: "image/svg+xml" },
-			{ url: "/favicon-96x96.png", sizes: "96x96" },
-		],
-		apple: "/apple-touch-icon.png",
-	},
-	manifest: "/site.webmanifest",
 };
 
 export default function RootLayout({

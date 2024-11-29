@@ -62,7 +62,7 @@ const MessageList: React.FC<MessageListProps> = ({ messagesContainerRef, setShow
 		switch (melodyState) {
 			case "THINKING":
 				return (
-					<div className={`flex gap-4 w-full 'pr-48`}>
+					<div className={`flex-row gap-4 w-full pr-48`}>
 						<div className="flex-row items-center justify-center">
 							<img src={melodyIconUrl} className="w-9 h-9 rounded-full mt-3" />
 							<p className="text-md text-opacity-60">Staring into the abyss ...</p>
@@ -71,9 +71,11 @@ const MessageList: React.FC<MessageListProps> = ({ messagesContainerRef, setShow
 				);
 			case "CREATING":
 				return (
-					<div className="flex-row items-center justify-center">
-						<img src={melodyIconUrl} className="w-9 h-9 rounded-full mt-3" />
-						<p>Creating ...</p>
+					<div className={`flex-row gap-4 w-full pr-48`}>
+						<div className="flex-row items-center justify-center">
+							<img src={melodyIconUrl} className="w-9 h-9 rounded-full mt-3" />
+							<p className="text-md text-opacity-60">Creating ...</p>
+						</div>
 					</div>
 				);
 			default:
@@ -86,11 +88,12 @@ const MessageList: React.FC<MessageListProps> = ({ messagesContainerRef, setShow
 			{
 				selectedChatId === null ?
 					(
-						<div className="flex-row w-full h-full items-center justify-center">
-							<img src="/images/welcome-oniooo.png" className="w-[50%]" />
+						<div className="flex w-full h-[60%] items-center justify-center">
+							<div className="flex items-center justify-center bg-white bg-opacity-[0.12] rounded-full p-6">
+								<img src="/icons/main-logo/oniooo-small.png" className="w-[76px] h-[76px] mt-[4px]" />
+							</div>
 						</div>
-					) :
-					(
+					) : (
 						messages.map((message, index) => {
 							const isUser = message.type === "USER_TEXT" || message.type === "USER_FILE";
 							const showIcon = index === 0 || getMessageSender(messages[index - 1].type) !== getMessageSender(message.type);

@@ -154,7 +154,7 @@ const ChatInterface: React.FC = () => {
 				<div className="grid grid-cols-2 gap-x-4 gap-y-5 w-full justify-center mb-3">
 					{
 						suggestionButtons.map((button, index) => (
-							<div key={index} className="flex flex-row items-center gap-3 w-full bg-white bg-opacity-20 hover:bg-opacity-40 p-3 rounded-[25px] cursor-pointer duration-500">
+							<div key={index} className="flex flex-row items-center gap-3 w-full bg-white bg-opacity-[0.12] hover:bg-opacity-40 p-3 rounded-[25px] cursor-pointer duration-500">
 								<img src={button.icon} alt={button.title} className="w-14 h-14 rounded-[20px]" />
 								<div className="flex flex-col items-start justify-center gap-[2px]">
 									<p className="text-[14px] text-left">{button.title}</p>
