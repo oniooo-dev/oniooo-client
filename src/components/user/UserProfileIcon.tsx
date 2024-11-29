@@ -20,7 +20,7 @@ const UserProfileIcon: React.FC<UserProfileIconProps> = ({ onClick }) => {
 			<img
 				src={user?.iconUrl}
 				className="w-[22px] h-[22px] rounded-full bg-white hover:opacity-50 duration-500 
-						   border-0 border-white border-opacity-20 ml-auto border border-white"
+						   border-0 border-white border-opacity-20 ml-auto"
 			/>
 		</div>
 	);
