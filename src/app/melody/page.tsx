@@ -12,6 +12,8 @@ export default function MelodyPage() {
 		<AuthProvider>
 			<ChatSocketProvider>
 				<div className="relative flex flex-col w-[100vw] h-[100vh] bg-black bg-opacity-[0.83] text-white">
+					<p className="absolute opacity-0" style={{ visibility: "hidden" }}>Oniooo helps you create stunning images, videos, music, and more with cutting-edge AI tools—all from a single platform.
+						Whether you're generating creative content, composing music, or editing visuals, Oniooo makes it seamless by eliminating the need to switch between multiple apps. Simply ask, and Oniooo delivers results tailored to your vision. Experience the future of creativity with Oniooo, where imagination meets simplicity!</p>
 					<EpicBackground />
 					<div className="absolute top-4 right-4 z-10">
 						<GoogleAuthButton />
