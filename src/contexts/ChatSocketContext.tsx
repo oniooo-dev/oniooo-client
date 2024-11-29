@@ -4,7 +4,7 @@
 */
 
 import config from "@/config";
-import { MelodyChat, MelodyMessage } from "@/lib/types";
+import { MelodyChat, MelodyMessage, MelodyState } from "@/lib/types";
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { useAuth } from "./AuthContext";
@@ -26,6 +26,7 @@ interface IChatSocketContext {
 	selectChat: (chatId: string | null) => void;
 	fetchMessagesByChatId: (chatId: string) => Promise<void>;
 	fetchChats: () => Promise<void>;
+	melodyState: MelodyState | null;
 	error: string | null;
 	connect: () => void;
 	disconnect: () => void;
@@ -48,6 +49,7 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 	const [error, setError] = useState<string | null>(null);
 	const [lastChunkId, setLastChunkId] = useState<string | null>(null);
 	const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
+	const [melodyState, setMelodyState] = useState<MelodyState | null>(null);
 
 	const addMessageToLocalState = (newMessage: MelodyMessage) => {
 		setMessages((prevMessages) => {
@@ -218,6 +220,15 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 			);
 		});
 
+		newSocket.on("melody_state_update", (data: { melodyState: MelodyState }) => {
+
+			// Log the state
+			console.log("Melody state updated:", data.melodyState);
+
+			// Update the state
+			setMelodyState(data.melodyState);
+		});
+
 		// Not Sure if this is needed
 		newSocket.on('llm_response_end', () => {
 			console.log('Complete message received');
@@ -314,6 +325,7 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 				loading,
 				error,
 				chats,
+				melodyState,
 				socket,
 				selectedChatId,
 				selectChat,

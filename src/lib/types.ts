@@ -15,3 +15,5 @@ export interface MelodyMessage {
 	type: string;
 	content: string;
 }
+
+export type MelodyState = "THINKING" | "CREATING";

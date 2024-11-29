@@ -31,7 +31,7 @@ export default function RootLayout({
 		<html lang="en" className={`${poppins.variable} font-[300] text-[15px]`}>
 			<head>
 				<title>Oniooo</title>
-				<meta name="description" content="Oniooo" />
+				<meta name="description" content="diowafoiwajiofw" />
 				<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
 				<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 				<link rel="shortcut icon" href="/favicon.ico" />

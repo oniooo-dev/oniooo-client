@@ -53,13 +53,26 @@ const ConversationBanner: React.FC<ConversationBannerProps> = ({ chatId, title }
 		<div ref={conversationBannerRef} className="relative flex flex-row w-[240px]">
 			<div
 				className={`relative flex flex-row items-center justify-between w-full h-12 px-3 py-3 bg-opacity-[0.08] rounded-[20px] cursor-pointer duration-300
-							${isOptionsOpen ? "bg-white bg-opacity-[0.05]" : `${selectedChatId === chatId ? "bg-white hover:bg-opacity-[0.20]" : "hover:bg-white hover:bg-opacity-[0.1]"}`}`}
+							${isOptionsOpen ?
+						"bg-white bg-opacity-[0.05]" :
+						`${selectedChatId === chatId ?
+							"bg-white hover:bg-opacity-[0.15]" :
+							"hover:bg-white hover:bg-opacity-[0.1]"}
+							`}
+				`}
 				onMouseEnter={handleMouseEnter}
 				onMouseLeave={handleMouseLeave}
 				onClick={handleMouseClick}
 			>
 				<div
-					className={`${isOptionsOpen || isHovered ? `banner-container-clicked` : `banner-container`} ${selectedChatId === chatId ? "px-1" : "hover:px-1"} duration-300`}
+					className={`${isOptionsOpen || isHovered ?
+						`banner-container-clicked` :
+						`banner-container`} 
+						${selectedChatId === chatId ? "px-1" :
+							"hover:px-1"
+						} 
+						duration-300
+						`}
 				>
 					<div className="title-container duration-500">
 						<p className="scrolling-title">{title}</p>

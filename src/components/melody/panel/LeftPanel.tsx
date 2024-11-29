@@ -13,7 +13,7 @@ const LeftPanel = () => {
     };
 
     return (
-        <div className="flex flex-col w-fit h-full p-2 rounded-[20px] bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg">
+        <div className="flex flex-col w-fit h-full p-2 rounded-[20px] bg-white bg-opacity-[0.12] backdrop-filter backdrop-blur-lg">
             <NewChat />
             <ConversationSelectionPanel />
             <MochiBalance onClick={handleMochiClick} />

@@ -11,7 +11,7 @@ const NewChat: React.FC = () => {
 
     return (
         <button
-            className="flex flex-row items-center px-5 py-2 gap-4 w-full h-[54px] bg-white bg-opacity-15 hover:bg-opacity-30 
+            className="flex flex-row items-center px-5 py-2 gap-4 w-full h-[54px] bg-white bg-opacity-[0.10] hover:bg-opacity-30 
                        rounded-[20px] duration-500 text-left font-medium"
             onClick={
                 () => handleClick()

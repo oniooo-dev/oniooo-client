@@ -69,6 +69,29 @@ const ChatInterface: React.FC = () => {
 	// ...
 	const messagesContainerRef = useRef<HTMLDivElement>(null);
 
+	const suggestionButtons = [
+		{
+			icon: "/images/suggestions/dragon.png",
+			title: "Create an illustration",
+			description: "Of a mythic dragon"
+		},
+		{
+			icon: "/images/suggestions/fam.png",
+			title: "Generate a video",
+			description: "of beautiful memories"
+		},
+		{
+			icon: "/images/suggestions/guita.png",
+			title: "Compose music",
+			description: "of a romantic encounter"
+		},
+		{
+			icon: "/images/suggestions/paint.png",
+			title: "Upscale / Remove background",
+			description: "of this image"
+		}
+	]
+
 	// Scroll to the bottom of the messages list
 	const scrollToBottom = () => {
 		setTimeout(() => {  // Ensure scroll adjustments happen after DOM updates
@@ -109,7 +132,7 @@ const ChatInterface: React.FC = () => {
 			)}
 
 			{/* Message list */}
-			<div className="w-[90%] lg:w-[70%] h-[95%] overflow-y-auto hide-scrollbar">
+			<div className="w-[90%] lg:w-[65%] h-[95%] overflow-y-auto hide-scrollbar">
 				<MessageList messagesContainerRef={messagesContainerRef} setShowScrollButton={setShowScrollButton} scrollToBottom={scrollToBottom} files={files} />
 			</div>
 
@@ -127,7 +150,20 @@ const ChatInterface: React.FC = () => {
 			}
 
 			{/* Chat input box */}
-			<div className="absolute bottom-4 flex w-[90%] lg:w-[70%]">
+			<div className="absolute bottom-8 flex-col w-[90%] lg:w-[65%]">
+				<div className="grid grid-cols-2 gap-x-4 gap-y-5 w-full justify-center mb-3">
+					{
+						suggestionButtons.map((button, index) => (
+							<div key={index} className="flex flex-row items-center gap-3 w-full bg-white bg-opacity-20 hover:bg-opacity-40 p-3 rounded-[25px] cursor-pointer duration-500">
+								<img src={button.icon} alt={button.title} className="w-14 h-14 rounded-[20px]" />
+								<div className="flex flex-col items-start justify-center gap-[2px]">
+									<p className="text-[14px] text-left">{button.title}</p>
+									<p className="text-[14px] text-left opacity-60">{button.description}</p>
+								</div>
+							</div>
+						))
+					}
+				</div>
 				<ChatInputBox
 					files={files}
 					fileInputRef={fileInputRef}

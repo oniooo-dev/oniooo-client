@@ -24,7 +24,7 @@ const UserAccount = () => {
                         className="underline underline-offset-8 cursor-pointer"
                         onClick={() => logout()}
                     >
-                        Logout
+                        Log out
                     </p>
                 }
             </div>

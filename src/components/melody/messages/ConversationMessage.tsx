@@ -49,17 +49,17 @@ const ConversationMessage: React.FC<ConversationMessageProps> = ({ type, content
 
 	useEffect(() => {
 		async function fetchFileInfo(uri: string) {
-			if (!uri || typeof uri !== 'string') {
-				console.error('Invalid URI:', uri);
-				setFileInfo({ fileType: null, signedUrl: null });
-				return;
-			}
+			// if (!uri || typeof uri !== 'string') {
+			// 	console.error('Invalid URI:', uri);
+			// 	setFileInfo({ fileType: null, signedUrl: null });
+			// 	return;
+			// }
 
 			try {
 				console.log("Fetching file info for URI: " + uri);
 
-				// For USER_FILE, fetch from API
-				if (type === "USER_FILE") {
+				// Updated condition: Check for "USER_FILE" or presence of "s3" and "aws" in content
+				if (type === "USER_FILE" || (content && content.includes("s3") && content.includes("aws"))) {
 					const response = await fetch('/api/file-info', {
 						method: 'POST',
 						headers: { 'Content-Type': 'application/json' },
@@ -75,7 +75,6 @@ const ConversationMessage: React.FC<ConversationMessageProps> = ({ type, content
 
 					setFileInfo({ fileType: data.fileType, signedUrl: data.signedUrl });
 				}
-				// For SYSTEM_FILE, fetch MIME type directly
 				else if (type === "SYSTEM_FILE") {
 					const mimeType = getMimeTypeFromExtension(uri);
 					setFileInfo({ fileType: mimeType, signedUrl: uri });
@@ -87,20 +86,22 @@ const ConversationMessage: React.FC<ConversationMessageProps> = ({ type, content
 			}
 		}
 
+		// Updated condition in the main if statement
 		if ((type === "USER_FILE" || type === "SYSTEM_FILE") && content) {
 			fetchFileInfo(content);
-		} else if (type === "USER_FILE" || type === "SYSTEM_FILE") {
+		}
+		else if (type === "USER_FILE" || (content && content.includes("s3") && content.includes("aws"))) {
 			console.warn(`Skipped fetching file info. Type: ${type}, Content: ${content}`);
 		}
 	}, [type, content]);
 
-	if ((type === "USER_FILE" || type === "SYSTEM_FILE") && !content) {
+	if ((type === "USER_FILE" || (content && content.includes("s3") && content.includes("aws"))) && !content) {
 		return <p>Error: Content is missing.</p>;
 	}
 
 	if (type.includes("TEXT")) {
 		return (
-			<div className="flex flex-col px-6 py-4 rounded-[20px] bg-white bg-opacity-20 leading-7">
+			<div className="flex flex-col px-6 py-4 rounded-[20px] bg-white bg-opacity-[0.12] leading-7">
 				<Markdown>{content}</Markdown>
 			</div>
 		);

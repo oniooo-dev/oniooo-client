@@ -131,7 +131,7 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, fileInputRef, onFile
 			</div>
 			{/* Yes, all those divs are necessary. */}
 			<div className="flex flex-row w-full gap-[10px]">
-				<div className="flex flex-col w-full pl-6 pr-4 rounded-[32px] bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg">
+				<div className="flex flex-col w-full pl-6 pr-4 rounded-[32px] bg-white bg-opacity-[0.12] backdrop-filter backdrop-blur-lg">
 					<div className="flex flex-row w-full gap-2 py-3">
 						<div className="flex flex-row items-center w-full gap-2">
 							{/* File Upload Icon */}

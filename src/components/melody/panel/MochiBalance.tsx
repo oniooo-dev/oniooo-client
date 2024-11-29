@@ -1,3 +1,4 @@
+import UserProfileIcon from '@/components/user/UserProfileIcon';
 import { useAuth } from '@/contexts/AuthContext';
 import React from 'react'
 
@@ -20,14 +21,15 @@ const MochiBalance: React.FC<MochiBalanceProps> = ({ onClick }) => {
       onClick={handleBannerClick}
     >
       <div className="flex flex-row items-center gap-3">
-        <img src="/icons/main-logo/oniooo-small.png" className="w-[22px] h-[22px]" alt="Mochi Icon" />
+        <img src="/icons/main-logo/oniooo-small.png" className="w-[24px] h-[24px]" alt="Mochi Icon" />
         <p className="text-[14px] font-normal mt-[1px]">
           {
             user ? user.mochiBalance : 0
           }
         </p>
       </div>
-      <img src="/icons/melody/mochi-market.png" className="w-[22px] h-[22px] opacity-80" alt="Mochi Store" />
+      {/* <img src="/icons/melody/mochi-market.png" className="w-[22px] h-[22px] opacity-80" alt="Mochi Store" /> */}
+      <UserProfileIcon onClick={() => { }} />
     </div>
   )
 }

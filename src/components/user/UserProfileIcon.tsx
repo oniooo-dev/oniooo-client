@@ -19,8 +19,8 @@ const UserProfileIcon: React.FC<UserProfileIconProps> = ({ onClick }) => {
 		<div className="cursor-pointer" onClick={handleClick}>
 			<img
 				src={user?.iconUrl}
-				className="w-[40px] h-[40px] rounded-full bg-white hover:opacity-50 duration-500 
-						   border-0 border-white border-opacity-20 ml-auto"
+				className="w-[22px] h-[22px] rounded-full bg-white hover:opacity-50 duration-500 
+						   border-0 border-white border-opacity-20 ml-auto border border-white"
 			/>
 		</div>
 	);

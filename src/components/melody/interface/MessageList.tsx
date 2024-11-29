@@ -16,7 +16,7 @@ const MessageList: React.FC<MessageListProps> = ({ messagesContainerRef, setShow
 	const { user } = useAuth();
 
 	// Chat socket
-	const { messages, selectedChatId } = useChatSocket();
+	const { messages, selectedChatId, melodyState } = useChatSocket();
 
 	// Melody icon URL
 	const melodyIconUrl = "https://i.pinimg.com/736x/b2/2d/f2/b22df2808098dc432566e625231318dc.jpg";
@@ -57,16 +57,39 @@ const MessageList: React.FC<MessageListProps> = ({ messagesContainerRef, setShow
 	const isUserMessage = (type: string) => type.includes("USER");
 	const getMessageSender = (type: string) => (isUserMessage(type) ? "USER" : "SYSTEM");
 
+	// Switch statement for melodyState rendering
+	const renderMelodyState = () => {
+		switch (melodyState) {
+			case "THINKING":
+				return (
+					<div className={`flex gap-4 w-full 'pr-48`}>
+						<div className="flex-row items-center justify-center">
+							<img src={melodyIconUrl} className="w-9 h-9 rounded-full mt-3" />
+							<p className="text-md text-opacity-60">Staring into the abyss ...</p>
+						</div>
+					</div>
+				);
+			case "CREATING":
+				return (
+					<div className="flex-row items-center justify-center">
+						<img src={melodyIconUrl} className="w-9 h-9 rounded-full mt-3" />
+						<p>Creating ...</p>
+					</div>
+				);
+			default:
+				return null;
+		}
+	};
+
 	return (
 		<div ref={messagesContainerRef} className="relative flex flex-col w-full h-full gap-6 pt-36 overflow-y-scroll hide-scrollbar">
 			{
 				selectedChatId === null ?
 					(
-						<div className="absolute flex w-full h-full items-center justify-center">
+						<div className="flex-row w-full h-full items-center justify-center">
 							<img src="/images/welcome-oniooo.png" className="w-[50%]" />
 						</div>
-					)
-					:
+					) :
 					(
 						messages.map((message, index) => {
 							const isUser = message.type === "USER_TEXT" || message.type === "USER_FILE";
@@ -81,9 +104,13 @@ const MessageList: React.FC<MessageListProps> = ({ messagesContainerRef, setShow
 										</>
 									) : (
 										<>
-											{showIcon && <img src={melodyIconUrl} className="w-9 h-9 rounded-full mt-3" />}
-											{!showIcon && <div className="w-9"></div>}
-											<ConversationMessage type={message.type} content={message.content} />
+											{message.content !== "" && (
+												<>
+													{showIcon && <img src={melodyIconUrl} className="w-9 h-9 rounded-full mt-3" />}
+													{!showIcon && <div className="w-9"></div>}
+													<ConversationMessage type={message.type} content={message.content} />
+												</>
+											)}
 										</>
 									)}
 								</div>
@@ -91,7 +118,12 @@ const MessageList: React.FC<MessageListProps> = ({ messagesContainerRef, setShow
 						})
 					)
 			}
-			<div ref={messagesEndRef} /> {/* Scroll to bottom ref */}
+
+			{renderMelodyState()}
+
+			{/* Scroll to bottom ref */}
+			<div className="h-10" ref={messagesEndRef} />
+
 			{
 				files && files.length > 0 ?
 					<div className="mb-60"></div> :
