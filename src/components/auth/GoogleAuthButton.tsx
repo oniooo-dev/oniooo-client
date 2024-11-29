@@ -22,7 +22,7 @@ const GoogleAuthButton: React.FC = () => {
                 src="https://user-images.githubusercontent.com/194400/70987158-4069c900-20b7-11ea-892e-8a2e1166b6b7.png"
                 className="w-5 h-5"
             />
-            <p className="text-sm text-black mr-2">Sign in</p>
+            <label className="text-sm text-black mr-2">Sign in</label>
         </button>
     )
 }
