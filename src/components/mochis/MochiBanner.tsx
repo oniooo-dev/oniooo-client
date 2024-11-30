@@ -22,17 +22,23 @@ const MochiBanner: React.FC<MochiBannerProps> = ({ name, price, amount, priceId 
 				return;
 			}
 
-			const response = await fetch(`${config.backendUrl}/create-checkout-session`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					priceId,
-					userId: user.userId,
-					amount,
-				}),
-			});
+			const response = await fetch(
+				`${config.backendUrl}/create-checkout-session`,
+				{
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(
+						{
+							priceId,
+							userId: user.userId,
+							mochiAmount: amount
+						}
+					),
+				}
+			);
+
 			const { url } = await response.json();
 			window.location.href = url; // Redirect user to Stripe Checkout
 		}
