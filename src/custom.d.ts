@@ -7,3 +7,8 @@ declare namespace JSX {
 		};
 	}
 }
+
+declare module 'prismjs/components/prism-javascript' {
+	import Prism from 'prismjs';
+	export default Prism;
+} 

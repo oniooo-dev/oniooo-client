@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import ChatInputBox from "./ChatInputBox";
 import MessageList from "./MessageList";
+import { useChatSocket } from "@/contexts/ChatSocketContext";
 
 const ChatInterface: React.FC = () => {
 
 	// ...
 	const [showScrollButton, setShowScrollButton] = useState<boolean>(false);
+
+	const { messages } = useChatSocket();
 
 	// Maximum file size in bytes (5 MB)
 	const MAX_FILE_SIZE = 20 * 1024 * 1024;
@@ -139,7 +142,7 @@ const ChatInterface: React.FC = () => {
 			{
 				showScrollButton &&
 				(
-					<button className="fixed bottom-24 px-6 py-4 bg-black bg-opacity-60 hover:bg-opacity-80 text-white rounded-full z-50 duration-500" onClick={scrollToBottom}>
+					<button className="fixed bottom-28 px-6 py-4 bg-black bg-opacity-60 hover:bg-opacity-80 text-white rounded-full z-50 duration-500" onClick={scrollToBottom}>
 						<img
 							src="https://cdn-icons-png.flaticon.com/512/60/60564.png"
 							className="w-4 h-4 filter invert rotate-180"
@@ -153,6 +156,7 @@ const ChatInterface: React.FC = () => {
 			<div className="absolute bottom-8 flex-col w-[90%] lg:w-[65%]">
 				<div className="grid grid-cols-2 gap-x-4 gap-y-5 w-full justify-center mb-3">
 					{
+						messages.length === 0 &&
 						suggestionButtons.map((button, index) => (
 							<div key={index} className="flex flex-row items-center gap-3 w-full bg-white bg-opacity-[0.12] hover:bg-opacity-40 p-3 rounded-[25px] cursor-pointer duration-500">
 								<img src={button.icon} alt={button.title} className="w-14 h-14 rounded-[20px]" />

@@ -210,12 +210,26 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 			}
 		);
 
+		/**
+		 * Merge image and video responses
+		*/
+
 		newSocket.on("image_response", (data: { imageUrl: string }) => {
 			console.log('Received image URI:', data.imageUrl);
 			addMessageToLocalState(
 				{
 					type: 'SYSTEM_FILE',
 					content: data.imageUrl
+				}
+			);
+		});
+
+		newSocket.on('video_response', (data: { videoUrl: string }) => {
+			console.log('Received video URI:', data.videoUrl);
+			addMessageToLocalState(
+				{
+					type: 'SYSTEM_FILE',
+					content: data.videoUrl
 				}
 			);
 		});

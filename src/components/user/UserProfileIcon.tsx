@@ -7,7 +7,7 @@ interface UserProfileIconProps {
 
 const UserProfileIcon: React.FC<UserProfileIconProps> = ({ onClick }) => {
 
-	const { user } = useAuth();
+	const { isAuthenticated, user } = useAuth();
 
 	const handleClick = () => {
 		if (onClick) {
@@ -18,9 +18,10 @@ const UserProfileIcon: React.FC<UserProfileIconProps> = ({ onClick }) => {
 	return (
 		<div className="cursor-pointer" onClick={handleClick}>
 			<img
-				src={user?.iconUrl}
-				className="w-[22px] h-[22px] rounded-full bg-white hover:opacity-50 duration-500 
-						   border-0 border-white border-opacity-20 ml-auto"
+				src={isAuthenticated ? user?.iconUrl : "/icons/melody/profile-icon.png"}
+				className={`w-[22px] h-[22px] rounded-full hover:opacity-50 duration-500 
+							ml-auto 
+							${isAuthenticated ? "border border-white border-opacity-20" : "opacity-100 filter invert"}`}
 			/>
 		</div>
 	);

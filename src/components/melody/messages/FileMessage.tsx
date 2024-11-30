@@ -1,3 +1,8 @@
+
+/**
+ * User file message component
+*/
+
 import React from "react";
 
 interface FileMessageProps {
@@ -11,19 +16,22 @@ const FileMessage: React.FC<FileMessageProps> = ({ file }) => {
 				<img src={URL.createObjectURL(file)} alt="Uploaded image" />
 			</div>
 		);
-	} else if (file.type.includes("video")) {
-		return (
-			<div className="w-full h-full">
-				<video src={URL.createObjectURL(file)} />
-			</div>
-		);
-	} else if (file.type.includes("pdf")) {
+	}
+	// else if (file.type.includes("video")) {
+	// 	return (
+	// 		<div className="w-full h-full">
+	// 			<video src={URL.createObjectURL(file)} />
+	// 		</div>
+	// 	);
+	// } 
+	else if (file.type.includes("pdf")) {
 		return (
 			<div className="w-full h-full">
 				<p>PDF</p>
 			</div>
 		);
-	} else {
+	}
+	else {
 		return (
 			<div className="w-full h-full">
 				<p>{file.type}</p>

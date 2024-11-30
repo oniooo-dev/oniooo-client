@@ -62,20 +62,16 @@ const MessageList: React.FC<MessageListProps> = ({ messagesContainerRef, setShow
 		switch (melodyState) {
 			case "THINKING":
 				return (
-					<div className={`flex-row gap-4 w-full pr-48`}>
-						<div className="flex-row items-center justify-center">
-							<img src={melodyIconUrl} className="w-9 h-9 rounded-full mt-3" />
-							<p className="text-md text-opacity-60">Staring into the abyss ...</p>
-						</div>
+					<div className={`flex flex-row gap-4`}>
+						<img src={melodyIconUrl} className="w-9 h-9 rounded-full" />
+						<p className="text-md text-opacity-60 mt-2">Staring into the abyss ...</p>
 					</div>
 				);
 			case "CREATING":
 				return (
-					<div className={`flex-row gap-4 w-full pr-48`}>
-						<div className="flex-row items-center justify-center">
-							<img src={melodyIconUrl} className="w-9 h-9 rounded-full mt-3" />
-							<p className="text-md text-opacity-60">Creating ...</p>
-						</div>
+					<div className={`flex flex-row gap-4`}>
+						<img src={melodyIconUrl} className="w-9 h-9 rounded-full" />
+						<p className="text-md text-opacity-60 mt-2">Creating ...</p>
 					</div>
 				);
 			default:

@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
-import Markdown from 'react-markdown';
+import React, { useState, useEffect, ReactNode } from "react";
 import ImageFile from "./files/ImageFile";
 import VideoFile from "./files/VideoFile";
-import AudioFile from "./files/AudioFile";
 import PDFFile from "./files/PDFFile";
-import CodeFile from "./files/CodeFile";
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm';
+import Prism from 'prismjs';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/themes/prism-okaidia.css'; // Import Okaidia theme
 
 interface ConversationMessageProps {
 	type: string;
@@ -42,6 +44,51 @@ function getMimeTypeFromExtension(url: string): string {
 	return mimeTypes[extension] || 'application/octet-stream';
 }
 
+const CodeBlock: React.FC<{ children: string; className?: string }> = ({ children, className }) => {
+
+	// State to track if the code is copied
+	const [isCopied, setIsCopied] = useState(false);
+
+	useEffect(() => {
+		Prism.highlightAll();
+	}, [children]);
+
+	useEffect(() => {
+		let timeout: NodeJS.Timeout;
+		if (isCopied) {
+			// Set a timeout to reset isCopied after 2 seconds
+			timeout = setTimeout(() => {
+				setIsCopied(false);
+			}, 2000); // 2000 milliseconds = 2 seconds
+		}
+		// Cleanup the timeout if the component unmounts or isCopied changes
+		return () => {
+			if (timeout) clearTimeout(timeout);
+		};
+	}, [isCopied]);
+
+	return (
+		<pre className={`
+						relative bg-gray-800 text-gray-300 p-4 rounded-lg ${className} 
+						overflow-scroll max-w-full duration-500
+						`}>
+			<code className={`${className} font-mono text-sm`}>
+				{children}
+			</code>
+			<button
+				onClick={() => {
+					navigator.clipboard.writeText(children);
+					setIsCopied(true);
+				}}
+				className="absolute top-2 right-2 bg-gray-500 text-white px-4 py-2 text-xs rounded
+						   opacity-50 hover:opacity-100 duration-500"
+			>
+				{isCopied ? 'Copied!' : 'Copy'}
+			</button>
+		</pre>
+	);
+};
+
 const ConversationMessage: React.FC<ConversationMessageProps> = ({ type, content }) => {
 
 	// File info
@@ -60,6 +107,8 @@ const ConversationMessage: React.FC<ConversationMessageProps> = ({ type, content
 
 				// Updated condition: Check for "USER_FILE" or presence of "s3" and "aws" in content
 				if (type === "USER_FILE" || (content && content.includes("s3") && content.includes("aws"))) {
+
+					// Fetch file info from server
 					const response = await fetch('/api/file-info', {
 						method: 'POST',
 						headers: { 'Content-Type': 'application/json' },
@@ -101,8 +150,19 @@ const ConversationMessage: React.FC<ConversationMessageProps> = ({ type, content
 
 	if (type.includes("TEXT")) {
 		return (
-			<div className="flex flex-col px-6 py-4 rounded-[20px] bg-white bg-opacity-[0.12] leading-7">
-				<Markdown>{content}</Markdown>
+			<div className="flex flex-col px-6 py-4 rounded-[20px] bg-white bg-opacity-[0.12] leading-7 max-w-full">
+				<ReactMarkdown
+					children={content}
+					remarkPlugins={[remarkGfm]}
+					components={{
+						code({ node, className, children, ...props }) {
+							if (typeof children === 'string') {
+								return <CodeBlock className={className}>{children}</CodeBlock>;
+							}
+							return <code>{children}</code>;
+						}
+					}}
+				/>
 			</div>
 		);
 	}
@@ -116,14 +176,8 @@ const ConversationMessage: React.FC<ConversationMessageProps> = ({ type, content
 		else if (fileType.startsWith('video/')) {
 			return <VideoFile uri={signedUrl} />
 		}
-		else if (fileType.startsWith('audio/')) {
-			return <AudioFile uri={signedUrl} />
-		}
 		else if (fileType.startsWith('application/pdf')) {
 			return <PDFFile uri={signedUrl} />
-		}
-		else if (fileType.startsWith('text/')) {
-			return <CodeFile uri={signedUrl} />
 		}
 		else {
 			return <a href={signedUrl} target="_blank" rel="noopener noreferrer">Download file</a>;
