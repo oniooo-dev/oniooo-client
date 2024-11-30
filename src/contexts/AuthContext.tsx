@@ -20,6 +20,7 @@ type AuthContextType = {
     error: string | null;
     login: () => void;
     logout: () => void;
+    updateMochiBalance: (amount: number) => void;
 };
 
 // Initializes the authentication context with default values.
@@ -57,10 +58,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 if (data.session) {
                     updateAuthState(data.session);
                 }
-            } catch (error) {
+            }
+            catch (error) {
                 console.error('Error getting session:', error);
                 setError('Failed to get session');
-            } finally {
+            }
+            finally {
                 setIsInitialized(true); // Set initialized to true after session check
             }
         };
@@ -121,6 +124,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                         console.error('Fetch user data failed, user not found:', errorText);
                         setError('User not found');
                         break;
+                    case 401:
+                        console.error('Unauthorized when fetching user data:', errorText);
+                        setError('Unauthorized');
+                        logout();
+                        break;
                     case 500:
                         console.error('Server error when fetching user data:', errorText);
                         setError('Server error');
@@ -145,6 +153,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setLoading(false);
         }
     };
+
+    // Use useEffect to log when 'user' changes
+    useEffect(() => {
+        console.log("User updated:", user);
+    }, [user]);
 
     // Provides a method to initiate login using OAuth provider.
     const login = async () => {
@@ -173,20 +186,36 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     // Provides a method for logging out the current user.
     const logout = async () => {
+
+        // Logout from Supabase
         const { error } = await supabase.auth.signOut();
+
+        // Logout from backend
         if (!error) {
             setUser(null);
             setIsAuthenticated(false);
             setJwtToken(undefined);
-        } else {
+        }
+        else {
             console.error('Logout error:', error.message);
             setError('Logout failed');
         }
     };
 
+    const updateMochiBalance = (amount: number) => {
+        setUser(
+            prevUser => {
+                if (prevUser) {
+                    return { ...prevUser, mochiBalance: prevUser.mochiBalance - amount };
+                }
+                return prevUser;
+            }
+        );
+    };
+
     // Context provider that makes auth state and handlers available to child components.
     return (
-        <AuthContext.Provider value={{ isAuthenticated, user, jwtToken, loading, error, login, logout }}>
+        <AuthContext.Provider value={{ isAuthenticated, user, jwtToken, loading, error, login, logout, updateMochiBalance }}>
             {children}
         </AuthContext.Provider>
     );

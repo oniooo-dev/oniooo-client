@@ -153,7 +153,7 @@ const ChatInterface: React.FC = () => {
 			}
 
 			{/* Chat input box */}
-			<div className="absolute bottom-8 flex-col w-[90%] lg:w-[65%]">
+			<div className="mb-8 flex-col w-[90%] lg:w-[65%]">
 				<div className="grid grid-cols-2 gap-x-4 gap-y-5 w-full justify-center mb-3">
 					{
 						messages.length === 0 &&

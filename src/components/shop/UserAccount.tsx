@@ -1,8 +1,13 @@
 import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
 import React from 'react'
 
 const UserAccount = () => {
 
+    // Router
+    const router = useRouter();
+
+    // Auth
     const { isAuthenticated, user, logout } = useAuth();
 
     return (
@@ -22,7 +27,12 @@ const UserAccount = () => {
                 {isAuthenticated &&
                     <p
                         className="underline underline-offset-8 cursor-pointer"
-                        onClick={() => logout()}
+                        onClick={
+                            () => {
+                                logout();
+                                router.push('/melody');
+                            }
+                        }
                     >
                         Log out
                     </p>

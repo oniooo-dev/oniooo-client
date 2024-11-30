@@ -4,10 +4,18 @@ import EpicBackground from "@/components/background/EpicBackground";
 import Chat from "@/components/layout/Chat";
 import UserCorner from "@/components/layout/UserCorner";
 import LeftPanel from "@/components/melody/panel/LeftPanel";
+import MochiPaymentFailureModal from "@/components/mochis/MochiPaymentFailureModal";
+import MochiPaymentSuccessModal from "@/components/mochis/MochiPaymentSuccessModal";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ChatSocketProvider } from "@/contexts/ChatSocketContext";
+import { useState } from "react";
 
 export default function MelodyPage() {
+
+	// Modals
+	const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
+	const [showFailureModal, setShowFailureModal] = useState<boolean>(false);
+
 	return (
 		<AuthProvider>
 			<ChatSocketProvider>
@@ -21,6 +29,24 @@ export default function MelodyPage() {
 						`}
 					</p>
 					<EpicBackground />
+					{
+						showSuccessModal &&
+						<MochiPaymentSuccessModal
+							show={showSuccessModal}
+							onClose={
+								() => setShowSuccessModal(false)
+							}
+						/>
+					}
+					{
+						showFailureModal &&
+						<MochiPaymentFailureModal
+							show={showFailureModal}
+							onClose={
+								() => setShowFailureModal(false)
+							}
+						/>
+					}
 					<div className="absolute top-4 right-4 z-10">
 						<UserCorner />
 					</div>

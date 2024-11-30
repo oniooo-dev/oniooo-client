@@ -49,7 +49,7 @@ const MochiBanner: React.FC<MochiBannerProps> = ({ name, price, amount, priceId 
 
 	return (
 		<div
-			className="flex-vertical justify-center items-center bg-white bg-opacity-20 rounded-xl w-full h-full px-4 py-4 gap-4 hover:scale-[1.01] cursor-pointer duration-500"
+			className="flex-vertical justify-center items-center bg-white bg-opacity-20 rounded-xl w-full h-full px-4 py-4 gap-4 hover:scale-[1.015] cursor-pointer duration-500"
 			onClick={handleBuyClick}
 		>
 			<p className="text-lg">{name}</p>

@@ -37,7 +37,7 @@ export const ChatSocketContext = createContext<IChatSocketContext | undefined>(u
 export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
 	// Auth
-	const { isAuthenticated, jwtToken } = useAuth();
+	const { isAuthenticated, jwtToken, updateMochiBalance } = useAuth();
 
 	// State
 	const [prompt, setPrompt] = useState<string>("");
@@ -243,9 +243,22 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 			setMelodyState(data.melodyState);
 		});
 
+		newSocket.on('mochi_balance_update', (data: { mochiAmount: number }) => {
+
+			// Log the balance
+			console.log("Mochi balance updated:", data.mochiAmount);
+
+			// Update the user's mochi balance
+			updateMochiBalance(data.mochiAmount);
+		});
+
 		// Not Sure if this is needed
 		newSocket.on('llm_response_end', () => {
+
+			// Log the completion
 			console.log('Complete message received');
+
+			// Set loading to false
 			setLoading(false);
 		});
 
