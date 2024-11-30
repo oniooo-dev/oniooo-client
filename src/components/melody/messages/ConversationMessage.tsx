@@ -152,7 +152,6 @@ const ConversationMessage: React.FC<ConversationMessageProps> = ({ type, content
 		return (
 			<div className="flex flex-col px-6 py-4 rounded-[20px] bg-white bg-opacity-[0.12] leading-7 max-w-full">
 				<ReactMarkdown
-					children={content}
 					remarkPlugins={[remarkGfm]}
 					components={{
 						code({ node, className, children, ...props }) {
@@ -162,7 +161,9 @@ const ConversationMessage: React.FC<ConversationMessageProps> = ({ type, content
 							return <code>{children}</code>;
 						}
 					}}
-				/>
+				>
+					{content}
+				</ReactMarkdown>
 			</div>
 		);
 	}
