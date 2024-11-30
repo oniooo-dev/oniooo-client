@@ -19,9 +19,9 @@ const UserProfileIcon: React.FC<UserProfileIconProps> = ({ onClick }) => {
 		<div className="cursor-pointer" onClick={handleClick}>
 			<img
 				src={isAuthenticated ? user?.iconUrl : "/icons/melody/profile-icon.png"}
-				className={`w-[22px] h-[22px] rounded-full hover:opacity-50 duration-500 
+				className={`w-[24px] h-[24px] rounded-full hover:opacity-50 duration-500 
 							ml-auto 
-							${isAuthenticated ? "border border-white border-opacity-20" : "opacity-100 filter invert"}`}
+							${isAuthenticated ? "border-2 border-white border-opacity-20" : "opacity-100 filter invert"}`}
 			/>
 		</div>
 	);

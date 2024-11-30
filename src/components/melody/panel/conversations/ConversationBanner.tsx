@@ -78,16 +78,16 @@ const ConversationBanner: React.FC<ConversationBannerProps> = ({ chatId, title }
 						<p className="scrolling-title">{title}</p>
 					</div>
 				</div>
-				{(isOptionsOpen || isHovered) && (
+				{/* {(isOptionsOpen || isHovered) && (
 					<div
 						className={`absolute right-2 p-2 rounded-full bg-white bg-opacity-0 ${isOptionsOpen ? "bg-opacity-5" : "hover:bg-opacity-20"} opacity-60 hover:opacity-100 duration-500`}
 						onClick={handleOptionsClick}
 					>
 						<img src="/icons/melody/bars-sort.png" alt="options icon" className="w-3 h-3" />
 					</div>
-				)}
+				)} */}
 			</div>
-			<AnimatePresence>
+			{/* <AnimatePresence>
 				{isOptionsOpen && (
 					<motion.div
 						className="absolute top-1 right-[-105px] flex flex-row z-50"
@@ -100,7 +100,7 @@ const ConversationBanner: React.FC<ConversationBannerProps> = ({ chatId, title }
 						<ConversationTools />
 					</motion.div>
 				)}
-			</AnimatePresence>
+			</AnimatePresence> */}
 		</div>
 	);
 };
