@@ -29,7 +29,11 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, fileInputRef, onFile
 
 	// When user uploads using the clip icon
 	const handleFileDrop = (newFiles: File[]) => {
-		const validTypes = ['application/pdf']; // Only PDF as non-image
+
+		// Only PDF as non-image
+		const validTypes = ['application/pdf'];
+
+		// Filter out invalid files
 		const validFiles = newFiles.filter(file => {
 			if (file.size > MAX_FILE_SIZE) {
 				alert(`File ${file.name} exceeds the maximum file size of 20MB.`);
