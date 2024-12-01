@@ -95,7 +95,7 @@ const MessageList: React.FC<MessageListProps> = ({ messagesContainerRef, setShow
 							const isUser = message.type === "USER_TEXT" || message.type === "USER_FILE";
 							const showIcon = index === 0 || getMessageSender(messages[index - 1].type) !== getMessageSender(message.type);
 							return (
-								<div key={index} className={`flex ${isUser ? 'justify-end' : ''} gap-4 w-full ${isUser ? 'pl-48' : 'pr-48'}`}>
+								<div key={index} className={`flex ${isUser ? 'justify-end' : ''} gap-4 w-full ${isUser ? 'pl-24' : 'pr-24'} text-[16px]`}>
 									{isUser ? (
 										<>
 											<ConversationMessage type={message.type} content={message.content} />
