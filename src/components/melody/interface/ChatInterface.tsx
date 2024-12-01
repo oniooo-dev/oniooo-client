@@ -84,9 +84,9 @@ const ChatInterface: React.FC = () => {
 			description: "of beautiful memories"
 		},
 		{
-			icon: "/images/suggestions/guita.png",
-			title: "Compose music",
-			description: "of a romantic encounter"
+			icon: "/images/suggestions/girl_reading_paper.png",
+			title: "Write a deep-dive article",
+			description: "on AI's impact on creativity"
 		},
 		{
 			icon: "/images/suggestions/paint.png",

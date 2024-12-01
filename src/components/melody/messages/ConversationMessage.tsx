@@ -89,19 +89,13 @@ const CodeBlock: React.FC<{ children: string; className?: string }> = ({ childre
 	);
 };
 
-const ConversationMessage: React.FC<ConversationMessageProps> = ({ type, content }) => {
+const ConversationMessage: React.FC<ConversationMessageProps> = ({ type, content = '' }) => {
 
 	// File info
 	const [fileInfo, setFileInfo] = useState<{ fileType: string | null, signedUrl: string | null }>({ fileType: null, signedUrl: null });
 
 	useEffect(() => {
 		async function fetchFileInfo(uri: string) {
-			// if (!uri || typeof uri !== 'string') {
-			// 	console.error('Invalid URI:', uri);
-			// 	setFileInfo({ fileType: null, signedUrl: null });
-			// 	return;
-			// }
-
 			try {
 				console.log("Fetching file info for URI: " + uri);
 
@@ -187,10 +181,6 @@ const ConversationMessage: React.FC<ConversationMessageProps> = ({ type, content
 
 	// Add Loader UI
 	return <p>Loading...</p>;
-};
-
-ConversationMessage.defaultProps = {
-	content: '',
 };
 
 export default ConversationMessage;

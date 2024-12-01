@@ -11,7 +11,7 @@ const BackButton = () => {
 	return (
 		<div
 			className={`absolute top-0 left-0 flex flex-row items-center justify-center px-10 py-8 gap-2 hover:ml-1 duration-500 
-							text-[#f2f2f2] text-opacity-50 hover:text-opacity-100 hover:scale-[1.02] cursor-pointer`}
+							text-[#f2f2f2] text-opacity-70 hover:text-opacity-100 hover:scale-[1.02] cursor-pointer`}
 			onClick={handleBack}
 		>
 			<img

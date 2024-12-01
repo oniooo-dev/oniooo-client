@@ -129,6 +129,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                         setError('Unauthorized');
                         logout();
                         break;
+                    case 403:
+                        console.error('Forbidden when fetching user data:', errorText);
+                        setError('Forbidden');
+                        logout();
+                        break;
                     case 500:
                         console.error('Server error when fetching user data:', errorText);
                         setError('Server error');
@@ -197,6 +202,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             setJwtToken(undefined);
         }
         else {
+            setUser(null);
+            setIsAuthenticated(false);
+            setJwtToken(undefined);
             console.error('Logout error:', error.message);
             setError('Logout failed');
         }

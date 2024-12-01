@@ -19,7 +19,8 @@ const MessageList: React.FC<MessageListProps> = ({ messagesContainerRef, setShow
 	const { messages, selectedChatId, melodyState } = useChatSocket();
 
 	// Melody icon URL
-	const melodyIconUrl = "https://i.pinimg.com/736x/b2/2d/f2/b22df2808098dc432566e625231318dc.jpg";
+	const userIconUrl = "/icons/messages/user_pfp.png";
+	const melodyIconUrl = "/icons/messages/melody_pfp.png";
 
 	// Scroll to bottom ref
 	const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -84,8 +85,8 @@ const MessageList: React.FC<MessageListProps> = ({ messagesContainerRef, setShow
 			{
 				selectedChatId === null ?
 					(
-						<div className="flex w-full h-[60%] items-center justify-center">
-							<div className="flex items-center justify-center bg-white bg-opacity-[0.12] rounded-full p-6">
+						<div className="flex w-full h-full items-center justify-center">
+							<div className="flex items-center justify-center bg-white bg-opacity-[0.12] rounded-full p-6 mt-12">
 								<img src="/icons/main-logo/oniooo-small.png" className="w-[76px] h-[76px] mt-[4px]" />
 							</div>
 						</div>
@@ -99,7 +100,7 @@ const MessageList: React.FC<MessageListProps> = ({ messagesContainerRef, setShow
 										<>
 											<ConversationMessage type={message.type} content={message.content} />
 											{!showIcon && <div className="w-9"></div>}
-											{showIcon && <img src={user?.iconUrl || melodyIconUrl} className="w-9 h-9 rounded-full mt-3" />}
+											{showIcon && <img src={userIconUrl || melodyIconUrl} className="w-9 h-9 rounded-full mt-3" />}
 										</>
 									) : (
 										<>
