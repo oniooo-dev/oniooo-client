@@ -1,11 +1,11 @@
 import React from 'react'
 import ChatInterface from '../melody/interface/ChatInterface';
 
-const Chat = () => {
+const Chat = ({ openAuthModal }: { openAuthModal: () => void }) => {
     return (
         <div className="flex w-full h-full items-center justify-center">
             {
-                <ChatInterface />
+                <ChatInterface openAuthModal={openAuthModal} />
             }
         </div>
     )

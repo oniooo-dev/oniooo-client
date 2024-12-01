@@ -44,6 +44,31 @@ function getMimeTypeFromExtension(url: string): string {
 	return mimeTypes[extension] || 'application/octet-stream';
 }
 
+function extractMimeType(url: string): string {
+	const regex = /\.(\w+)(?=\?|$)/; // This regex captures file extension just before a query string or end of the string
+	const match = url.match(regex);
+	if (match) {
+		const extension = match[1].toLowerCase();
+		switch (extension) {
+			case 'png':
+				return 'image/png';
+			case 'jpg':
+			case 'jpeg':
+				return 'image/jpeg';
+			case 'gif':
+				return 'image/gif';
+			case 'svg':
+				return 'image/svg+xml';
+			case 'webp':
+				return 'image/webp';
+			// add more cases as needed
+			default:
+				return 'application/octet-stream'; // default MIME type if not listed
+		}
+	}
+	return 'application/octet-stream'; // default MIME type if no extension is found
+}
+
 const CodeBlock: React.FC<{ children: string; className?: string }> = ({ children, className }) => {
 
 	// State to track if the code is copied
@@ -118,6 +143,10 @@ const ConversationMessage: React.FC<ConversationMessageProps> = ({ type, content
 
 					setFileInfo({ fileType: data.fileType, signedUrl: data.signedUrl });
 				}
+				else if (content && content.includes("google")) {
+					const mimeType = extractMimeType(uri);
+					setFileInfo({ fileType: mimeType, signedUrl: uri });
+				}
 				else if (type === "SYSTEM_FILE") {
 					const mimeType = getMimeTypeFromExtension(uri);
 					setFileInfo({ fileType: mimeType, signedUrl: uri });
@@ -144,7 +173,7 @@ const ConversationMessage: React.FC<ConversationMessageProps> = ({ type, content
 
 	if (type.includes("TEXT")) {
 		return (
-			<div className="flex flex-col px-6 py-4 rounded-[20px] bg-white bg-opacity-[0.12] leading-7 max-w-full">
+			<div className="flex flex-col px-6 py-4 rounded-[20px] bg-white bg-opacity-[0.12] leading-7 max-w-full break-words">
 				<ReactMarkdown
 					remarkPlugins={[remarkGfm]}
 					components={{
@@ -180,7 +209,7 @@ const ConversationMessage: React.FC<ConversationMessageProps> = ({ type, content
 	}
 
 	// Add Loader UI
-	return <p>Loading...</p>;
+	return <p className="mt-2">Loading...</p>;
 };
 
 export default ConversationMessage;

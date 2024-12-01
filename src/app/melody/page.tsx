@@ -6,6 +6,7 @@ import UserCorner from "@/components/layout/UserCorner";
 import LeftPanel from "@/components/melody/panel/LeftPanel";
 import MochiPaymentFailureModal from "@/components/mochis/MochiPaymentFailureModal";
 import MochiPaymentSuccessModal from "@/components/mochis/MochiPaymentSuccessModal";
+import AuthModal from "@/components/modals/AuthModal";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ChatSocketProvider } from "@/contexts/ChatSocketContext";
 import { useState } from "react";
@@ -15,6 +16,15 @@ export default function MelodyPage() {
 	// Modals
 	const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
 	const [showFailureModal, setShowFailureModal] = useState<boolean>(false);
+	const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
+
+	const openAuthModal = () => {
+		setShowAuthModal(true);
+	};
+
+	const closeAuthModal = () => {
+		setShowAuthModal(false);
+	};
 
 	return (
 		<AuthProvider>
@@ -47,6 +57,13 @@ export default function MelodyPage() {
 							}
 						/>
 					}
+					{
+						showAuthModal &&
+						<AuthModal
+							isOpen={showAuthModal}
+							onClose={closeAuthModal}
+						/>
+					}
 					<div className="absolute top-4 right-4 z-10">
 						<UserCorner />
 					</div>
@@ -54,7 +71,7 @@ export default function MelodyPage() {
 						<div className="w-fit h-full py-4">
 							<LeftPanel />
 						</div>
-						<Chat />
+						<Chat openAuthModal={openAuthModal} />
 					</div>
 				</div>
 			</ChatSocketProvider>

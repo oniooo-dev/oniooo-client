@@ -4,6 +4,9 @@ import FileUploadList from "./FileUploadList";
 import SendButton from "./SendButton";
 import { useChatSocket } from "@/contexts/ChatSocketContext";
 import { uploadFiles } from "@/lib/files";
+import { useAuth } from "@/contexts/AuthContext";
+
+const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
 
 interface ChatInputBoxProps {
 	files: File[];
@@ -11,25 +14,41 @@ interface ChatInputBoxProps {
 	onFileDrop: (file: File[]) => void;
 	onRemove: (file: File) => void;
 	onReset: () => void;
+	openAuthModal: () => void;
 }
 
-const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, fileInputRef, onFileDrop, onRemove, onReset }) => {
+const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, fileInputRef, onFileDrop, onRemove, onReset, openAuthModal }) => {
 
 	// Chat Socket Context
 	const { prompt, setPrompt, sendMessage, loading, selectedChatId } = useChatSocket();
+
+	const { isAuthenticated } = useAuth();
 
 	// Textarea Ref
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 
 	// When user uploads using the clip icon
-	const handleFileDrop = (files: File[]) => {
-		onFileDrop(files);
+	const handleFileDrop = (newFiles: File[]) => {
+		const validTypes = ['application/pdf']; // Only PDF as non-image
+		const validFiles = newFiles.filter(file => {
+			if (file.size > MAX_FILE_SIZE) {
+				alert(`File ${file.name} exceeds the maximum file size of 20MB.`);
+				return false;
+			}
+			if (!file.type.startsWith('image/') && !validTypes.includes(file.type)) {
+				alert(`File type of ${file.name} is not supported.`);
+				return false;
+			}
+			return true;
+		});
+
+		const updatedFiles = [...files, ...validFiles];
+		onFileDrop(updatedFiles);
 	};
 
 	// Handle prompt change
 	const handlePromptChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setPrompt(event.target.value);
-		adjustHeight();
 	};
 
 	// Reset the file buffer
@@ -48,6 +67,16 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, fileInputRef, onFile
 	};
 
 	const handleSendMessage = async () => {
+
+		/**
+		 * User Sending Message
+		*/
+
+		if (!isAuthenticated) {
+			console.log("Cannot send message while not authenticated");
+			openAuthModal();
+			return;
+		}
 
 		// Prevent sending messages while loading
 		if (loading) {
@@ -76,10 +105,6 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, fileInputRef, onFile
 
 			// Clear UI
 			handleFileBufferReset();
-
-			// Adjust the height of the textarea
-			adjustHeight();
-
 		}
 		catch (error) {
 			console.log("Error uploading files:", error);
@@ -114,7 +139,7 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, fileInputRef, onFile
 	// Initial height adjustment for the textarea
 	useEffect(() => {
 		adjustHeight();
-	}, []);
+	}, [prompt]);
 
 	// Reset the prompt and file buffer
 	useEffect(() => {
@@ -123,8 +148,8 @@ const ChatInputBox: React.FC<ChatInputBoxProps> = ({ files, fileInputRef, onFile
 	}, [selectedChatId]);
 
 	return (
-		<div className="flex flex-col w-full justify-center items-center">
-			<div className="w-full mb-4">
+		<div className="flex flex-col w-full">
+			<div className="w-full">
 				{
 					files && files.length > 0 && <FileUploadList files={files} onRemove={onRemove} />
 				}

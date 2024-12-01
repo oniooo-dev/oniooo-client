@@ -3,7 +3,7 @@ import ChatInputBox from "./ChatInputBox";
 import MessageList from "./MessageList";
 import { useChatSocket } from "@/contexts/ChatSocketContext";
 
-const ChatInterface: React.FC = () => {
+const ChatInterface: React.FC<{ openAuthModal: () => void }> = ({ openAuthModal }) => {
 
 	// ...
 	const [showScrollButton, setShowScrollButton] = useState<boolean>(false);
@@ -154,26 +154,31 @@ const ChatInterface: React.FC = () => {
 
 			{/* Chat input box */}
 			<div className="mb-8 flex-col w-[90%] lg:w-[65%]">
-				<div className="grid grid-cols-2 gap-x-4 gap-y-5 w-full justify-center mb-3">
-					{
-						messages.length === 0 &&
-						suggestionButtons.map((button, index) => (
-							<div key={index} className="flex flex-row items-center gap-3 w-full bg-white bg-opacity-[0.12] hover:bg-opacity-40 p-3 rounded-[25px] cursor-pointer duration-500">
-								<img src={button.icon} alt={button.title} className="w-14 h-14 rounded-[20px]" />
-								<div className="flex flex-col items-start justify-center gap-[2px]">
-									<p className="text-[14px] text-left">{button.title}</p>
-									<p className="text-[14px] text-left opacity-60">{button.description}</p>
-								</div>
-							</div>
-						))
-					}
-				</div>
+				{
+					(messages.length === 0 && files.length === 0) &&
+					(
+						<div className="grid grid-cols-2 gap-x-4 gap-y-5 w-full justify-center mb-4">
+							{
+								suggestionButtons.map((button, index) => (
+									<div key={index} className="flex flex-row items-center gap-3 w-full bg-white bg-opacity-[0.12] hover:bg-opacity-40 p-3 rounded-[25px] cursor-pointer duration-500">
+										<img src={button.icon} alt={button.title} className="w-14 h-14 rounded-[20px]" />
+										<div className="flex flex-col items-start justify-center gap-[2px]">
+											<p className="text-[14px] text-left">{button.title}</p>
+											<p className="text-[14px] text-left opacity-60">{button.description}</p>
+										</div>
+									</div>
+								))
+							}
+						</div>
+					)
+				}
 				<ChatInputBox
 					files={files}
 					fileInputRef={fileInputRef}
 					onFileDrop={handleFileDrop}
 					onRemove={removeFile}
 					onReset={handleFileBufferReset}
+					openAuthModal={openAuthModal}
 				/>
 			</div>
 		</div>

@@ -32,7 +32,7 @@ const FileUploadIcon: React.FC<FileUploadIconProps> = ({ fileInputRef, onFileDro
 				style={{ display: "none" }}
 				ref={fileInputRef}
 				onChange={handleFileChange}
-				accept="image/*, video/*, audio/*, .pdf, .txt, .html, .css, .js, .ts, .py, .rs, .go"
+				accept="image/*, .pdf"
 			/>
 			<img
 				src="/icons/melody/paperclip.png"
