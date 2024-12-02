@@ -94,8 +94,8 @@ const CodeBlock: React.FC<{ children: string; className?: string }> = ({ childre
 
 	return (
 		<pre className={`
-						relative bg-gray-800 text-gray-300 p-4 rounded-lg ${className} 
-						overflow-scroll max-w-full duration-500
+						relative bg-gray-800 text-white p-4 rounded-lg ${className} 
+						overflow-scroll max-w-full duration-500 my-2
 						`}>
 			<code className={`${className} font-mono text-sm`}>
 				{children}
@@ -113,6 +113,24 @@ const CodeBlock: React.FC<{ children: string; className?: string }> = ({ childre
 		</pre>
 	);
 };
+
+const UnorderedList: React.FC<React.HTMLAttributes<HTMLUListElement>> = ({ children, ...props }) => (
+	<ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginBottom: '1em' }} {...props}>
+		{children}
+	</ul>
+);
+
+const OrderedList: React.FC<React.OlHTMLAttributes<HTMLOListElement>> = ({ children, ...props }) => (
+	<ol style={{ listStyleType: 'decimal', paddingLeft: '20px', marginBottom: '1em' }} {...props}>
+		{children}
+	</ol>
+);
+
+const ListItem: React.FC<React.LiHTMLAttributes<HTMLLIElement>> = ({ children, ...props }) => (
+	<li className="text-white" {...props}>
+		{children}
+	</li>
+);
 
 const ConversationMessage: React.FC<ConversationMessageProps> = ({ type, content = '' }) => {
 
@@ -172,20 +190,33 @@ const ConversationMessage: React.FC<ConversationMessageProps> = ({ type, content
 	}
 
 	if (type.includes("TEXT")) {
+		const formattedText = content.replace(/\n/g, '\n\n');
 		return (
 			<div className="flex flex-col px-6 py-4 rounded-[20px] bg-white bg-opacity-[0.12] leading-7 max-w-full break-words">
 				<ReactMarkdown
 					remarkPlugins={[remarkGfm]}
 					components={{
-						code({ node, className, children, ...props }) {
+						h1: ({ node, ...props }) => <h1 className="text-2xl font-bold my-4 text-center" {...props} />,
+						h2: ({ node, ...props }) => <h2 className="text-xl font-bold my-4" {...props} />,
+						h3: ({ node, ...props }) => <h3 className="text-lg font-bold my-4" {...props} />,
+						h4: ({ node, ...props }) => <h4 className="text-base font-bold my-4" {...props} />,
+						h5: ({ node, ...props }) => <h5 className="text-sm font-bold my-4" {...props} />,
+						h6: ({ node, ...props }) => <h6 className="text-xs font-bold my-4" {...props} />,
+						p: ({ node, ...props }) => <p className="text-base font-[500]" {...props} />,
+						ul: ({ node, ...props }) => <UnorderedList {...props} />,
+						ol: ({ node, ...props }) => <OrderedList {...props} />,
+						li: ({ node, ...props }) => <ListItem {...props} />,
+						code: ({ node, className, children, ...props }) => {
 							if (typeof children === 'string') {
 								return <CodeBlock className={className}>{children}</CodeBlock>;
 							}
 							return <code>{children}</code>;
-						}
+						},
+						em: ({ node, ...props }) => <span className="font-normal" {...props} />,
+						i: ({ node, ...props }) => <span className="font-normal" {...props} />,
 					}}
 				>
-					{content}
+					{formattedText}
 				</ReactMarkdown>
 			</div>
 		);

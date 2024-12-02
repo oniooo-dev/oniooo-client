@@ -100,13 +100,13 @@ const MessageList: React.FC<MessageListProps> = ({ messagesContainerRef, setShow
 										<>
 											<ConversationMessage type={message.type} content={message.content} />
 											{!showIcon && <div className="w-9"></div>}
-											{showIcon && <img src={userIconUrl || melodyIconUrl} className="w-9 h-9 rounded-full mt-3" />}
+											{showIcon && <img src={userIconUrl || melodyIconUrl} className="w-9 h-9 rounded-full mt-3 " />}
 										</>
 									) : (
 										<>
 											{message.content !== "" && (
 												<>
-													{showIcon && <img src={melodyIconUrl} className="w-9 h-9 rounded-full mt-3" />}
+													{showIcon && <img src={melodyIconUrl} className="w-9 h-9 rounded-full mt-3 -scale-x-100" />}
 													{!showIcon && <div className="w-9"></div>}
 													<ConversationMessage type={message.type} content={message.content} />
 												</>
