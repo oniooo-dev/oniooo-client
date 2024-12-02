@@ -24,7 +24,7 @@ const MochiBalance: React.FC<MochiBalanceProps> = ({ onClick }) => {
         <img src="/icons/main-logo/oniooo-small.png" className="w-[24px] h-[24px]" alt="Mochi Icon" />
         <p className="text-[14px] font-normal mt-[1px]">
           {
-            user ? user.mochiBalance : 0
+            user?.mochiBalance ? user.mochiBalance : 0
           }
         </p>
       </div>
