@@ -46,7 +46,7 @@ export async function updateSession(request: NextRequest) {
         !request.nextUrl.pathname.startsWith('/melody') &&      // Avoid redirect loop on /melody
         !request.nextUrl.pathname.startsWith('/home') &&
         !request.nextUrl.pathname.startsWith('/shop') &&
-        !request.nextUrl.pathname.startsWith('/terms') &&
+        !request.nextUrl.pathname.startsWith('/terms-of-service') &&
         !request.nextUrl.pathname.startsWith('/privacy-policy')
     ) {
         // no user, potentially respond by redirecting the user to the login page

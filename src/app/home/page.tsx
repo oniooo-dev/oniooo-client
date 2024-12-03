@@ -23,10 +23,20 @@ export default function CompanyPage() {
                     <p className="cursor-pointer underline underline-offset-8 duration-500">
                         Company
                     </p>
-                    <p className="cursor-pointer hover:underline underline-offset-8 duration-500">
+                    <p
+                        className="cursor-pointer hover:underline underline-offset-8 duration-500"
+                        onClick={() => {
+                            window.location.href = 'https://drive.google.com/file/d/1l6iHlu61SRZ1YjWkqxYi02S-utRsBMNx/view?usp=drive_link';
+                        }}
+                    >
                         Terms
                     </p>
-                    <p className="cursor-pointer hover:underline underline-offset-8 duration-500">
+                    <p
+                        className="cursor-pointer hover:underline underline-offset-8 duration-500"
+                        onClick={() => {
+                            window.location.href = 'https://drive.google.com/file/d/1QXEmY4_JwcDWV4OaDVc7p680PplegifM/view?usp=drive_link';
+                        }}
+                    >
                         Privacy
                     </p>
                 </div>

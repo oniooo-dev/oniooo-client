@@ -26,7 +26,7 @@ const MochiPage = () => {
           </div>
           <MochiMenu />
           <div className="w-1/2 mt-16">
-            <p className="text-2xl font-medium">Pricing (Mochies)</p>
+            <p className="text-2xl font-medium">Pricing (Mochis)</p>
           </div>
           <div className="w-full flex justify-center">
             <GenerationPriceTable />

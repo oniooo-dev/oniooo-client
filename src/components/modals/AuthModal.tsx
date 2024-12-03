@@ -19,17 +19,21 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             onClick={onClose}
         >
             <div
-                className="rounded-lg shadow-lg relative"
-                style={{
-                    width: '90%',
-                    maxWidth: '800px',
-                    height: '80vh',
-                    maxHeight: '550px',
-                    backgroundImage: 'url(/images/unauth_modal.png)',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                }}
+                className="
+                    w-[90%]
+                    max-w-[800px]
+                    h-[80vh]
+                    max-h-[550px]
+                    bg-[url('/images/unauth_modal.png')]
+                    bg-cover
+                    bg-center
+                    bg-no-repeat
+                    rounded-[55px]
+                    shadow-lg
+                    relative
+                    border-2
+                    border-[#ffa9ac]
+                "
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* <button
@@ -52,8 +56,12 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
                         <h1 className="text-xl font-medium text-white">Oniooo masters content creation for you.</h1>
                     </div>
                     <div className="flex flex-col items-center justify-center gap-3">
-                        <div className="scale-125">
-                            <GoogleAuthButton />
+                        <div className="flex flex-row items-center justify-center gap-8">
+                            <img src="/images/cute_bouncing.gif" className="w-12 h-12 rounded-full rotate-180" />
+                            <div className="scale-125">
+                                <GoogleAuthButton />
+                            </div>
+                            <img src="/images/cute_bouncing.gif" className="w-12 h-12 rounded-full" />
                         </div>
                         <div className="flex flex-row items-center justify-center gap-2">
                             <img src="/icons/main-logo/oniooo-small.png" className="w-4 h-4" />

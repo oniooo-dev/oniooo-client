@@ -172,8 +172,19 @@ export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 		// Error
 		newSocket.on("error", (err) => {
 			setStatus("error");
-			setError("Connection error: " + err.message);
+			setError(err.message);
+
+			if (err.message === "INSUFFICIENT_MOCHI_BALANCE") {
+				selectChat(null);
+			}
+
+			// Set melody state to null
+			setMelodyState(null);
+
+			// Set loading to false
 			setLoading(false);
+
+			// Log the error
 			console.error("Connection error: ", err);
 		});
 
