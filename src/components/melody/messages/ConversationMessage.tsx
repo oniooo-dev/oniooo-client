@@ -190,7 +190,7 @@ const ConversationMessage: React.FC<ConversationMessageProps> = ({ type, content
 	}
 
 	if (type.includes("TEXT")) {
-		const formattedText = content.replace(/\n/g, '\n\n');
+		// const formattedText = content.replace(/\n/g, '\n\n');
 		return (
 			<div className="flex flex-col px-6 py-4 rounded-[20px] bg-white bg-opacity-[0.12] leading-7 max-w-full break-words">
 				<ReactMarkdown
@@ -216,7 +216,7 @@ const ConversationMessage: React.FC<ConversationMessageProps> = ({ type, content
 						i: ({ node, ...props }) => <span className="font-normal" {...props} />,
 					}}
 				>
-					{formattedText}
+					{content}
 				</ReactMarkdown>
 			</div>
 		);
