@@ -12,7 +12,7 @@ import PaymentLogTable from '@/components/shop/PaymentLogTable'
 const MochiPage = () => {
   return (
     <AuthProvider>
-      <div className="flex flex-col w-screen h-screen gap-4 bg-black bg-opacity-80 text-[#f2f2f2]">
+      <div className="w-screen h-screen bg-black bg-opacity-80 text-[#f2f2f2]">
         <EpicBackground />
         <div className="absolute top-2 left-4">
           <BackButton />
@@ -31,12 +31,12 @@ const MochiPage = () => {
           <div className="w-full flex justify-center">
             <GenerationPriceTable />
           </div>
-          <div className="w-1/2 mt-16">
+          {/* <div className="w-1/2 mt-16">
             <p className="text-2xl font-medium">Payment History</p>
           </div>
           <div className="w-full flex justify-center">
             <PaymentLogTable />
-          </div>
+          </div> */}
           <div className="p-24"></div>
         </div>
       </div>
