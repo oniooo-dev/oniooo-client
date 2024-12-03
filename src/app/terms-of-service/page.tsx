@@ -1,10 +1,9 @@
 import React from 'react'
 
 const TermsOfServicePage = () => {
-    const pdfUrl = 'www.oniooo.com/pdfs/terms-of-service/terms-of-services.pdf';
     return (
         <iframe
-            src={pdfUrl}
+            src='/pdfs/terms-of-service/terms-of-services.pdf'
             title="Full Page PDF"
             style={{
                 position: 'absolute',

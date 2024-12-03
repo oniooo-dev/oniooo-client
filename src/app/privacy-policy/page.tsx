@@ -1,7 +1,7 @@
 import React from 'react'
 
 const PrivacyPolicyPage = () => {
-    const pdfUrl = 'www.oniooo.com/pdfs/privacy-policy/privacy-policies.pdf';
+    const pdfUrl = '/pdfs/privacy-policy/privacy-policies.pdf';
     return (
         <iframe
             src={pdfUrl}
