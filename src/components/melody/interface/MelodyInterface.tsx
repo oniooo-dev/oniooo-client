@@ -8,7 +8,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import LeftPanel from '../panel/LeftPanel';
 import Chat from '@/components/layout/Chat';
 import { useChatSocket } from '@/contexts/ChatSocketContext';
-import DiscordButton from '@/components/layout/DIscordButton';
+import DiscordButton from '@/components/layout/DiscordButton';
 import ConfidentialityButton from '@/components/layout/ConfidentialityButton';
 
 const MelodyInterface = () => {
