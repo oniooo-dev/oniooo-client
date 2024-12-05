@@ -17,12 +17,13 @@ const MochiPage = () => {
         <div className="absolute top-2 left-4">
           <BackButton />
         </div>
-        <div className="flex flex-col items-center w-full h-full gap-4 overflow-scroll hide-scrollbar px-4">
+        <div className="flex flex-col items-center w-full h-full gap-6 overflow-scroll hide-scrollbar px-4">
           <div className="flex flex-col w-full md:w-1/2 mt-36">
             <UserAccount />
           </div>
-          <div className="w-1/2 mt-8">
+          <div className="flex flex-row w-1/2 mt-8 gap-4">
             <p className="text-2xl font-medium">Mochi Packs</p>
+            <img src="/images/store/mochi_promotion_banner.png" alt="mochi promotion banner" className="w-[200px] h-auto" />
           </div>
           <MochiMenu />
           <div className="w-1/2 mt-16">
