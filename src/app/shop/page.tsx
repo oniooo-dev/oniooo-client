@@ -23,7 +23,7 @@ const MochiPage = () => {
         </div>
 
         {/* Main Content */}
-        <div className="flex flex-col items-center w-full h-full gap-6 overflow-scroll hide-scrollbar px-4 bg-white bg-opacity-20">
+        <div className="flex flex-col items-center w-full h-full gap-6 overflow-scroll hide-scrollbar px-4">
 
           {/* User Account */}
           <div className="flex flex-col w-1/2 mt-36">
