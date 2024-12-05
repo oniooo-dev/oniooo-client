@@ -14,7 +14,7 @@ const MochiMenu = () => {
 	}, []);
 
 	return (
-		<div className="grid grid-cols-3 w-1/2 h-1/2 gap-4">
+		<div className="grid grid-cols-3 w-1/2 gap-4">
 			{
 				products.map((product: any) => (
 					<MochiBanner key={product.id} name={product.name} price={product.price} amount={product.amount} priceId={product.priceId} />
