@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Poppins } from 'next/font/google'
+import Script from "next/script";
 
 const poppins = Poppins({
 	subsets: ['latin'],
@@ -30,6 +31,18 @@ export default function RootLayout({
 				<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 				<link rel="manifest" href="/site.webmanifest" />
 			</head>
+			<Script
+				src="https://www.googletagmanager.com/gtag/js?id=AW-16780884369"
+				strategy="afterInteractive"
+			/>
+			<Script id="google-analytics" strategy="afterInteractive">
+				{`
+					window.dataLayer = window.dataLayer || [];
+					function gtag(){dataLayer.push(arguments);}
+					gtag('js', new Date());
+					gtag('config', 'AW-16780884369');
+					`}
+			</Script>
 			<body>
 				<script
 					type="module"
