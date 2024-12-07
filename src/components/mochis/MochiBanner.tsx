@@ -7,15 +7,16 @@ interface MochiBannerProps {
 	price: number;
 	amount: number;
 	priceId: string;
+	onClick: () => void;
 }
 
-const MochiBanner: React.FC<MochiBannerProps> = ({ name, price, amount, priceId }) => {
+const MochiBanner: React.FC<MochiBannerProps> = ({ name, price, amount, priceId, onClick }) => {
 
 	const { user } = useAuth();
 
 	const handleBuyClick = async () => {
 		try {
-
+			onClick();
 			// If user is not authenticated, redirect to melody
 			if (!user || !user.userId) {
 				window.location.href = '/melody';
