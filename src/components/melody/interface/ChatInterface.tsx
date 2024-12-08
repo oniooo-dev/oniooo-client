@@ -196,7 +196,7 @@ const ChatInterface: React.FC<{ openAuthModal: () => void }> = ({ openAuthModal 
 			}
 
 			{/* Chat input box */}
-			<div className="mb-8 flex-col w-[90%] lg:w-[65%]">
+			<div className="mb-4 flex-col w-[90%] lg:w-[65%]">
 				{
 					(messages.length === 0 && files.length === 0) &&
 					(
